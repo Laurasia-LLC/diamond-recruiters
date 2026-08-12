@@ -1,0 +1,168 @@
+@import 'tailwindcss';
+
+/* Self-hosted variable fonts — no Google Fonts request, no consent banner needed for them. */
+@import '@fontsource-variable/instrument-sans/index.css';
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
+@theme {
+  /* ---- Brand palette -------------------------------------------------
+     Deep navy carries the authority; the warm sand surface keeps it from
+     reading cold and corporate; ice blue is the single saturated accent. */
+  --color-ink-950: #05101c;
+  --color-ink-900: #0a1a2b;
+  --color-ink-800: #0f2438;
+  --color-ink-700: #16334c;
+  --color-ink-600: #1f4665;
+  --color-ink-500: #2d5d84;
+  --color-ink-400: #4a7ca5;
+  --color-ink-300: #7ba3c4;
+  --color-ink-200: #b3cbdd;
+  --color-ink-100: #dbe6ef;
+
+  --color-ice-600: #1a7fb5;
+  --color-ice-500: #2b9bd4;
+  --color-ice-400: #4fb4e6;
+  --color-ice-300: #85cdf0;
+  --color-ice-100: #d6eefa;
+
+  --color-sand-50: #faf8f5;
+  --color-sand-100: #f3efe8;
+  --color-sand-200: #e6dfd3;
+  --color-sand-300: #d4c9b6;
+
+  --color-copper-500: #c2703a;
+  --color-copper-400: #d98f5c;
+
+  /* ---- Type ---------------------------------------------------------- */
+  --font-display: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --text-2xs: 0.6875rem;
+
+  /* ---- Motion -------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv05' 1, 'ss01' 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, branded focus ring everywhere — keyboard users included. */
+  :focus-visible {
+    outline: 2px solid var(--color-ice-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-ice-300);
+    color: var(--color-ink-950);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Small uppercase technical label — the industrial voice of the design. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .prose-dr {
+    line-height: 1.7;
+  }
+
+  .prose-dr > * + * {
+    margin-top: 1.15em;
+  }
+
+  .prose-dr h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin-top: 2.25em;
+    margin-bottom: 0.15em;
+  }
+
+  .prose-dr h3 {
+    font-size: 1.15rem;
+    margin-top: 1.9em;
+    margin-bottom: 0.1em;
+  }
+
+  .prose-dr ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .prose-dr ul > li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-top: 0.6em;
+  }
+
+  /* Diamond bullet — small nod to the name, costs nothing. */
+  .prose-dr ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 0.62em;
+    width: 0.4rem;
+    height: 0.4rem;
+    background-color: var(--color-ice-500);
+    transform: rotate(45deg);
+  }
+
+  .prose-dr strong {
+    font-weight: 600;
+    color: var(--color-ink-950);
+  }
+
+  .prose-dr a {
+    color: var(--color-ice-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

@@ -1,0 +1,174 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABand from '../components/CTABand.astro';
+import { STATS, SECTORS } from '../consts';
+import heroImage from '../assets/about-team-meeting.jpg';
+import gaugesImage from '../assets/accent-control-gauges.jpg';
+
+const principles = [
+  {
+    title: 'Narrow beats broad',
+    body: 'We recruit into industrial automation, process instrumentation and flow control. That is it. A generalist agency has to be told what a control valve is before it can find someone who sells them.',
+  },
+  {
+    title: 'Say the awkward thing early',
+    body: 'The band is too low. The job description describes two people. That candidate is strong technically but has never carried a quota. Saying it in week one is worth more than being agreeable until week eight.',
+  },
+  {
+    title: 'Confidentiality is not a feature',
+    body: 'It is the baseline. Nothing about a candidate reaches a client, and nothing about a client reaches the market, without explicit approval first.',
+  },
+  {
+    title: 'A placement is not the finish line',
+    body: 'A hire who leaves in month four cost everyone more than the vacancy did. We check in with both sides through the first ninety days because that is when it either sets or does not.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Diamond Recruiters is a specialist technical sales search firm for US industrial manufacturing — automation, process instrumentation and flow control."
+>
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="A team greeting each other in a bright modern office"
+      widths={[800, 1400, 1800]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-35"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/88 to-ink-900/70"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-20 pt-16 lg:px-8 lg:pb-24 lg:pt-24">
+      <p class="eyebrow text-ice-400">About</p>
+      <h1 class="mt-5 max-w-4xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        A search firm that knows what is on the plant floor.
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
+        Diamond Recruiters places technical sales people with industrial manufacturers and
+        their distribution partners across the United States. We chose one market and went
+        deep into it rather than covering everything shallowly.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="border-b border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-16">
+      <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          STATS.map((stat) => (
+            <div>
+              <dt class="sr-only">{stat.label}</dt>
+              <dd>
+                <span class="block font-display text-4xl font-semibold tracking-tight text-ink-950 lg:text-5xl">
+                  {stat.value}
+                </span>
+                <span class="mt-3 block text-sm font-medium text-ink-900">{stat.label}</span>
+                <span class="mt-1.5 block text-sm leading-relaxed text-ink-500">{stat.detail}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===================== POSITIONING ===================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <SectionHeading eyebrow="What we do" title="Technical sales, industrial markets." />
+        <div class="mt-8 overflow-hidden rounded-2xl">
+          <Image
+            src={gaugesImage}
+            alt="Analogue instrument gauges on a control panel"
+            widths={[500, 900]}
+            sizes="(min-width: 1024px) 38vw, 92vw"
+            class="h-56 w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      </div>
+
+      <div class="space-y-5 text-lg leading-relaxed text-ink-600 lg:col-span-7">
+        <p>
+          Selling sensors, instrumentation or flow control is not a transferable sales
+          motion. The person has to walk into a plant, work out why the sensing is failing
+          or why the valve is oversized, and turn that into a recommendation a controls
+          engineer will accept.
+        </p>
+        <p>
+          Very few people can do that. Fewer still are looking for a new job at the moment
+          you need one. So the search is a direct-approach exercise, run by someone who can
+          hold the technical conversation well enough that a working sales engineer stays on
+          the phone past the first thirty seconds.
+        </p>
+        <p class="text-ink-900">
+          That is the entire premise of the firm. We are not trying to be everything to
+          everyone — we are trying to be the obvious call for this one market.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRINCIPLES ===================== -->
+  <section class="border-y border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <SectionHeading
+        eyebrow="How we operate"
+        title="Four principles we actually run on"
+        lead="Written down so both sides can hold us to them."
+      />
+
+      <div class="mt-14 grid gap-x-10 gap-y-11 sm:grid-cols-2">
+        {
+          principles.map((item, i) => (
+            <div class="border-t border-ink-200 pt-6">
+              <span class="font-mono text-sm text-ice-600">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-2.5 text-xl text-ink-950">{item.title}</h3>
+              <p class="mt-3 leading-relaxed text-ink-600">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COVERAGE ===================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+    <SectionHeading
+      eyebrow="Coverage"
+      title="Markets and territories"
+      lead="We recruit nationwide across the United States, with the heaviest concentration where industrial manufacturing is."
+    />
+
+    <div class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-ink-100 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        SECTORS.map((sector) => (
+          <div class="bg-white p-7">
+            <h3 class="font-display font-semibold text-ink-950">{sector.name}</h3>
+            <p class="mt-2 text-[0.925rem] leading-relaxed text-ink-600">{sector.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <CTABand
+    title="Whichever side of the table you are on, start with a conversation."
+    lead="No obligation, no pressure, and a straight answer about whether we can help. If we cannot, we will usually know someone who can."
+    primaryHref="/contact"
+    primaryLabel="Get in touch"
+    secondaryHref="/open-roles"
+    secondaryLabel="See open roles"
+  />
+</BaseLayout>

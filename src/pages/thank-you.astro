@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import { CONTACT } from '../consts';
+---
+
+<BaseLayout
+  title="Thank you"
+  description="Your message has reached Diamond Recruiters."
+  noindex={true}
+>
+  <section class="mx-auto flex max-w-2xl flex-col items-start px-5 py-24 lg:px-8 lg:py-32">
+    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ice-100">
+      <svg
+        class="h-7 w-7 text-ice-600"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="M4 12.5l5.5 5.5L20 7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+
+    <h1 class="mt-8 text-4xl leading-tight">That reached us.</h1>
+
+    <p class="mt-6 text-lg leading-relaxed text-ink-600">
+      A person reads every submission — there is no filter sitting in front of us. You will
+      hear back within one business day, including if the answer is that we do not have
+      anything that fits.
+    </p>
+
+    <p class="mt-4 leading-relaxed text-ink-600">
+      If it is urgent, or you want to add something you forgot, just reply straight to
+      <a
+        href={`mailto:${CONTACT.applications}`}
+        class="text-ice-600 underline underline-offset-2">{CONTACT.applications}</a
+      >.
+    </p>
+
+    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+      <Button href="/open-roles" size="lg">Browse open roles</Button>
+      <Button href="/" variant="secondary" size="lg">Back to home</Button>
+    </div>
+  </section>
+</BaseLayout>

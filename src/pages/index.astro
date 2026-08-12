@@ -1,0 +1,369 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import JobCard from '../components/JobCard.astro';
+import CTABand from '../components/CTABand.astro';
+import { SITE, SECTORS, STATS } from '../consts';
+
+import heroImage from '../assets/hero-automation-line.jpg';
+import employersImage from '../assets/employers-handshake.jpg';
+import candidatesImage from '../assets/candidates-plant-floor.jpg';
+
+const jobs = (await getCollection('jobs', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const featured = jobs.filter((j) => j.data.featured).slice(0, 2);
+
+const process = [
+  {
+    step: '01',
+    title: 'Scoping call',
+    body: 'Territory, product line, control architecture, the real comp band. We ask what the last person in the seat got wrong, because that is usually the brief.',
+  },
+  {
+    step: '02',
+    title: 'Market map',
+    body: 'We name the companies and the people inside them. You see the map before we approach anyone, so you know the search is grounded in your market and not a job board.',
+  },
+  {
+    step: '03',
+    title: 'Direct approach',
+    body: 'Confidential outreach to people who are performing where they are. The strongest sales engineers are not applying to anything — they are being called.',
+  },
+  {
+    step: '04',
+    title: 'Technical qualification',
+    body: 'We test the engineering, not just the resume. Every candidate arrives with one number they can defend and an application story that holds up.',
+  },
+  {
+    step: '05',
+    title: 'Shortlist and close',
+    body: 'A slate you can act on, then we manage the offer, the counter-offer and the notice period. Most searches die at the counter-offer. Ours do not.',
+  },
+  {
+    step: '06',
+    title: 'First ninety days',
+    body: 'We check in with both sides at 30, 60 and 90 days. A placement that leaves in month four was not a placement.',
+  },
+];
+---
+
+<BaseLayout title={SITE.name}>
+  <!-- ============================ HERO ============================ -->
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="Automation line inside a modern production plant, lit in cool blue"
+      widths={[800, 1400, 2000, 2400]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/80 to-ink-900/55"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-linear-to-t from-sand-50 to-transparent"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-28 pt-20 lg:px-8 lg:pb-36 lg:pt-28">
+      <div class="max-w-3xl">
+        <p class="eyebrow text-ice-400">Technical sales search · United States</p>
+
+        <h1
+          class="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
+        >
+          The sales engineers who can read a plant floor
+          <span class="text-ice-400">— and close the fix.</span>
+        </h1>
+
+        <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100 lg:text-xl">
+          Diamond Recruiters places technical sales talent with industrial manufacturers
+          across automation, process instrumentation and flow control. We recruit inside
+          one market, deeply, instead of every market thinly.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <Button href="/for-employers#brief" variant="onDark" size="lg">
+            Hire a sales engineer
+          </Button>
+          <Button
+            href="/open-roles"
+            size="lg"
+            class="bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm hover:bg-white/20 hover:ring-white/40"
+          >
+            See open roles ({jobs.length})
+          </Button>
+        </div>
+
+        <p class="mt-8 flex items-center gap-2.5 text-sm text-ink-300">
+          <svg class="h-4 w-4 shrink-0 text-ice-400" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 1l1.9 4.1 4.5.6-3.3 3.1.8 4.4L8 11.1 4.1 13.2l.8-4.4L1.6 5.7l4.5-.6z"
+            ></path>
+          </svg>
+          Every candidate conversation starts with the real salary band. No exceptions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= TWO AUDIENCES ======================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <SectionHeading
+      eyebrow="Who we work with"
+      title="Two sides of the same market, and we are straight with both."
+      lead="Most agencies treat candidates as inventory and clients as invoices. We do neither. The whole business depends on both sides trusting what we tell them."
+    />
+
+    <div class="mt-14 grid gap-6 lg:grid-cols-2">
+      <a
+        href="/for-employers"
+        class="group relative flex flex-col overflow-hidden rounded-2xl bg-ink-950 ring-1 ring-ink-800 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink-900/20"
+      >
+        <div class="relative h-56 overflow-hidden sm:h-64">
+          <Image
+            src={employersImage}
+            alt="Two professionals shaking hands in a modern office atrium"
+            widths={[600, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            class="h-full w-full object-cover opacity-70 transition-all duration-500 ease-out-expo group-hover:scale-[1.04] group-hover:opacity-85"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/50 to-transparent"
+          >
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col p-8">
+          <p class="eyebrow text-ice-400">For employers</p>
+          <h3 class="mt-3 text-2xl text-white">You need someone who can carry the line</h3>
+          <p class="mt-4 flex-1 leading-relaxed text-ink-200">
+            Territory sales, applications engineering, regional and national sales
+            leadership. We map your market by name, approach people who are performing
+            where they are, and hand you a slate you can act on.
+          </p>
+          <span
+            class="mt-7 inline-flex items-center gap-2 text-sm font-medium text-ice-400 transition-colors group-hover:text-ice-300"
+          >
+            How we run a search
+            <svg
+              class="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a
+        href="/for-candidates"
+        class="group relative flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink-100 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink-900/10 hover:ring-ink-200"
+      >
+        <div class="relative h-56 overflow-hidden sm:h-64">
+          <Image
+            src={candidatesImage}
+            alt="Engineers working beside a circular conveyor system on a plant floor"
+            widths={[600, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            class="h-full w-full object-cover transition-transform duration-500 ease-out-expo group-hover:scale-[1.04]"
+            loading="lazy"
+          />
+        </div>
+        <div class="flex flex-1 flex-col p-8">
+          <p class="eyebrow text-ice-600">For candidates</p>
+          <h3 class="mt-3 text-2xl text-ink-950">You want the number before the interview loop</h3>
+          <p class="mt-4 flex-1 leading-relaxed text-ink-600">
+            We tell you the client, the band and the territory on the first call. If the
+            money is under what you need, we say so and stop there rather than spending
+            three weeks of your evenings finding out.
+          </p>
+          <span
+            class="mt-7 inline-flex items-center gap-2 text-sm font-medium text-ink-900 transition-colors group-hover:text-ice-600"
+          >
+            What working with us looks like
+            <svg
+              class="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========================= OPEN ROLES ========================= -->
+  <section class="border-y border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading
+          eyebrow={`${jobs.length} roles open now`}
+          title="Open roles"
+          lead="Live searches we are running right now. Salary and travel are stated up front on every one."
+          class="mb-0"
+        />
+        <Button href="/open-roles" variant="secondary">All open roles</Button>
+      </div>
+
+      <div class="mt-14 grid gap-7 lg:grid-cols-2">
+        {featured.map((job) => <JobCard job={job} featured />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= THE PROMISE ======================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="How we are different"
+          title="We name the band on the first call."
+        />
+        <p class="mt-6 leading-relaxed text-ink-600">
+          It is the single most common complaint we hear from sales engineers: four rounds
+          of interviews, a plant visit, a presentation — and then a number that was never
+          going to work. Everybody's time burned for nothing.
+        </p>
+        <p class="mt-4 leading-relaxed text-ink-600">
+          So we do it the other way round. You get the client, the territory and the actual
+          band before you commit to anything. If it does not clear your bar, we say so and
+          stop there. It costs us placements. It has also made us the call people take.
+        </p>
+      </div>
+
+      <div class="lg:col-span-7">
+        <div class="grid gap-5 sm:grid-cols-2">
+          {
+            [
+              {
+                title: 'One market, not forty',
+                body: 'Automation, instrumentation and flow control. We know what a DCS is, which EPC writes the spec, and why your last hire could not size a valve.',
+              },
+              {
+                title: 'Nobody is a résumé wall',
+                body: 'You get a short slate with a reason attached to each name, not twenty forwarded PDFs and a hope that one sticks.',
+              },
+              {
+                title: 'Confidential by default',
+                body: 'Nothing moves without your say-so. Your current employer never learns you spoke to us.',
+              },
+              {
+                title: 'We answer the phone after',
+                body: 'The relationship does not end at the signed offer. We check in through the first ninety days, both sides.',
+              },
+            ].map((item) => (
+              <div class="rounded-2xl bg-white p-7 ring-1 ring-ink-100">
+                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-ice-100">
+                  <svg class="h-4 w-4 text-ice-600" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+                  </svg>
+                </div>
+                <h3 class="mt-5 text-lg">{item.title}</h3>
+                <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{item.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== SECTORS ========================== -->
+  <section class="border-y border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <SectionHeading
+        eyebrow="Markets"
+        title="Where we recruit"
+        lead="Deep in a narrow band of industrial manufacturing — which is why our calls get returned."
+      />
+
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl bg-ink-100 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          SECTORS.map((sector, i) => (
+            <div class="group bg-white p-8 transition-colors duration-300 hover:bg-sand-50">
+              <span class="font-mono text-xs text-ink-300">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-3 text-lg text-ink-950">{sector.name}</h3>
+              <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{sector.detail}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== PROCESS ========================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <SectionHeading
+      eyebrow="The search"
+      title="How a search actually runs"
+      lead="No black box. You know what is happening at every stage, and so does the candidate."
+    />
+
+    <ol class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        process.map((item) => (
+          <li class="relative border-t border-ink-200 pt-6">
+            <span class="font-mono text-sm font-medium text-ice-600">{item.step}</span>
+            <h3 class="mt-2.5 text-lg text-ink-950">{item.title}</h3>
+            <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{item.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- ============================ STATS =========================== -->
+  <section class="border-t border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+      <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          STATS.map((stat) => (
+            <div>
+              <dt class="sr-only">{stat.label}</dt>
+              <dd>
+                <span class="block font-display text-4xl font-semibold tracking-tight text-ink-950 lg:text-5xl">
+                  {stat.value}
+                </span>
+                <span class="mt-3 block text-sm font-medium text-ink-900">{stat.label}</span>
+                <span class="mt-1.5 block text-sm leading-relaxed text-ink-500">
+                  {stat.detail}
+                </span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CTABand
+    eyebrow="Start here"
+    title="Tell us what you need to hire, or what you want to be paid."
+    lead="Either conversation starts the same way — a short call, straight answers, no obligation on you. We reply to every message within one business day."
+    primaryHref="/for-employers#brief"
+    primaryLabel="Brief us on a role"
+    secondaryHref="/open-roles"
+    secondaryLabel="Browse open roles"
+  />
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { usdRange } from '../lib/format';
+
+interface Props {
+  job: CollectionEntry<'jobs'>;
+  /** Larger treatment for the two featured roles on the homepage. */
+  featured?: boolean;
+}
+
+const { job, featured = false } = Astro.props;
+const d = job.data;
+const href = `/open-roles/${job.id}`;
+---
+
+<article
+  class="group relative flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink-100 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-xl hover:shadow-ink-900/8 hover:ring-ink-200"
+>
+  <div class="relative aspect-16/9 overflow-hidden bg-ink-900">
+    <Image
+      src={d.heroImage}
+      alt={d.heroAlt}
+      widths={[400, 700, 1000]}
+      sizes={featured ? '(min-width: 1024px) 44vw, 92vw' : '(min-width: 1024px) 30vw, 92vw'}
+      class="h-full w-full object-cover opacity-90 transition-all duration-500 ease-out-expo group-hover:scale-[1.04] group-hover:opacity-100"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-linear-to-t from-ink-950/70 via-ink-950/10 to-transparent"></div>
+
+    <span
+      class="eyebrow absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-ink-800 backdrop-blur-sm"
+    >
+      {d.discipline}
+    </span>
+
+    <p class="absolute inset-x-4 bottom-3.5 font-mono text-xs text-ice-300">
+      {d.territoryLabel}
+    </p>
+  </div>
+
+  <div class="flex flex-1 flex-col p-6">
+    <h3 class={featured ? 'text-xl leading-snug' : 'text-lg leading-snug'}>
+      <a href={href} class="after:absolute after:inset-0 after:content-['']">
+        {d.title}
+      </a>
+    </h3>
+
+    <p class="mt-3 flex-1 text-[0.925rem] leading-relaxed text-ink-600">
+      {d.summary}
+    </p>
+
+    <dl class="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-ink-100 pt-5">
+      <div>
+        <dt class="eyebrow text-ink-400">Base</dt>
+        <dd class="mt-1 font-mono text-sm font-medium text-ink-900">
+          {usdRange(d.baseMin, d.baseMax)}
+        </dd>
+      </div>
+      <div>
+        <dt class="eyebrow text-ink-400">OTE</dt>
+        <dd class="mt-1 font-mono text-sm font-medium text-ink-900">
+          {usdRange(d.oteMin, d.oteMax)}
+        </dd>
+      </div>
+      <div>
+        <dt class="eyebrow text-ink-400">Travel</dt>
+        <dd class="mt-1 text-sm text-ink-700">{d.travel}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow text-ink-400">Experience</dt>
+        <dd class="mt-1 text-sm text-ink-700">{d.experience}</dd>
+      </div>
+    </dl>
+
+    <span
+      class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 transition-colors group-hover:text-ice-600"
+    >
+      View role
+      <svg
+        class="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        aria-hidden="true"
+      >
+        <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+  </div>
+</article>

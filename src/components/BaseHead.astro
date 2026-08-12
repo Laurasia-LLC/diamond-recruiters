@@ -1,0 +1,85 @@
+---
+import { SITE, CONTACT, LEGAL } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Absolute or site-relative path to the social share image. */
+  image?: string;
+  /** Set true on pages that should not be indexed. */
+  noindex?: boolean;
+  /** Extra JSON-LD to inject (e.g. JobPosting). */
+  schema?: Record<string, unknown> | null;
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = '/og-default.png',
+  noindex = false,
+  schema = null,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', Astro.site);
+const ogImage = new URL(image, Astro.site);
+const fullTitle = title === SITE.name ? `${SITE.name} — ${SITE.tagline}` : `${title} | ${SITE.name}`;
+
+/** Organization schema — helps Google associate the brand with the domain. */
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'EmploymentAgency',
+  name: SITE.name,
+  legalName: LEGAL.entityName,
+  url: SITE.url,
+  description: SITE.description,
+  email: CONTACT.applications,
+  telephone: CONTACT.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: CONTACT.address.line1,
+    addressLocality: CONTACT.address.city,
+    addressRegion: CONTACT.address.region,
+    postalCode: CONTACT.address.postalCode,
+    addressCountry: CONTACT.address.country,
+  },
+  areaServed: { '@type': 'Country', name: 'United States' },
+  knowsAbout: [
+    'Industrial automation sales recruitment',
+    'Process instrumentation recruitment',
+    'Sales engineer recruitment',
+    'Flow control and valve automation hiring',
+  ],
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content={SITE.locale} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="theme-color" content="#0a1a2b" />
+
+<script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline />
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />}

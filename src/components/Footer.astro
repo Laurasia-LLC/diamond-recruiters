@@ -1,0 +1,128 @@
+---
+import { SITE, CONTACT, SECTORS } from '../consts';
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+
+/** Hide social links until they hold a real URL — a broken link reads worse than none. */
+const linkedin = CONTACT.social.linkedin.includes('PLACEHOLDER')
+  ? null
+  : CONTACT.social.linkedin;
+
+const columns = [
+  {
+    heading: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/for-employers', label: 'For Employers' },
+      { href: '/for-candidates', label: 'For Candidates' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    heading: 'Open Roles',
+    links: [
+      { href: '/open-roles', label: 'All open roles' },
+      { href: '/open-roles/sales-engineer-industrial-automation-sensors', label: 'Automation & Sensors' },
+      { href: '/open-roles/sales-engineer-process-instrumentation-valve-automation', label: 'Process Instrumentation' },
+    ],
+  },
+  {
+    heading: 'Legal',
+    links: [
+      { href: '/privacy', label: 'Privacy Policy' },
+      { href: '/imprint', label: 'Imprint' },
+    ],
+  },
+];
+---
+
+<footer class="bg-ink-950 text-ink-200">
+  <div class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <Logo tone="light" />
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-ink-300">
+          Technical sales search for industrial manufacturers. We recruit the people who
+          walk the plant floor and close the fix — across automation, instrumentation and
+          flow control in the United States.
+        </p>
+
+        <div class="mt-7 space-y-2.5 text-sm">
+          <a
+            href={`mailto:${CONTACT.applications}`}
+            class="block text-ice-300 transition-colors hover:text-ice-100"
+          >
+            {CONTACT.applications}
+          </a>
+          <a
+            href={CONTACT.phoneHref}
+            class="block text-ink-300 transition-colors hover:text-white"
+          >
+            {CONTACT.phone}
+          </a>
+        </div>
+
+        {
+          linkedin && (
+            <a
+              href={linkedin}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="mt-6 inline-flex items-center gap-2 text-sm text-ink-300 transition-colors hover:text-white"
+            >
+              <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.4 8.65 22 11.1 22 14.3V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1V21h-4z" />
+              </svg>
+              LinkedIn
+            </a>
+          )
+        }
+      </div>
+
+      <div class="grid gap-10 sm:grid-cols-3 lg:col-span-5">
+        {
+          columns.map((col) => (
+            <div>
+              <h3 class="eyebrow text-ink-400">{col.heading}</h3>
+              <ul class="mt-4 space-y-2.5">
+                {col.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      class="text-sm text-ink-200 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="lg:col-span-3">
+        <h3 class="eyebrow text-ink-400">Markets we cover</h3>
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {
+            SECTORS.map((s) => (
+              <li class="rounded-full border border-ink-800 px-3 py-1.5 text-xs text-ink-300">
+                {s.name}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-14 flex flex-col gap-4 border-t border-ink-800 pt-8 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>&copy; {year} {SITE.name}. All rights reserved.</p>
+      <p class="font-mono">
+        Recruiting across the United States · Automation · Instrumentation · Flow Control
+      </p>
+    </div>
+  </div>
+</footer>

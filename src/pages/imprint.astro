@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CONTACT, LEGAL } from '../consts';
+
+const addr = CONTACT.address;
+---
+
+<BaseLayout
+  title="Imprint"
+  description="Legal identification and site ownership details for Diamond Recruiters."
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-3xl px-5 pb-14 pt-16 lg:px-8 lg:pb-16 lg:pt-24">
+      <p class="eyebrow text-ice-400">Legal</p>
+      <h1 class="mt-4 text-4xl leading-tight text-white">Imprint</h1>
+      <p class="mt-5 text-ink-300">Site ownership and legal identification</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
+    <div
+      class="mb-12 rounded-2xl border border-copper-500/30 bg-copper-500/8 px-6 py-5 text-sm leading-relaxed text-ink-800"
+    >
+      <p class="font-medium text-copper-500">Before this page goes live</p>
+      <p class="mt-2">
+        Every identifier below is a placeholder. Replace them in
+        <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">src/consts.ts</code>.
+        A US entity has no §5 TMG obligation, but if any part of the business is operated
+        from Germany or the EU, this page becomes legally required and must name the
+        operating entity, a managing director and a register number.
+      </p>
+    </div>
+
+    <div class="prose-dr text-ink-700">
+      <h2>Site operator</h2>
+      <p>
+        {LEGAL.entityName}<br />
+        {LEGAL.entityType}, organized in {LEGAL.stateOfIncorporation}<br />
+        {addr.line1}<br />
+        {addr.city}, {addr.region} {addr.postalCode}<br />
+        {addr.countryName}
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Email: <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a><br />
+        Applications: <a href={`mailto:${CONTACT.applications}`}>{CONTACT.applications}</a><br />
+        Telephone: <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+      </p>
+
+      <h2>Responsible for content</h2>
+      <p>
+        {LEGAL.responsibleParty}, {LEGAL.responsibleTitle}<br />
+        At the address above.
+      </p>
+
+      <h2>Nature of business</h2>
+      <p>
+        Recruitment and executive search services for technical sales roles in industrial
+        manufacturing, supplied to employers in the United States.
+      </p>
+
+      <h2>Liability for content</h2>
+      <p>
+        We prepare the content of this site with care, but we do not warrant that it is
+        complete, current or accurate at all times. Salary ranges shown on role pages are our
+        assessment of comparable roles in the relevant market and are not an offer, a
+        guarantee, or a statement of any particular employer's compensation band. The
+        client's actual band is confirmed directly with candidates.
+      </p>
+
+      <h2>Liability for links</h2>
+      <p>
+        Where this site links to external websites, we have no control over their content
+        and accept no responsibility for it. Responsibility rests with the operator of the
+        linked site.
+      </p>
+
+      <h2>Copyright</h2>
+      <p>
+        The content and structure of this site are protected by copyright. Photography used
+        on this site is licensed from third-party photographers — see
+        <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">CREDITS.md</code> in
+        the site repository for the source of each image. Reproduction of site content
+        outside the limits of copyright law requires our written consent.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        How we handle personal information is set out in our <a href="/privacy">Privacy Policy</a>.
+      </p>
+
+      <p class="mt-10 text-sm text-ink-500">
+        {SITE.name} · <a href={SITE.url}>{SITE.domain}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

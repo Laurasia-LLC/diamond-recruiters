@@ -1,0 +1,45 @@
+---
+interface Props {
+  /** Show the wordmark next to the mark. */
+  withWordmark?: boolean;
+  class?: string;
+  /** 'light' for dark backgrounds, 'dark' for light backgrounds. */
+  tone?: 'light' | 'dark';
+}
+
+const { withWordmark = true, class: className = '', tone = 'dark' } = Astro.props;
+
+const wordColor = tone === 'light' ? 'text-white' : 'text-ink-900';
+const subColor = tone === 'light' ? 'text-ink-200' : 'text-ink-500';
+---
+
+<span class={`inline-flex items-center gap-2.5 ${className}`}>
+  <svg
+    class="h-8 w-8 shrink-0"
+    viewBox="0 0 32 32"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <!-- Brilliant-cut silhouette: crown filled, pavilion drawn in facets. -->
+    <path d="M16 2.5 L29.5 12.5 L16 29.5 L2.5 12.5 Z" class="fill-ice-500/15" />
+    <path d="M8.4 6.6 H23.6 L29.5 12.5 H2.5 Z" class="fill-ice-500" />
+    <g class="stroke-ink-900" stroke-width="1.15" stroke-linejoin="round">
+      <path d="M16 2.5 L29.5 12.5 L16 29.5 L2.5 12.5 Z" />
+      <path d="M2.5 12.5 H29.5" />
+      <path d="M16 2.5 L10.6 12.5 L16 29.5" />
+      <path d="M16 2.5 L21.4 12.5 L16 29.5" />
+    </g>
+  </svg>
+
+  {
+    withWordmark && (
+      <span class="flex flex-col leading-none">
+        <span class={`font-display text-[1.02rem] font-semibold tracking-tight ${wordColor}`}>
+          Diamond Recruiters
+        </span>
+        <span class={`eyebrow mt-1 ${subColor}`}>Technical Sales Search</span>
+      </span>
+    )
+  }
+</span>

@@ -1,0 +1,211 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SECTORS } from '../consts';
+import heroImage from '../assets/employers-handshake.jpg';
+import textureImage from '../assets/sector-electrical.jpg';
+
+const roles = [
+  'Territory / Regional Sales Engineer',
+  'Applications & Solutions Engineer',
+  'Regional Sales Manager',
+  'National Sales Manager',
+  'Business Development Manager',
+  'Product & Market Manager',
+  'Distribution / Channel Manager',
+  'Technical Support & Inside Sales',
+];
+
+const commitments = [
+  {
+    title: 'We tell you if the number is wrong',
+    body: 'If the band you have set will not buy the person you described, you hear that in the first call — not after eight weeks of an empty pipeline. Sometimes the fix is the comp. Sometimes it is the job description.',
+  },
+  {
+    title: 'A named market map, not a job board',
+    body: 'You see which companies and which people we intend to approach before we approach them. If a competitor is off-limits, you tell us then, not after we have called them.',
+  },
+  {
+    title: 'A short slate with reasons',
+    body: 'Three or four candidates, each with the number they can defend and an honest note on where they are weaker. Not twenty forwarded resumes with a hope that one sticks.',
+  },
+  {
+    title: 'We manage the counter-offer',
+    body: 'Most searches in this market die at resignation, not at interview. We prepare for it with the candidate weeks before it happens, because it always happens.',
+  },
+  {
+    title: 'Terms agreed in writing first',
+    body: 'Fee basis, guarantee period and exclusivity are settled before we start work. No surprises on the invoice, and nothing verbal that either side has to remember differently later.',
+  },
+  {
+    title: 'One point of contact throughout',
+    body: 'The person who takes your brief runs your search. You are not handed to a delivery team who never heard the original conversation.',
+  },
+];
+---
+
+<BaseLayout
+  title="For Employers"
+  description="Diamond Recruiters runs technical sales searches for industrial manufacturers across the United States — automation, instrumentation and flow control. Named market maps, short slates, honest comp advice."
+>
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="Two professionals shaking hands in a modern office atrium"
+      widths={[800, 1400, 1800]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-45"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/85 to-ink-900/70"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-20 pt-16 lg:px-8 lg:pb-24 lg:pt-24">
+      <p class="eyebrow text-ice-400">For employers</p>
+      <h1 class="mt-5 max-w-4xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        An open territory is not a vacancy. It is revenue leaking every month.
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
+        We recruit technical sales people for industrial manufacturers and their channel
+        partners — the ones who have to understand the product to sell it. One market,
+        covered properly, which is why our calls get returned.
+      </p>
+      <div class="mt-10">
+        <a
+          href="#brief"
+          class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
+        >
+          Brief us on a role
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE PROBLEM ===================== -->
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="Why this is hard"
+          title="The people you want are not looking."
+        />
+      </div>
+      <div class="space-y-5 text-lg leading-relaxed text-ink-600 lg:col-span-7">
+        <p>
+          A sales engineer who is hitting quota in a territory they have built has no reason
+          to browse job boards. They are not in your applicant pool, and no amount of
+          advertising will put them there.
+        </p>
+        <p>
+          Meanwhile the applications you do receive skew toward people who can describe a
+          product but have never diagnosed one on a plant floor. Screening those takes your
+          regional manager away from their own number.
+        </p>
+        <p class="text-ink-900">
+          So the search has to be done by approach, by name, by someone who can hold a
+          technical conversation credibly enough that a working sales engineer takes the
+          call. That is the whole job.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ROLES + SECTORS ===================== -->
+  <section class="border-y border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <div class="grid gap-14 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <SectionHeading eyebrow="Roles" title="What we fill" />
+          <ul class="mt-9 space-y-px overflow-hidden rounded-2xl bg-ink-100">
+            {
+              roles.map((role) => (
+                <li class="flex items-center gap-3.5 bg-white px-5 py-4 transition-colors hover:bg-sand-50">
+                  <svg
+                    class="h-3.5 w-3.5 shrink-0 text-ice-500"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+                  </svg>
+                  <span class="text-[0.95rem] text-ink-800">{role}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <SectionHeading eyebrow="Markets" title="Where we already have a network" />
+          <dl class="mt-9 space-y-6">
+            {
+              SECTORS.map((sector) => (
+                <div class="border-l-2 border-ink-100 pl-5 transition-colors hover:border-ice-500">
+                  <dt class="font-display font-semibold text-ink-950">{sector.name}</dt>
+                  <dd class="mt-1.5 text-[0.925rem] leading-relaxed text-ink-600">
+                    {sector.detail}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMMITMENTS ===================== -->
+  <section class="relative overflow-hidden bg-ink-950">
+    <Image
+      src={textureImage}
+      alt=""
+      widths={[800, 1400]}
+      sizes="100vw"
+      class="absolute inset-0 h-full w-full object-cover opacity-10"
+      loading="lazy"
+      aria-hidden="true"
+    />
+    <div class="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <SectionHeading
+        eyebrow="What you get"
+        title="Six things we commit to on every search"
+        lead="None of these are unusual. They are just rarely written down where a client can hold you to them."
+        tone="light"
+      />
+
+      <div class="mt-14 grid gap-x-10 gap-y-11 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          commitments.map((item, i) => (
+            <div class="border-t border-ink-800 pt-6">
+              <span class="font-mono text-sm text-ice-400">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-2.5 text-lg text-white">{item.title}</h3>
+              <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-300">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BRIEF FORM ===================== -->
+  <section class="border-b border-ink-100 bg-sand-100/70" id="brief">
+    <div class="mx-auto max-w-3xl px-5 py-20 lg:px-8 lg:py-24">
+      <p class="eyebrow text-ice-600">Start a search</p>
+      <h2 class="mt-3 text-3xl leading-tight sm:text-4xl">Brief us on a role</h2>
+      <p class="mt-5 leading-relaxed text-ink-600">
+        The more specific you are, the more useful our first reply will be. If you would
+        rather just talk it through, say so in the message and we will call you instead.
+      </p>
+
+      <div class="mt-10 rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-9">
+        <ContactForm variant="employer" id="employer-brief" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

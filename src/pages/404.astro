@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import { CONTACT } from '../consts';
+
+const links = [
+  { href: '/open-roles', label: 'Open roles', detail: 'Every search we are running right now' },
+  { href: '/for-employers', label: 'For employers', detail: 'How we run a search, and how to brief one' },
+  { href: '/for-candidates', label: 'For candidates', detail: 'What working with us looks like' },
+  { href: '/contact', label: 'Contact', detail: 'Reach a person directly' },
+];
+---
+
+<BaseLayout title="Page not found" noindex={true}>
+  <section class="mx-auto max-w-3xl px-5 py-24 lg:px-8 lg:py-32">
+    <p class="eyebrow text-ice-600">Error 404</p>
+    <h1 class="mt-4 text-4xl leading-tight sm:text-5xl">This page is not here.</h1>
+    <p class="mt-6 text-lg leading-relaxed text-ink-600">
+      The link may be out of date, or a role may have closed since it was shared. Everything
+      currently open is on the roles page.
+    </p>
+
+    <div class="mt-10">
+      <Button href="/open-roles" size="lg">See open roles</Button>
+    </div>
+
+    <ul class="mt-14 divide-y divide-ink-100 border-y border-ink-100">
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href} class="group flex items-center justify-between gap-4 py-5">
+              <span>
+                <span class="block font-display font-medium text-ink-950">{link.label}</span>
+                <span class="mt-1 block text-sm text-ink-500">{link.detail}</span>
+              </span>
+              <svg
+                class="h-5 w-5 shrink-0 text-ink-300 transition-all duration-300 ease-out-expo group-hover:translate-x-1 group-hover:text-ice-600"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                aria-hidden="true"
+              >
+                <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-10 text-sm text-ink-500">
+      Looking for something specific? Email
+      <a
+        href={`mailto:${CONTACT.general}`}
+        class="text-ice-600 underline underline-offset-2">{CONTACT.general}</a
+      > and we will point you at it.
+    </p>
+  </section>
+</BaseLayout>

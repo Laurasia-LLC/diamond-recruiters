@@ -1,0 +1,47 @@
+---
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'onDark';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full font-medium ' +
+  'transition-all duration-200 ease-out-expo whitespace-nowrap ' +
+  'disabled:opacity-50 disabled:pointer-events-none';
+
+const variants = {
+  primary:
+    'bg-ink-900 text-white hover:bg-ink-700 shadow-sm hover:shadow-md hover:-translate-y-px',
+  secondary:
+    'bg-white text-ink-900 ring-1 ring-ink-200 hover:ring-ink-400 hover:bg-sand-50 hover:-translate-y-px',
+  ghost: 'text-ink-700 hover:text-ink-900 hover:bg-ink-100/60',
+  onDark:
+    'bg-ice-500 text-ink-950 hover:bg-ice-400 shadow-sm hover:shadow-lg hover:-translate-y-px font-semibold',
+};
+
+const sizes = {
+  sm: 'text-sm px-4 py-2',
+  md: 'text-[0.95rem] px-5 py-2.5',
+  lg: 'text-base px-7 py-3.5',
+};
+
+const cls = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag class={cls} href={href} type={href ? undefined : type} {...rest}>
+  <slot />
+</Tag>

@@ -1,0 +1,113 @@
+---
+import { NAV_LINKS } from '../consts';
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+
+const path = '/' + Astro.url.pathname.replace(/^\/|\/$/g, '');
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 border-b border-transparent transition-all duration-300 ease-out-expo"
+>
+  <div class="mx-auto flex max-w-7xl items-center gap-6 px-5 py-4 lg:px-8">
+    <a href="/" class="shrink-0" aria-label="Diamond Recruiters — home">
+      <Logo />
+    </a>
+
+    <nav class="ml-auto hidden items-center gap-1 lg:flex" aria-label="Main">
+      {
+        NAV_LINKS.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            class:list={[
+              'relative rounded-full px-3.5 py-2 text-[0.925rem] font-medium transition-colors',
+              isActive(link.href)
+                ? 'text-ink-900'
+                : 'text-ink-600 hover:text-ink-900',
+            ]}
+          >
+            {link.label}
+            {isActive(link.href) && (
+              <span class="absolute inset-x-3.5 -bottom-0.5 h-px bg-ice-500" />
+            )}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="ml-auto hidden lg:ml-3 lg:block">
+      <Button href="/for-employers#brief" size="sm">Start a search</Button>
+    </div>
+
+    <button
+      id="menu-toggle"
+      type="button"
+      class="ml-auto rounded-full p-2 text-ink-800 transition-colors hover:bg-ink-100 lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+    >
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path id="menu-icon-open" d="M3.5 7h17M3.5 12h17M3.5 17h17" stroke-linecap="round" />
+        <path id="menu-icon-close" class="hidden" d="M5.5 5.5l13 13M18.5 5.5l-13 13" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-ink-100 bg-sand-50/98 backdrop-blur-sm lg:hidden"
+  >
+    <nav class="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-4" aria-label="Mobile">
+      {
+        NAV_LINKS.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            class:list={[
+              'rounded-xl px-3 py-3 text-base font-medium transition-colors',
+              isActive(link.href)
+                ? 'bg-ink-100 text-ink-900'
+                : 'text-ink-700 hover:bg-ink-100/60',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <Button href="/for-employers#brief" class="mt-2 w-full" size="md">Start a search</Button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Header gains a surface once the page scrolls, so the hero sits flush at rest.
+  const header = document.getElementById('site-header');
+  const solid = ['bg-sand-50/85', 'backdrop-blur-md', 'border-ink-100', 'shadow-sm'];
+
+  const sync = () => {
+    if (!header) return;
+    const scrolled = window.scrollY > 8;
+    header.classList.toggle('border-transparent', !scrolled);
+    solid.forEach((c) => header.classList.toggle(c, scrolled));
+  };
+
+  sync();
+  window.addEventListener('scroll', sync, { passive: true });
+
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    iconOpen?.classList.toggle('hidden', open);
+    iconClose?.classList.toggle('hidden', !open);
+  });
+</script>

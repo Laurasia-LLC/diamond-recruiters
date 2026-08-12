@@ -1,0 +1,101 @@
+# Diamond Recruiters — Apache configuration for all-inkl shared hosting.
+#
+# This file ships with the build and is uploaded to the document root.
+# It is safe to edit on the server, but changes will be overwritten by the
+# next deploy, so make lasting changes in public/.htaccess in the repo.
+
+Options -Indexes
+
+# --------------------------------------------------------------------------
+# Canonical host and HTTPS
+# --------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+  # Force the bare domain (drop www) so there is one canonical origin.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+  # Serve /about from /about/index.html WITHOUT redirecting to /about/.
+  # Keeps URLs matching the canonical tags and avoids a redirect on every click.
+  DirectorySlash Off
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*?)/?$ /$1/index.html [L]
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# --------------------------------------------------------------------------
+# Never serve these
+# --------------------------------------------------------------------------
+# Mail credentials live in api/config.php on the server only.
+<FilesMatch "^(config\.php|config\.sample\.php|_mailer\.php)$">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(md|yml|yaml|json5|log|bak|sql|env)$">
+  Require all denied
+</FilesMatch>
+
+<Files ".htaccess">
+  Require all denied
+</Files>
+
+# --------------------------------------------------------------------------
+# Security headers
+# --------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+
+  # Everything is self-hosted: no external scripts, fonts, images or frames.
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+
+  # Hashed assets never change under the same name — cache them hard.
+  <FilesMatch "\.(woff2|woff|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                        "access plus 1 hour"
+  ExpiresByType text/html               "access plus 0 seconds"
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType image/webp              "access plus 1 year"
+  ExpiresByType image/avif              "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 1 year"
+  ExpiresByType image/png               "access plus 1 year"
+  ExpiresByType image/svg+xml           "access plus 1 month"
+  ExpiresByType font/woff2              "access plus 1 year"
+</IfModule>
+
+# --------------------------------------------------------------------------
+# Compression
+# --------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --------------------------------------------------------------------------
+# Upload limits for the application form (PHP)
+# --------------------------------------------------------------------------
+<IfModule mod_php.c>
+  php_value upload_max_filesize 8M
+  php_value post_max_size 10M
+</IfModule>
+
+AddDefaultCharset UTF-8
