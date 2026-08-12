@@ -1,0 +1,14 @@
+# Normalise line endings. The build output is deployed to a Linux/Apache host,
+# where CRLF in .htaccess or a PHP file can cause real problems.
+* text=auto eol=lf
+
+# Binary — never touch.
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.pdf   binary
