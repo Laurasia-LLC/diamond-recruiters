@@ -74,12 +74,16 @@ jobs:
       # this account. Add --delete only once the first deploy is verified.
       # Its absence is also why api/config.php on the server is safe: mirror
       # only ever uploads what exists locally, and that file does not.
+      # FTP_REMOTE_DIR is deliberately NOT used. Whether '/' means the domain
+      # folder or the shared webspace root depends on how the FTP user was
+      # created in KAS, that is invisible from here, and guessing it wrong is
+      # what left the site empty through five runs. The target is detected
+      # below instead, so the deploy cannot be broken by that setting again.
       - name: Deploy to all-inkl over FTPS
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
         run: |
           set -euo pipefail
           sudo apt-get update -qq
@@ -91,16 +95,32 @@ jobs:
           # hostname — an unverified cert here was a likely part of the reset.
           SETTINGS='set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; set ftp:passive-mode true; set net:max-retries 3; set net:timeout 30;'
 
-          echo "::group::Which directory does this FTP account land in?"
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS pwd; ls; bye"
+          lftp_do() {
+            lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS $1 bye"
+          }
+
+          echo "::group::Where this account lands"
+          LANDING="$(lftp_do 'cls -1;')"
+          printf '%s\n' "$LANDING"
           echo "::endgroup::"
 
-          echo "::group::Mirror dist/ to '$FTP_REMOTE_DIR'"
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS mirror --reverse --verbose --parallel=4 ./dist/ '$FTP_REMOTE_DIR'; bye"
+          # A user restricted to the domain folder lands INSIDE it and therefore
+          # cannot see a 'diamond-recruiters.com' entry. A user rooted at the
+          # shared webspace can. That difference is what picks the target.
+          if printf '%s\n' "$LANDING" | grep -q 'diamond-recruiters\.com'; then
+            TARGET='/diamond-recruiters.com/'
+            echo "Account is rooted at the shared webspace -> uploading to $TARGET"
+          else
+            TARGET='/'
+            echo "Account is restricted to the domain folder -> uploading to $TARGET"
+          fi
+
+          echo "::group::Mirror dist/ to $TARGET"
+          lftp_do "mirror --reverse --verbose --parallel=4 ./dist/ '$TARGET';"
           echo "::endgroup::"
 
-          echo "::group::What is on the server now?"
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS ls '$FTP_REMOTE_DIR'; bye"
+          echo "::group::Result"
+          lftp_do "cls -l '$TARGET';"
           echo "::endgroup::"
 
       # Remembers which postings have already been pushed, so unchanged roles
