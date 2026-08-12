@@ -62,31 +62,46 @@ jobs:
         run: npm run check:placeholders
         continue-on-error: true
 
-      # v4.3.5 targets Node 20, which GitHub now force-runs on Node 24. That
-      # mismatch surfaced as "read ECONNRESET (data socket)" — the TLS data
-      # channel dying mid-transfer, not an authentication failure. v4.4.0 is the
-      # release that moved to Node 24. Do not pin back without re-testing.
+      # FTP-Deploy-Action died with "read ECONNRESET (data socket)" on both
+      # v4.3.5 and v4.4.0 — its TLS data channel does not survive against this
+      # server, and it never printed where it was writing. lftp brings its own
+      # TLS and retry handling, and the `pwd; ls` below makes the one thing we
+      # could not see explicit: which directory this account actually lands in.
+      #
+      # NOTE: deliberately no --delete on the mirror. FTP_REMOTE_DIR is '/', and
+      # until a green run proves that resolves to the domain folder rather than
+      # the shared webspace root, a delete could wipe the other 14 domains on
+      # this account. Add --delete only once the first deploy is verified.
+      # Its absence is also why api/config.php on the server is safe: mirror
+      # only ever uploads what exists locally, and that file does not.
       - name: Deploy to all-inkl over FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          # Shared hosting is slower than the 30s default under a first upload
-          # of several hundred image derivatives.
-          timeout: 60000
-          # Until the first deploy actually succeeds, we want the full trace.
-          log-level: verbose
-          # Never touch the live mail credentials or anything uploaded outside
-          # the build.
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            api/config.php
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+
+          # ssl-force keeps the whole session encrypted, control and data.
+          # Certificate verification is off because shared-hosting FTPS
+          # certificates are issued for the platform, not for this account's
+          # hostname — an unverified cert here was a likely part of the reset.
+          SETTINGS='set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; set ftp:passive-mode true; set net:max-retries 3; set net:timeout 30;'
+
+          echo "::group::Which directory does this FTP account land in?"
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS pwd; ls; bye"
+          echo "::endgroup::"
+
+          echo "::group::Mirror dist/ to '$FTP_REMOTE_DIR'"
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS mirror --reverse --verbose --parallel=4 ./dist/ '$FTP_REMOTE_DIR'; bye"
+          echo "::endgroup::"
+
+          echo "::group::What is on the server now?"
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS ls '$FTP_REMOTE_DIR'; bye"
+          echo "::endgroup::"
 
       # Remembers which postings have already been pushed, so unchanged roles
       # do not burn the 200/day Indexing API quota on every run.
