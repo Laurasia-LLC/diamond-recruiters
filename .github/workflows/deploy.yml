@@ -100,28 +100,39 @@ jobs:
           }
 
           echo "::group::Where this account lands"
-          LANDING="$(lftp_do 'cls -1;')"
-          printf '%s\n' "$LANDING"
+          lftp_do 'pwd; cls -1;' || echo "(listing failed)"
           echo "::endgroup::"
 
-          # A user restricted to the domain folder lands INSIDE it and therefore
-          # cannot see a 'diamond-recruiters.com' entry. A user rooted at the
-          # shared webspace can. That difference is what picks the target.
-          if printf '%s\n' "$LANDING" | grep -q 'diamond-recruiters\.com'; then
-            TARGET='/diamond-recruiters.com/'
-            echo "Account is rooted at the shared webspace -> uploading to $TARGET"
-          else
-            TARGET='/'
-            echo "Account is restricted to the domain folder -> uploading to $TARGET"
+          # Detection was tried and the site stayed empty, so stop inferring.
+          # Exactly one of these is the document root of diamond-recruiters.com;
+          # which one depends on how the FTP user was created in KAS, and that is
+          # not observable from here. Writing to both is guaranteed to hit it.
+          # The loser gets a harmless duplicate that is deleted afterwards — an
+          # unreachable copy costs a cleanup, another blind guess costs a day.
+          #
+          # Each attempt is tolerated so one failure cannot mask the other, and
+          # so the diagnostics below always print.
+          UPLOADED=0
+          for TARGET in '/diamond-recruiters.com/' '/'; do
+            echo "::group::Mirror dist/ -> $TARGET"
+            if lftp_do "mirror --reverse --verbose --parallel=4 ./dist/ '$TARGET';"; then
+              echo "OK: mirrored to $TARGET"
+              UPLOADED=$((UPLOADED + 1))
+            else
+              echo "NOT WRITABLE: $TARGET (expected for whichever path does not exist)"
+            fi
+            echo "::endgroup::"
+          done
+
+          echo "::group::What is on the server now"
+          lftp_do "cls -l '/';" || true
+          lftp_do "cls -l '/diamond-recruiters.com/';" || true
+          echo "::endgroup::"
+
+          if [ "$UPLOADED" -eq 0 ]; then
+            echo "Both candidate targets failed — this is a transfer or permission problem, not a path one."
+            exit 1
           fi
-
-          echo "::group::Mirror dist/ to $TARGET"
-          lftp_do "mirror --reverse --verbose --parallel=4 ./dist/ '$TARGET';"
-          echo "::endgroup::"
-
-          echo "::group::Result"
-          lftp_do "cls -l '$TARGET';"
-          echo "::endgroup::"
 
       # Remembers which postings have already been pushed, so unchanged roles
       # do not burn the 200/day Indexing API quota on every run.
