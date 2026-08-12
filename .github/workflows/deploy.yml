@@ -23,6 +23,14 @@ jobs:
     name: Build, validate and publish
     runs-on: ubuntu-latest
 
+    # GitHub does NOT allow the `secrets` context inside a step-level `if:`.
+    # Resolving it once here — where secrets ARE permitted — gives both Indexing
+    # API steps something legal to test. Referencing secrets directly in an `if:`
+    # is not a runtime error but a parse error, so it fails the ENTIRE workflow
+    # before any step runs, which reads as a deploy failure with no deploy log.
+    env:
+      HAS_INDEXING_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '' }}
+
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -80,13 +88,11 @@ jobs:
           path: .cache
           key: indexing-state-${{ github.run_id }}
           restore-keys: indexing-state-
-        env:
-          HAS_INDEXING_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '' }}
 
       # Pushes new and newly-closed roles straight to Google rather than
       # waiting for a sitemap crawl. Skipped silently until the secret is set.
       - name: Notify Google Indexing API
-        if: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '' }}
+        if: env.HAS_INDEXING_KEY == 'true'
         run: npm run notify:google
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
