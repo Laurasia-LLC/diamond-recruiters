@@ -12,6 +12,13 @@ Options -Indexes
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Let's Encrypt validates by fetching a file over PLAIN HTTP. Redirecting that
+  # to HTTPS breaks issuance on a domain that has no certificate yet — and, far
+  # worse, breaks unattended renewal every 60 days once the site is live, which
+  # surfaces as the whole site going down behind an expired-certificate warning.
+  # Excluded before the HTTPS rule so it can never be caught by it.
+  RewriteRule ^\.well-known/acme-challenge/ - [L]
+
   # Force HTTPS.
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
