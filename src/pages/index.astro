@@ -6,13 +6,14 @@ import Button from '../components/Button.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import JobCard from '../components/JobCard.astro';
 import CTABand from '../components/CTABand.astro';
+import { isLive } from '../lib/jobStatus';
 import { SITE, SECTORS, STATS } from '../consts';
 
 import heroImage from '../assets/hero-automation-line.jpg';
 import employersImage from '../assets/employers-handshake.jpg';
 import candidatesImage from '../assets/candidates-plant-floor.jpg';
 
-const jobs = (await getCollection('jobs', ({ data }) => !data.draft)).sort(
+const jobs = (await getCollection('jobs', ({ data }) => isLive(data))).sort(
   (a, b) => a.data.order - b.data.order
 );
 const featured = jobs.filter((j) => j.data.featured).slice(0, 2);
@@ -68,8 +69,10 @@ const process = [
       aria-hidden="true"
     >
     </div>
+    <!-- Kept shallower than the section's bottom padding so hero text never
+         sits inside the fade and lose contrast. -->
     <div
-      class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-linear-to-t from-sand-50 to-transparent"
+      class="absolute inset-x-0 bottom-0 -z-10 h-20 bg-linear-to-t from-sand-50 to-transparent lg:h-28"
       aria-hidden="true"
     >
     </div>
@@ -81,7 +84,7 @@ const process = [
         <h1
           class="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
         >
-          The sales engineers who can read a plant floor
+          The sales engineers who can read a plant floor{' '}
           <span class="text-ice-400">— and close the fix.</span>
         </h1>
 
@@ -96,7 +99,7 @@ const process = [
             Hire a sales engineer
           </Button>
           <Button
-            href="/open-roles"
+            href="/jobs"
             size="lg"
             class="bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm hover:bg-white/20 hover:ring-white/40"
           >
@@ -221,7 +224,7 @@ const process = [
           lead="Live searches we are running right now. Salary and travel are stated up front on every one."
           class="mb-0"
         />
-        <Button href="/open-roles" variant="secondary">All open roles</Button>
+        <Button href="/jobs" variant="secondary">All open roles</Button>
       </div>
 
       <div class="mt-14 grid gap-7 lg:grid-cols-2">
@@ -363,7 +366,7 @@ const process = [
     lead="Either conversation starts the same way — a short call, straight answers, no obligation on you. We reply to every message within one business day."
     primaryHref="/for-employers#brief"
     primaryLabel="Brief us on a role"
-    secondaryHref="/open-roles"
+    secondaryHref="/jobs"
     secondaryLabel="Browse open roles"
   />
 </BaseLayout>

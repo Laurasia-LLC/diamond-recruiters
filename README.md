@@ -35,8 +35,10 @@ npm run dev          # http://localhost:4321
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the built site locally |
 | `npm run check` | TypeScript + Astro diagnostics |
+| `npm run validate:schema` | **Validates JobPosting JSON-LD against Google's rules** |
 | `npm run check:placeholders` | **Lists every fake value still in the build** |
-| `npm run prelaunch` | Build, then run the placeholder check |
+| `npm run notify:google` | Push new/closed roles to the Google Indexing API |
+| `npm run prelaunch` | Build, validate schema, then check placeholders |
 | `npm run assets` | Regenerate favicon, OG card and app icons |
 
 The PHP forms do not run under `npm run dev` — Astro's dev server does not execute PHP. To
@@ -60,23 +62,44 @@ value is marked `PLACEHOLDER` or written as obviously-unreal digits (`000+`, `XX
 ### Adding a role
 
 Create a markdown file in `src/content/jobs/`. The filename becomes the URL:
-`sales-engineer-motion-control.md` → `/open-roles/sales-engineer-motion-control`.
+`sales-engineer-motion-control.md` → `/jobs/sales-engineer-motion-control`.
 
 Copy an existing role as a template. The frontmatter is schema-validated, so a typo or a
 missing field fails the build rather than shipping broken. Every new role automatically gets:
 
 - a card on the homepage (if `featured: true`) and the roles listing
-- a detail page with an application form
-- an entry in `sitemap-index.xml`
+- a detail page with an application form and a mobile apply bar
+- an entry in `sitemap-index.xml`, stamped with `lastmod`
 - **schema.org JobPosting structured data**, making it eligible for the Google Jobs box
+- a push to the Google Indexing API on the next deploy
 
 Set `draft: true` to keep a role out of the build entirely.
 
-### Closing a role
+### The posting lifecycle
 
-Either delete the file, or set `draft: true`. Note that `validThrough` in the frontmatter is
-what tells Google when to stop showing the posting — roles are currently set to expire
-**10 November 2026**. Extend that date if a search is still running.
+`validThrough` is **derived, not written by hand**: it is `datePosted + 45 days`
+(`VALID_DAYS` in `src/lib/jobStatus.ts`). Google wants a 30–45 day window and treats stale
+postings as a quality signal against the **whole domain**, not just the one listing.
+
+| You want to… | Do this |
+|---|---|
+| Re-post / extend a role | Bump `datePosted`. `validThrough` follows automatically. |
+| Close a role now | Set `status: filled` or `status: closed` |
+| Pin a hard end date | Set `validThrough` explicitly (overrides the 45-day default) |
+| Hide it completely | Set `draft: true` |
+
+When a role expires or is closed, the next build automatically:
+
+- **strips the JobPosting schema** from the page
+- adds `noindex, follow`
+- removes it from the roles listing, the homepage and the sitemap
+- keeps the URL alive with a "this search has closed" notice, so inbound links and
+  anything already shared do not 404
+- sends `URL_DELETED` to the Indexing API so Google drops it promptly
+
+**This is why the deploy workflow runs on a daily cron.** `validThrough` is evaluated at
+build time, so a rebuild is what actually retires a posting. Without the scheduled run, a
+closed role would keep serving live schema until someone happened to push a commit.
 
 ### Changing images
 
@@ -140,8 +163,81 @@ the FTP account root — getting this wrong publishes the site into a subfolder.
 - [ ] Submit a test application and confirm it arrives with the resume attached
 - [ ] Submit an employer brief and confirm it arrives
 - [ ] Check `https://diamond-recruiters.com/robots.txt` and `/sitemap-index.xml` resolve
-- [ ] Run both role pages through the [Rich Results Test](https://search.google.com/test/rich-results) — they should report a valid **JobPosting**
-- [ ] Submit the sitemap in Google Search Console
+
+---
+
+## Google for Jobs
+
+The site is built to be eligible for the Google Jobs box. Eligibility is not the same as
+ranking: valid markup gets you into the auction, domain authority decides where you land.
+On a new domain expect weeks to index and months before meaningful traffic. The niche helps
+— nobody is fighting hard for *"control valve sales engineer Houston"*.
+
+### What is already done
+
+- One dedicated, static, crawlable URL per role at `/jobs/<slug>` — no JS-rendered content
+- Self-referencing canonical on every page
+- Full JobPosting JSON-LD: `title`, `description` (as HTML), `datePosted`, `validThrough`,
+  `hiringOrganization`, `jobLocation`, plus `baseSalary`, `employmentType`, `identifier`,
+  `directApply` and `url`
+- `jobLocationType: TELECOMMUTE` is emitted **only** for roles flagged `remote: true`, and
+  never alongside `jobLocation` — combining them is a documented error. Set `remote: true`
+  in frontmatter and the schema switches form automatically.
+- `applicantLocationRequirements` appears only on remote roles, where it is meaningful
+- Automatic expiry, enforced daily by the scheduled build (see "The posting lifecycle")
+- `npm run validate:schema` blocks the deploy on any malformed posting
+
+### Setup you still need to do
+
+**1. Search Console — do this before the first role goes live.**
+
+Add `diamond-recruiters.com` as a **Domain property** (not a URL-prefix property) and verify
+by DNS TXT record in the all-inkl KAS DNS editor. Domain properties cover every subdomain
+and both protocols, which saves pain later.
+
+If you prefer HTML-file verification, drop the `google*.html` file Google gives you into
+`public/` — anything in there is copied to the web root on deploy.
+
+Then submit `https://diamond-recruiters.com/sitemap-index.xml` once. There is nothing to
+re-submit afterwards: **Google retired the sitemap ping endpoint in 2023.** Search Console
+re-reads a submitted sitemap on its own schedule, and the Indexing API below is the way to
+request fast crawling.
+
+**2. Indexing API — optional but high value.**
+
+`JobPosting` is one of only two schema types the Indexing API accepts. It takes a new role
+from published to crawled in minutes instead of days, and tells Google to drop a closed role
+promptly.
+
+1. Google Cloud console → new project → enable **Indexing API**
+2. Create a service account and generate a JSON key
+3. Search Console → your property → **Settings → Users and permissions** → add the service
+   account's `client_email` as an **Owner**. Skipping this gives 403 on every call.
+4. Add the entire JSON key as the `GOOGLE_SERVICE_ACCOUNT_JSON` repository secret
+
+Test it without sending anything:
+
+```bash
+npm run notify:google -- --dry-run
+```
+
+Once the secret is set the deploy workflow calls it automatically, and only for roles whose
+posting date or status actually changed — unchanged roles do not burn the 200/day quota.
+
+**3. Validate on the live URLs.**
+
+`npm run validate:schema` checks everything Google's own test would, but it cannot see your
+live site. After the first deploy, run both role URLs through the
+[Rich Results Test](https://search.google.com/test/rich-results) once. Re-run it whenever
+`src/lib/jobSchema.ts` changes.
+
+### Where the traffic actually comes from
+
+Worth knowing: **LinkedIn does not syndicate to Google for Jobs**, and **Indeed withdrew in
+2019**. The advice that you get Google for Jobs "for free" by posting to LinkedIn is wrong.
+Boards that do feed it include ZipRecruiter, Glassdoor, Monster and most ATS platforms. Your
+own site emitting valid schema is the most direct route you have, which is exactly what this
+build gives you.
 
 ---
 

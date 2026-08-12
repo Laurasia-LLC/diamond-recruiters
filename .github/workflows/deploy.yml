@@ -1,8 +1,17 @@
-name: Build and deploy to all-inkl
+name: Build and deploy
 
 on:
   push:
     branches: [main]
+
+  # Daily rebuild. The site is static, but validThrough is evaluated at BUILD
+  # time — so a rebuild is what actually retires an expired posting: it strips
+  # the JobPosting schema, adds noindex and drops the role from the sitemap.
+  # Without this, a role would sit in Google's feed with stale schema long
+  # after it closed, which damages trust in the whole domain's postings.
+  schedule:
+    - cron: '17 6 * * *' # 06:17 UTC daily
+
   workflow_dispatch:
 
 concurrency:
@@ -11,7 +20,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Build and publish
+    name: Build, validate and publish
     runs-on: ubuntu-latest
 
     steps:
@@ -33,9 +42,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Warns but does not block, so you can ship a staging pass while the
-      # real company details are still being gathered. Flip to a hard failure
-      # (remove `continue-on-error`) once the site is live for good.
+      # Hard gate. A malformed JobPosting is worse than no JobPosting, because
+      # Google judges the domain's whole feed on it.
+      - name: Validate JobPosting structured data
+        run: npm run validate:schema
+
+      # Warns rather than blocks, so a staging deploy is still possible while
+      # the real company details are being gathered. Remove continue-on-error
+      # once the site is live for good.
       - name: Check for placeholder content
         run: npm run check:placeholders
         continue-on-error: true
@@ -49,10 +63,31 @@ jobs:
           protocol: ftps
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          # Never touch the live mail credentials or anything uploaded
-          # outside the build.
+          # Never touch the live mail credentials or anything uploaded outside
+          # the build.
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             api/config.php
+
+      # Remembers which postings have already been pushed, so unchanged roles
+      # do not burn the 200/day Indexing API quota on every run.
+      - name: Restore Indexing API state
+        if: env.HAS_INDEXING_KEY == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: indexing-state-${{ github.run_id }}
+          restore-keys: indexing-state-
+        env:
+          HAS_INDEXING_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '' }}
+
+      # Pushes new and newly-closed roles straight to Google rather than
+      # waiting for a sitemap crawl. Skipped silently until the secret is set.
+      - name: Notify Google Indexing API
+        if: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '' }}
+        run: npm run notify:google
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          SITE_URL: https://diamond-recruiters.com

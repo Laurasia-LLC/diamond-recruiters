@@ -115,7 +115,7 @@ export const SECTORS = [
 ] as const;
 
 export const NAV_LINKS = [
-  { href: '/open-roles', label: 'Open Roles' },
+  { href: '/jobs', label: 'Open Roles' },
   { href: '/for-employers', label: 'For Employers' },
   { href: '/for-candidates', label: 'For Candidates' },
   { href: '/about', label: 'About' },

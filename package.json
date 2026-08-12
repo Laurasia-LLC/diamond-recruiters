@@ -12,7 +12,9 @@
     "assets": "node scripts/generate-assets.mjs",
     "check": "astro check",
     "check:placeholders": "node scripts/check-placeholders.mjs",
-    "prelaunch": "npm run build && npm run check:placeholders",
+    "validate:schema": "node scripts/validate-jobposting.mjs",
+    "notify:google": "node scripts/notify-indexing.mjs",
+    "prelaunch": "npm run build && npm run validate:schema && npm run check:placeholders",
     "astro": "astro"
   },
   "dependencies": {
@@ -22,6 +24,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.1",
+    "gray-matter": "^4.0.3",
     "marked": "^18.0.9",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.3",

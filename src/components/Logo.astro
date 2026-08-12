@@ -24,7 +24,7 @@ const subColor = tone === 'light' ? 'text-ink-200' : 'text-ink-500';
     <!-- Brilliant-cut silhouette: crown filled, pavilion drawn in facets. -->
     <path d="M16 2.5 L29.5 12.5 L16 29.5 L2.5 12.5 Z" class="fill-ice-500/15" />
     <path d="M8.4 6.6 H23.6 L29.5 12.5 H2.5 Z" class="fill-ice-500" />
-    <g class="stroke-ink-900" stroke-width="1.15" stroke-linejoin="round">
+    <g class="dr-logo-stroke stroke-ink-900" stroke-width="1.15" stroke-linejoin="round">
       <path d="M16 2.5 L29.5 12.5 L16 29.5 L2.5 12.5 Z" />
       <path d="M2.5 12.5 H29.5" />
       <path d="M16 2.5 L10.6 12.5 L16 29.5" />
@@ -35,10 +35,12 @@ const subColor = tone === 'light' ? 'text-ink-200' : 'text-ink-500';
   {
     withWordmark && (
       <span class="flex flex-col leading-none">
-        <span class={`font-display text-[1.02rem] font-semibold tracking-tight ${wordColor}`}>
+        <span
+          class={`dr-logo-word font-display text-[1.02rem] font-semibold tracking-tight ${wordColor}`}
+        >
           Diamond Recruiters
         </span>
-        <span class={`eyebrow mt-1 ${subColor}`}>Technical Sales Search</span>
+        <span class={`dr-logo-sub eyebrow mt-1 ${subColor}`}>Technical Sales Search</span>
       </span>
     )
   }

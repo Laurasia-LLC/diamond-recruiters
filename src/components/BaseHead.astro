@@ -60,7 +60,8 @@ const orgSchema = {
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{/* "follow" so a closed role still passes link equity to the live ones. */}
+{noindex && <meta name="robots" content="noindex, follow" />}
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

@@ -46,9 +46,27 @@ const jobs = defineCollection({
       heroImage: image(),
       heroAlt: z.string(),
 
+      /** Bump this to re-post a role; validThrough follows automatically. */
       datePosted: z.coerce.date(),
-      /** Google de-lists postings with no validThrough after ~30 days. */
-      validThrough: z.coerce.date(),
+      /**
+       * Optional. Defaults to datePosted + VALID_DAYS (see lib/jobStatus.ts).
+       * Only set this when a search has a genuinely fixed end date.
+       */
+      validThrough: z.coerce.date().optional(),
+
+      /**
+       * 'open' is live. Anything else strips the JobPosting schema, adds
+       * noindex, drops the role from listings and the sitemap, and shows a
+       * closed notice — without breaking inbound links to the URL.
+       */
+      status: z.enum(['open', 'filled', 'closed']).default('open'),
+
+      /**
+       * True only for genuinely remote roles. Google forbids combining
+       * jobLocationType with jobLocation, so this switches the schema between
+       * the two forms — see lib/jobSchema.ts.
+       */
+      remote: z.boolean().default(false),
 
       featured: z.boolean().default(false),
       /** Lower sorts first on the listing page. */

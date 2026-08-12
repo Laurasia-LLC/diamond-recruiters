@@ -37,7 +37,9 @@ heroImage: '../../assets/job-process-instrumentation.jpg'
 heroAlt: 'Refinery distillation columns and red-and-white stacks against a clear blue sky'
 
 datePosted: 2026-08-12
-validThrough: 2026-11-10
+# validThrough is derived: datePosted + 45 days. Bump datePosted to re-post.
+status: open
+remote: false
 
 featured: true
 order: 2

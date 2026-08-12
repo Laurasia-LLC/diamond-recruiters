@@ -4,14 +4,14 @@ import Button from '../components/Button.astro';
 import { CONTACT } from '../consts';
 
 const links = [
-  { href: '/open-roles', label: 'Open roles', detail: 'Every search we are running right now' },
+  { href: '/jobs', label: 'Open roles', detail: 'Every search we are running right now' },
   { href: '/for-employers', label: 'For employers', detail: 'How we run a search, and how to brief one' },
   { href: '/for-candidates', label: 'For candidates', detail: 'What working with us looks like' },
   { href: '/contact', label: 'Contact', detail: 'Reach a person directly' },
 ];
 ---
 
-<BaseLayout title="Page not found" noindex={true}>
+<BaseLayout title="Page not found" noindex={true} headerOverDark={false}>
   <section class="mx-auto max-w-3xl px-5 py-24 lg:px-8 lg:py-32">
     <p class="eyebrow text-ice-600">Error 404</p>
     <h1 class="mt-4 text-4xl leading-tight sm:text-5xl">This page is not here.</h1>
@@ -21,7 +21,7 @@ const links = [
     </p>
 
     <div class="mt-10">
-      <Button href="/open-roles" size="lg">See open roles</Button>
+      <Button href="/jobs" size="lg">See open roles</Button>
     </div>
 
     <ul class="mt-14 divide-y divide-ink-100 border-y border-ink-100">

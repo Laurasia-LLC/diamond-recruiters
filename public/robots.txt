@@ -3,4 +3,8 @@ Allow: /
 Disallow: /thank-you
 Disallow: /api/
 
+# Job pages must stay crawlable for Google for Jobs. Closed roles are
+# de-listed with a noindex meta tag on the page itself, not blocked here —
+# blocking them in robots.txt would stop Google seeing the noindex at all.
+
 Sitemap: https://diamond-recruiters.com/sitemap-index.xml

@@ -9,9 +9,21 @@ interface Props {
   image?: string;
   noindex?: boolean;
   schema?: Record<string, unknown> | null;
+  /**
+   * Set false on pages that open on a light background, so the header renders
+   * dark type instead of light. Most pages open with a dark hero.
+   */
+  headerOverDark?: boolean;
 }
 
-const { title, description, image, noindex, schema } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  noindex,
+  schema,
+  headerOverDark = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -33,7 +45,7 @@ const { title, description, image, noindex, schema } = Astro.props;
       Skip to content
     </a>
 
-    <Header />
+    <Header overDark={headerOverDark} />
 
     <main id="main" class="flex-1">
       <slot />

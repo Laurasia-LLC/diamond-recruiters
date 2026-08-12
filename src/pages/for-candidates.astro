@@ -5,9 +5,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ApplicationForm from '../components/ApplicationForm.astro';
 import JobCard from '../components/JobCard.astro';
+import { isLive } from '../lib/jobStatus';
 import heroImage from '../assets/candidates-plant-floor.jpg';
 
-const jobs = (await getCollection('jobs', ({ data }) => !data.draft)).sort(
+const jobs = (await getCollection('jobs', ({ data }) => isLive(data))).sort(
   (a, b) => a.data.order - b.data.order
 );
 
@@ -90,7 +91,7 @@ const faqs = [
       </p>
       <div class="mt-10 flex flex-col gap-3 sm:flex-row">
         <a
-          href="/open-roles"
+          href="/jobs"
           class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
         >
           See open roles ({jobs.length})
@@ -164,7 +165,7 @@ const faqs = [
         <div class="flex flex-wrap items-end justify-between gap-4">
           <SectionHeading eyebrow="Live now" title="Open roles" class="mb-0" />
           <a
-            href="/open-roles"
+            href="/jobs"
             class="text-sm font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
           >
             View all
