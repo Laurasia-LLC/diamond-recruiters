@@ -55,8 +55,15 @@ export const LEGAL = {
   entityName: 'Talent Scope Group LLC',
   entityType: 'Limited Liability Company',
   stateOfIncorporation: 'Wyoming',
-  responsibleParty: 'PLACEHOLDER Full Name',
-  responsibleTitle: 'Managing Partner',
+  /**
+   * The entity itself, by the owner's decision. Note that a German or EU
+   * Impressum (§18 MStV) requires a NATURAL PERSON here, not a company — so if
+   * this site is ever marketed into the EU, put a name back and set the title
+   * below. The imprint drops the title automatically while it is empty, which
+   * is what keeps "Talent Scope Group LLC, Managing Partner" off the page.
+   */
+  responsibleParty: 'Talent Scope Group LLC',
+  responsibleTitle: '',
   /** Used in the privacy policy's "last updated" line. */
   policyLastUpdated: 'August 12, 2026',
 } as const;

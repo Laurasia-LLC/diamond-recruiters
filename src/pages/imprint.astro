@@ -3,6 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, CONTACT, LEGAL } from '../consts';
 
 const addr = CONTACT.address;
+
+/** Title is optional: an entity named as responsible party has no job title. */
+const responsible: string = LEGAL.responsibleTitle
+  ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
+  : LEGAL.responsibleParty;
 ---
 
 <BaseLayout
@@ -51,7 +56,7 @@ const addr = CONTACT.address;
 
       <h2>Responsible for content</h2>
       <p>
-        {LEGAL.responsibleParty}, {LEGAL.responsibleTitle}<br />
+        {responsible}<br />
         At the address above.
       </p>
 
