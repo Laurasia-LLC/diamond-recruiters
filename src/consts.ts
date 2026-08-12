@@ -21,38 +21,40 @@ export const CONTACT = {
   /** Real, and printed in both job ads. Applications land here. */
   applications: 'apply@diamond-recruiters.com',
 
-  /** PLACEHOLDER — create this mailbox in all-inkl KAS, or change it to apply@. */
+  /**
+   * Delivered by the catch-all on @diamond-recruiters.com, which forwards to
+   * ph@skytz-consulting.com. No dedicated mailbox is required for this to work.
+   */
   general: 'hello@diamond-recruiters.com',
 
-  /** PLACEHOLDER — replace with the real number, or delete and I'll drop phone UI. */
-  phone: '+1 (000) 000-0000',
-  phoneHref: 'tel:+10000000000',
+  /** Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation. */
+  phone: '+1 (307) 429-0181',
+  phoneHref: 'tel:+13074290181',
 
-  /** PLACEHOLDER — replace with the registered business address. */
+  /** Registered address of the entity in Wyoming. */
   address: {
-    line1: '000 PLACEHOLDER Street, Suite 000',
-    city: 'PLACEHOLDER City',
-    region: 'ST',
-    postalCode: '00000',
+    line1: '1309 Coffeen Avenue, STE 1200',
+    city: 'Sheridan',
+    region: 'WY',
+    postalCode: '82801',
     country: 'US',
     countryName: 'United States',
   },
 
-  /** PLACEHOLDER — remove any line you don't have; the footer hides empty ones. */
+  /** Empty entries are hidden rather than rendered as dead links. */
   social: {
-    linkedin: 'https://www.linkedin.com/company/PLACEHOLDER',
+    linkedin: '',
   },
 } as const;
 
 /**
- * PLACEHOLDER — legal identity for the Imprint and Privacy pages.
- * A US entity: exact registered name, state of incorporation, and the
- * person accountable for the site's content.
+ * Legal identity for the Imprint and Privacy pages. Diamond Recruiters is the
+ * trading name; Talent Scope Group LLC is the entity behind it.
  */
 export const LEGAL = {
-  entityName: 'PLACEHOLDER Diamond Recruiters LLC',
+  entityName: 'Talent Scope Group LLC',
   entityType: 'Limited Liability Company',
-  stateOfIncorporation: 'PLACEHOLDER State',
+  stateOfIncorporation: 'Wyoming',
   responsibleParty: 'PLACEHOLDER Full Name',
   responsibleTitle: 'Managing Partner',
   /** Used in the privacy policy's "last updated" line. */
@@ -60,29 +62,34 @@ export const LEGAL = {
 } as const;
 
 /**
- * PLACEHOLDER STATS — every number below is fake and must be replaced or removed.
- * They are rendered in an obviously-unreal form so they cannot pass a glance.
+ * What the firm commits to, in place of a metrics band. Deliberately non-numeric:
+ * a new firm quoting placement counts and retention percentages invites the one
+ * question it cannot answer. Each line below is a claim a client can hold us to
+ * on the first engagement, which is worth more than a statistic they cannot check.
+ *
+ * If real figures ever exist, they belong here as a fifth item or a replacement —
+ * not as decoration.
  */
-export const STATS = [
+export const PROOF = [
   {
-    value: '000+',
-    label: 'Placements made',
-    detail: 'Sales engineers and technical sales leaders placed since inception.',
+    title: 'One market, not all of them',
+    detail:
+      'Automation, process instrumentation and flow control. A generalist agency has to be told what a control valve is before it can find someone who sells them.',
   },
   {
-    value: 'XX',
-    label: 'Years in the field',
-    detail: 'Recruiting exclusively inside industrial and process manufacturing.',
+    title: 'The map before the approach',
+    detail:
+      'You see the named companies and people we intend to approach before we contact anyone. The search is grounded in your market, not a job board.',
   },
   {
-    value: '00',
-    label: 'Days to shortlist',
-    detail: 'Median time from kickoff call to a qualified slate in front of you.',
+    title: 'Pay ranges in the open',
+    detail:
+      'Every role we publish carries a base and OTE range. Candidates self-select honestly, and nobody reaches final stage to discover the band was never close.',
   },
   {
-    value: '00%',
-    label: 'Retention at 12 months',
-    detail: 'Placed candidates still in seat one year after their start date.',
+    title: 'Ninety days, not thirty',
+    detail:
+      'We stay in contact with both sides through the first ninety days. That is when a placement either sets or quietly comes apart.',
   },
 ] as const;
 

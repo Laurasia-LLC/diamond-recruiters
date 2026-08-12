@@ -5,9 +5,7 @@ import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 
 /** Hide social links until they hold a real URL — a broken link reads worse than none. */
-const linkedin = CONTACT.social.linkedin.includes('PLACEHOLDER')
-  ? null
-  : CONTACT.social.linkedin;
+const linkedin: string | null = CONTACT.social.linkedin || null;
 
 const columns = [
   {

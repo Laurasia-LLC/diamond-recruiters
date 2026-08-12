@@ -119,21 +119,30 @@ npm run prelaunch
 
 It must print **"No placeholders found"**. Until then the site contains invented figures.
 
-Still outstanding at handover:
+Still outstanding:
 
-- [ ] Legal entity name, type, state of incorporation (`LEGAL`)
-- [ ] Person responsible for site content (`LEGAL.responsibleParty`)
-- [ ] Business postal address (`CONTACT.address`)
-- [ ] Phone number (`CONTACT.phone` **and** `CONTACT.phoneHref`)
-- [ ] Real figures for the four stats, or delete the `STATS` array to remove the block
-- [ ] LinkedIn URL, or leave it — the footer hides the link while it says `PLACEHOLDER`
+- [ ] Person responsible for site content (`LEGAL.responsibleParty`) — **the last placeholder
+      in the build**
+- [ ] LinkedIn URL, if one is ever created — set `CONTACT.social.linkedin` and the footer link
+      appears on its own. Empty is fine; the footer hides it.
 - [ ] Have an attorney review `/privacy` and `/imprint`
+
+Done:
+
+- [x] Legal entity — Talent Scope Group LLC, a Wyoming LLC (`LEGAL`)
+- [x] Registered address, Sheridan WY (`CONTACT.address`)
+- [x] Phone number (`CONTACT.phone` / `CONTACT.phoneHref`)
+- [x] The invented stats band is gone. It was replaced with `PROOF` — four commitments a
+      client can hold the firm to, rather than placement counts and retention percentages a
+      new firm cannot evidence. See the comment on `PROOF` in `src/consts.ts` before
+      reintroducing numbers.
 
 ### 2. Set up mail on all-inkl
 
 1. In KAS, confirm the mailbox **apply@diamond-recruiters.com** exists.
-2. Create **hello@diamond-recruiters.com** (used as the general contact address), or change
-   `CONTACT.general` in `src/consts.ts` to point at `apply@` instead.
+2. **hello@diamond-recruiters.com** needs no mailbox — a catch-all on the domain forwards
+   everything to `ph@skytz-consulting.com`. Keep that catch-all in place, or `hello@`, the
+   address printed on the contact, imprint, privacy and 404 pages, starts bouncing.
 3. Optional but recommended: copy `public/api/config.sample.php` to `api/config.php`
    **on the server** and fill in SMTP credentials. Without it the endpoints use PHP `mail()`,
    which works on all-inkl but is less reliable under load.

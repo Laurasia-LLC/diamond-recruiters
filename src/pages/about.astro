@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
-import { STATS, SECTORS } from '../consts';
+import { PROOF, SECTORS } from '../consts';
 import heroImage from '../assets/about-team-meeting.jpg';
 import gaugesImage from '../assets/accent-control-gauges.jpg';
 
@@ -60,21 +60,17 @@ const principles = [
     </div>
   </section>
 
-  <!-- ===================== STATS ===================== -->
+  <!-- ===================== PROOF ===================== -->
   <section class="border-b border-ink-100 bg-white">
     <div class="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-16">
       <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
         {
-          STATS.map((stat) => (
-            <div>
-              <dt class="sr-only">{stat.label}</dt>
-              <dd>
-                <span class="block font-display text-4xl font-semibold tracking-tight text-ink-950 lg:text-5xl">
-                  {stat.value}
-                </span>
-                <span class="mt-3 block text-sm font-medium text-ink-900">{stat.label}</span>
-                <span class="mt-1.5 block text-sm leading-relaxed text-ink-500">{stat.detail}</span>
-              </dd>
+          PROOF.map((item) => (
+            <div class="border-t-2 border-ice-600 pt-5">
+              <dt class="font-display text-lg font-semibold tracking-tight text-ink-950">
+                {item.title}
+              </dt>
+              <dd class="mt-2.5 text-sm leading-relaxed text-ink-500">{item.detail}</dd>
             </div>
           ))
         }
