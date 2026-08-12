@@ -99,40 +99,24 @@ jobs:
             lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "$SETTINGS $1 bye"
           }
 
-          echo "::group::Where this account lands"
-          lftp_do 'pwd; cls -1;' || echo "(listing failed)"
-          echo "::endgroup::"
-
-          # Detection was tried and the site stayed empty, so stop inferring.
-          # Exactly one of these is the document root of diamond-recruiters.com;
-          # which one depends on how the FTP user was created in KAS, and that is
-          # not observable from here. Writing to both is guaranteed to hit it.
-          # The loser gets a harmless duplicate that is deleted afterwards — an
-          # unreachable copy costs a cleanup, another blind guess costs a day.
+          # PROVEN by the first successful deploy: this FTP user is restricted to
+          # the document root of diamond-recruiters.com, so '/' IS the web root.
+          # FTP_REMOTE_DIR is not used — it was set to '/diamond-recruiters.com/',
+          # which put every upload in a nested folder inside the docroot while
+          # the docroot itself stayed empty and served 403. Hardcoded so that
+          # cannot recur.
           #
-          # Each attempt is tolerated so one failure cannot mask the other, and
-          # so the diagnostics below always print.
-          UPLOADED=0
-          for TARGET in '/diamond-recruiters.com/' '/'; do
-            echo "::group::Mirror dist/ -> $TARGET"
-            if lftp_do "mirror --reverse --verbose --parallel=4 ./dist/ '$TARGET';"; then
-              echo "OK: mirrored to $TARGET"
-              UPLOADED=$((UPLOADED + 1))
-            else
-              echo "NOT WRITABLE: $TARGET (expected for whichever path does not exist)"
-            fi
-            echo "::endgroup::"
-          done
-
-          echo "::group::What is on the server now"
-          lftp_do "cls -l '/';" || true
-          lftp_do "cls -l '/diamond-recruiters.com/';" || true
+          # --delete keeps the server matching the build, which the posting
+          # lifecycle depends on: a retired role must actually disappear, not
+          # linger with stale JobPosting schema. api/config.php is excluded, so
+          # the server-only mail credentials are never transferred OR deleted.
+          echo "::group::Mirror dist/ -> / (document root)"
+          lftp_do "mirror --reverse --delete --verbose --parallel=4 --exclude-glob config.php ./dist/ '/';"
           echo "::endgroup::"
 
-          if [ "$UPLOADED" -eq 0 ]; then
-            echo "Both candidate targets failed — this is a transfer or permission problem, not a path one."
-            exit 1
-          fi
+          echo "::group::Document root after deploy"
+          lftp_do "cls -l '/';"
+          echo "::endgroup::"
 
       # Remembers which postings have already been pushed, so unchanged roles
       # do not burn the 200/day Indexing API quota on every run.
