@@ -4,7 +4,7 @@ import { SITE, CONTACT, LEGAL } from '../consts';
 
 const addr = CONTACT.address;
 
-/** Title is optional: an entity named as responsible party has no job title. */
+/** Title is optional. When set, the page prints "Name, Title". */
 const responsible: string = LEGAL.responsibleTitle
   ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
   : LEGAL.responsibleParty;
@@ -24,27 +24,20 @@ const responsible: string = LEGAL.responsibleTitle
   </section>
 
   <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
-    <div
-      class="mb-12 rounded-2xl border border-copper-500/30 bg-copper-500/8 px-6 py-5 text-sm leading-relaxed text-ink-800"
-    >
-      <p class="font-medium text-copper-500">Before this page goes live</p>
-      <p class="mt-2">
-        Every identifier below is a placeholder. Replace them in
-        <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">src/consts.ts</code>.
-        A US entity has no §5 TMG obligation, but if any part of the business is operated
-        from Germany or the EU, this page becomes legally required and must name the
-        operating entity, a managing director and a register number.
-      </p>
-    </div>
-
     <div class="prose-dr text-ink-700">
       <h2>Site operator</h2>
       <p>
-        {LEGAL.entityName}<br />
-        {LEGAL.entityType}, organized in {LEGAL.stateOfIncorporation}<br />
+        {LEGAL.entityName}, a {LEGAL.stateOfIncorporation} {LEGAL.entityType}<br />
         {addr.line1}<br />
         {addr.city}, {addr.region} {addr.postalCode}<br />
         {addr.countryName}
+      </p>
+      <p>{SITE.name} is a trade name of {LEGAL.entityName}.</p>
+
+      <h2>Represented by</h2>
+      <p>
+        {responsible}<br />
+        At the address above.
       </p>
 
       <h2>Contact</h2>
@@ -52,12 +45,6 @@ const responsible: string = LEGAL.responsibleTitle
         Email: <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a><br />
         Applications: <a href={`mailto:${CONTACT.applications}`}>{CONTACT.applications}</a><br />
         Telephone: <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
-      </p>
-
-      <h2>Responsible for content</h2>
-      <p>
-        {responsible}<br />
-        At the address above.
       </p>
 
       <h2>Nature of business</h2>

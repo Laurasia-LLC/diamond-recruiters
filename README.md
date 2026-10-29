@@ -121,15 +121,18 @@ It must print **"No placeholders found"**. Until then the site contains invented
 
 Still outstanding:
 
-- [ ] Person responsible for site content (`LEGAL.responsibleParty`) — **the last placeholder
-      in the build**
 - [ ] LinkedIn URL, if one is ever created — set `CONTACT.social.linkedin` and the footer link
       appears on its own. Empty is fine; the footer hides it.
 - [ ] Have an attorney review `/privacy` and `/imprint`
 
 Done:
 
-- [x] Legal entity — Talent Scope Group LLC, a Wyoming LLC (`LEGAL`)
+- [x] Legal entity — Laurasia LLC, a Wyoming limited liability company. Diamond Recruiters
+      is a trade name of Laurasia LLC (`LEGAL`). No register number or EIN is printed.
+- [x] Person responsible for site content — Philipp Hoffschröer, Founder
+      (`LEGAL.responsibleParty` / `LEGAL.responsibleTitle`)
+- [x] Imprint and privacy contact — `hello@diamond-recruiters.com` (`CONTACT.general`).
+      Applications stay on `apply@diamond-recruiters.com` (`CONTACT.applications`).
 - [x] Registered address, Sheridan WY (`CONTACT.address`)
 - [x] Phone number (`CONTACT.phone` / `CONTACT.phoneHref`)
 - [x] The invented stats band is gone. It was replaced with `PROOF` — four commitments a
