@@ -35,7 +35,7 @@ highlights:
 heroImage: '../../assets/job-automation-sensors.jpg'
 heroAlt: 'Blue six-axis industrial robot arm working alongside a guarded automation cell on a factory floor'
 
-datePosted: 2026-08-12
+datePosted: 2026-10-29
 # validThrough is derived: datePosted + 45 days. Bump datePosted to re-post.
 status: open
 remote: false
