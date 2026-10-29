@@ -18,17 +18,21 @@ export const SITE = {
 } as const;
 
 export const CONTACT = {
-  /** Real, and printed in both job ads. Applications land here. */
+  /**
+   * Applications, including the address on job ads and the imprint.
+   * Change it here; the pages read this constant.
+   */
   applications: 'apply@diamond-recruiters.com',
 
   /**
-   * Delivered by the catch-all on @diamond-recruiters.com, which forwards to
-   * ph@skytz-consulting.com. No dedicated mailbox is required for this to work.
+   * Imprint and privacy contact. Delivered by the catch-all on
+   * @diamond-recruiters.com, which forwards to ph@skytz-consulting.com.
+   * Change this one value to update both legal pages.
    */
   general: 'hello@diamond-recruiters.com',
 
   /** Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation. */
-  phone: '+1 (307) 429-0181',
+  phone: '+1 307 429 0181',
   phoneHref: 'tel:+13074290181',
 
   /** Registered address of the entity in Wyoming. */
@@ -48,24 +52,28 @@ export const CONTACT = {
 } as const;
 
 /**
- * Legal identity for the Imprint and Privacy pages. Diamond Recruiters is the
- * trading name; Talent Scope Group LLC is the entity behind it.
+ * Legal identity for the imprint and privacy policy.
+ * Diamond Recruiters is a trade name of Laurasia LLC.
+ *
+ * No register number, EIN, or other identifier is stored here. Do not add one
+ * unless the owner supplies it — the legal pages omit anything that is not set.
+ *
+ * The imprint and privacy contact address is CONTACT.general. The applications
+ * address is CONTACT.applications. Both are edited above.
  */
 export const LEGAL = {
-  entityName: 'Talent Scope Group LLC',
-  entityType: 'Limited Liability Company',
+  entityName: 'Laurasia LLC',
+  /** Printed as "a Wyoming limited liability company". */
+  entityType: 'limited liability company',
   stateOfIncorporation: 'Wyoming',
   /**
-   * The entity itself, by the owner's decision. Note that a German or EU
-   * Impressum (§18 MStV) requires a NATURAL PERSON here, not a company — so if
-   * this site is ever marketed into the EU, put a name back and set the title
-   * below. The imprint drops the title automatically while it is empty, which
-   * is what keeps "Talent Scope Group LLC, Managing Partner" off the page.
+   * Managing person. The imprint prints "Name, Title" when responsibleTitle
+   * is set, and the name alone when it is empty.
    */
-  responsibleParty: 'Talent Scope Group LLC',
-  responsibleTitle: '',
+  responsibleParty: 'Philipp Hoffschröer',
+  responsibleTitle: 'Founder',
   /** Used in the privacy policy's "last updated" line. */
-  policyLastUpdated: 'August 12, 2026',
+  policyLastUpdated: 'October 29, 2026',
 } as const;
 
 /**

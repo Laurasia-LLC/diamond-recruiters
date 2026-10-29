@@ -3,6 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, CONTACT, LEGAL } from '../consts';
 
 const addr = CONTACT.address;
+const responsible: string = LEGAL.responsibleTitle
+  ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
+  : LEGAL.responsibleParty;
 ---
 
 <BaseLayout
@@ -19,32 +22,21 @@ const addr = CONTACT.address;
   </section>
 
   <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
-    <div
-      class="mb-12 rounded-2xl border border-copper-500/30 bg-copper-500/8 px-6 py-5 text-sm leading-relaxed text-ink-800"
-    >
-      <p class="font-medium text-copper-500">Before this page goes live</p>
-      <p class="mt-2">
-        This policy is a complete, working draft written for a US-incorporated recruitment
-        business. The company identifiers below are still placeholders, and the text has not
-        been reviewed by an attorney. Fill in the real entity details in
-        <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">src/consts.ts</code>
-        and have counsel review it before you publish.
-      </p>
-    </div>
-
     <div class="prose-dr text-ink-700">
       <p>
-        {LEGAL.entityName} (&ldquo;{SITE.name}&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is a
-        recruitment business operating at <a href={SITE.url}>{SITE.domain}</a>. This policy
-        explains what personal information we collect, why we collect it, who we share it
-        with, and what you can ask us to do with it.
+        {SITE.name} is a trade name of {LEGAL.entityName}. In this policy, &ldquo;we&rdquo; and
+        &ldquo;us&rdquo; mean {LEGAL.entityName}. {LEGAL.entityName} is a recruitment business
+        operating at <a href={SITE.url}>{SITE.domain}</a>. This policy explains what personal
+        information we collect, why we collect it, who we share it with, and what you can ask
+        us to do with it.
       </p>
 
       <h2>Who we are</h2>
       <p>
-        {LEGAL.entityName}, a {LEGAL.entityType} organized in {LEGAL.stateOfIncorporation}.
-        Postal address: {addr.line1}, {addr.city}, {addr.region} {addr.postalCode},
-        {' '}{addr.countryName}. You can reach us about anything on this page at{' '}
+        The organization responsible for personal information on this site is {LEGAL.entityName},
+        a {LEGAL.stateOfIncorporation} {LEGAL.entityType}. {SITE.name} is a trade name of {LEGAL.entityName}.
+        Represented by {responsible}. Postal address: {addr.line1}, {addr.city}, {addr.region}{' '}
+        {addr.postalCode}, {addr.countryName}. You can reach us about anything on this page at{' '}
         <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a>.
       </p>
 

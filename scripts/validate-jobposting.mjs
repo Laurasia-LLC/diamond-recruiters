@@ -10,13 +10,17 @@
  * builder. This script catches the failures that test would catch, before
  * they ever reach production.
  *
+ * Zero JobPosting blocks is a success when the build produced HTML and every
+ * non-draft role is expired, closed, or absent. A missing dist/, a live role
+ * with no schema, or a schema block that breaks Google's rules still fails.
+ *
  * Reference: https://developers.google.com/search/docs/appearance/structured-data/job-posting
  */
 
 import { readdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
-import { VALID_DAYS, readJobs, isLive } from './lib/jobIndex.mjs';
+import { VALID_DAYS, readJobs, isLive, validThroughFor } from './lib/jobIndex.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
@@ -35,6 +39,9 @@ const VALID_EMPLOYMENT_TYPES = new Set([
 const errors = [];
 const warnings = [];
 let checked = 0;
+let htmlFiles = 0;
+/** Job slugs whose built page actually contains a JobPosting block. */
+const seenSchema = new Set();
 
 const fail = (where, msg) => errors.push(`${where}: ${msg}`);
 const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
@@ -101,6 +108,7 @@ if (VALID_DAYS < 30 || VALID_DAYS > 45) {
 const seenJobPages = new Set();
 
 for await (const file of walk(dist)) {
+  htmlFiles += 1;
   const rel = relative(dist, file).replace(/\\/g, '/');
   const html = await readFile(file, 'utf8');
   const isJobPage = /^jobs\/[^/]+\/index\.html$/.test(rel);
@@ -131,6 +139,7 @@ for await (const file of walk(dist)) {
   }
 
   checked += 1;
+  seenSchema.add(slug);
   const where = `jobs/${slug}`;
 
   if (noindex) fail(where, 'carries JobPosting schema AND noindex — contradictory');
@@ -249,6 +258,9 @@ for (const { slug, data } of readJobs(root)) {
   if (shouldBeLive && !seenJobPages.has(slug)) {
     fail('build', `live role "${slug}" has no built page at dist/jobs/${slug}/`);
   }
+  if (shouldBeLive && seenJobPages.has(slug) && !seenSchema.has(slug)) {
+    fail('build', `live role "${slug}" is missing JobPosting schema`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -276,6 +288,11 @@ try {
 // ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
+if (htmlFiles === 0) {
+  console.log('\n  No HTML found in dist/. Did the build run?\n');
+  process.exit(1);
+}
+
 console.log('');
 if (warnings.length) {
   console.log('  WARNINGS');
@@ -291,8 +308,22 @@ if (errors.length) {
 }
 
 if (checked === 0) {
-  console.log('  No JobPosting schema found in dist/. Did the build run?\n');
-  process.exit(1);
+  const inactive = readJobs(root).filter(({ data }) => !data.draft && !isLive(data, now));
+  console.log('  No active JobPosting blocks in the build.');
+  if (inactive.length === 0) {
+    console.log('  No non-draft roles are on disk. An empty board is valid.');
+  } else {
+    console.log('  Every non-draft role is expired or closed, so none carry schema:');
+    for (const { slug, data } of inactive) {
+      const through = validThroughFor(data);
+      const throughLabel = Number.isNaN(through.getTime())
+        ? 'unknown'
+        : through.toISOString().slice(0, 10);
+      console.log(`    - ${slug} (status ${data.status ?? 'open'}, validThrough ${throughLabel})`);
+    }
+  }
+  console.log('  A live role with missing or invalid schema still fails this check.\n');
+  process.exit(0);
 }
 
 console.log(`  ${checked} JobPosting block(s) valid against Google's requirements.`);

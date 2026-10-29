@@ -219,17 +219,27 @@ const process = [
     <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
       <div class="flex flex-wrap items-end justify-between gap-6">
         <SectionHeading
-          eyebrow={`${jobs.length} roles open now`}
+          eyebrow={jobs.length === 0 ? 'No roles open right now' : `${jobs.length} roles open now`}
           title="Open roles"
-          lead="Live searches we are running right now. Salary and travel are stated up front on every one."
+          lead={jobs.length === 0
+            ? 'Nothing is posted at the moment. Most of what we work on never gets a public ad. Send a resume and we will tell you honestly whether we are likely to have something.'
+            : 'Live searches we are running right now. Salary and travel are stated up front on every one.'}
           class="mb-0"
         />
         <Button href="/jobs" variant="secondary">All open roles</Button>
       </div>
 
-      <div class="mt-14 grid gap-7 lg:grid-cols-2">
-        {featured.map((job) => <JobCard job={job} featured />)}
-      </div>
+      {
+        jobs.length > 0 ? (
+          <div class="mt-14 grid gap-7 lg:grid-cols-2">
+            {featured.map((job) => <JobCard job={job} featured />)}
+          </div>
+        ) : (
+          <div class="mt-10">
+            <Button href="/for-candidates#general-application">Send your resume</Button>
+          </div>
+        )
+      }
     </div>
   </section>
 
