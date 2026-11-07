@@ -1,11 +1,27 @@
 ---
-import { SITE, CONTACT, SECTORS } from '../consts';
+import { SITE, CONTACT, SECTORS, LEGAL } from '../consts';
 import Logo from './Logo.astro';
 
 const year = new Date().getFullYear();
 
 /** Hide social links until they hold a real URL — a broken link reads worse than none. */
 const linkedin: string | null = CONTACT.social.linkedin || null;
+
+/**
+ * Candidate-facing pages keep the applications inbox. Everywhere else — home,
+ * employers, about, contact, legal — the footer prints the general address and
+ * names the person behind it, so an employer never lands on the apply@ inbox.
+ */
+const CANDIDATE_PATHS = ['/for-candidates', '/jobs', '/thank-you'];
+const path = '/' + Astro.url.pathname.replace(/^\/+|\/+$/g, '');
+const forCandidates = CANDIDATE_PATHS.some(
+  (p) => path === p || path.startsWith(`${p}/`)
+);
+
+const primaryEmail = forCandidates ? CONTACT.applications : CONTACT.general;
+const primaryLabel = forCandidates ? 'Applications' : 'Enquiries';
+/** On /contact itself, link straight to the mailbox rather than back to the page. */
+const isContactPage = path === '/contact';
 
 const columns = [
   {
@@ -47,19 +63,42 @@ const columns = [
         </p>
 
         <div class="mt-7 space-y-2.5 text-sm">
+          <p class="eyebrow text-ink-400">{primaryLabel}</p>
           <a
-            href={`mailto:${CONTACT.applications}`}
+            href={`mailto:${primaryEmail}`}
             class="block text-ice-300 transition-colors hover:text-ice-100"
           >
-            {CONTACT.applications}
+            {primaryEmail}
           </a>
           <a
             href={CONTACT.phoneHref}
-            class="block text-ink-300 transition-colors hover:text-white"
+            class="block pt-2 text-ink-300 transition-colors hover:text-white"
           >
             {CONTACT.phone}
           </a>
         </div>
+
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-ink-400">
+          {LEGAL.responsibleTitle
+            ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
+            : LEGAL.responsibleParty}
+          {' — '}
+          {isContactPage ? (
+            <a
+              href={`mailto:${CONTACT.general}`}
+              class="text-ink-300 underline underline-offset-4 transition-colors hover:text-white"
+            >
+              email directly
+            </a>
+          ) : (
+            <a
+              href="/contact"
+              class="text-ink-300 underline underline-offset-4 transition-colors hover:text-white"
+            >
+              direct contact
+            </a>
+          )}
+        </p>
 
         {
           linkedin && (

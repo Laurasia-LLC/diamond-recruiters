@@ -25,9 +25,10 @@ export const CONTACT = {
   applications: 'apply@diamond-recruiters.com',
 
   /**
-   * Imprint and privacy contact. Delivered by the catch-all on
-   * @diamond-recruiters.com, which forwards to ph@skytz-consulting.com.
-   * Change this one value to update both legal pages.
+   * Imprint and privacy contact, and the address every employer-facing page
+   * prints. Delivered by the catch-all on @diamond-recruiters.com, which
+   * forwards to ph@skytz-consulting.com. Change this one value to update both
+   * legal pages and the employer CTA.
    */
   general: 'hello@diamond-recruiters.com',
 
@@ -49,6 +50,20 @@ export const CONTACT = {
   social: {
     linkedin: '',
   },
+} as const;
+
+/**
+ * Public scheduling link for employer conversations.
+ *
+ * It is a plain outbound link, not an embed: nothing is requested from Google
+ * until the visitor chooses to follow it, so the site keeps its no-third-party
+ * assets and no-tracking position. The calendar owns the call length and the
+ * available slots, so neither is stated here.
+ */
+export const BOOKING = {
+  url: 'https://calendar.app.google/5xbLcjnJdEKsHMqy9',
+  label: 'Book a call',
+  note: 'Opens Google Calendar in a new tab.',
 } as const;
 
 /**

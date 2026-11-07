@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
+import HumanContact from '../components/HumanContact.astro';
 import { PROOF, SECTORS } from '../consts';
 import heroImage from '../assets/about-team-meeting.jpg';
 import gaugesImage from '../assets/accent-control-gauges.jpg';
@@ -156,6 +157,23 @@ const principles = [
           </div>
         ))
       }
+    </div>
+  </section>
+
+  <!-- ===================== WHO RUNS IT ===================== -->
+  <section class="border-t border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <SectionHeading
+            title="One person, one market."
+            lead="No team page, no stock headshots. Diamond Recruiters is a founder-led firm, and the founder is the person who does the work."
+          />
+        </div>
+        <div class="lg:col-span-7">
+          <HumanContact eyebrow="Founder" />
+        </div>
+      </div>
     </div>
   </section>
 

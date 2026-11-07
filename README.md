@@ -133,7 +133,14 @@ Done:
       (`LEGAL.responsibleParty` / `LEGAL.responsibleTitle`)
 - [x] Imprint and privacy contact — `hello@diamond-recruiters.com` (`CONTACT.general`).
       Applications stay on `apply@diamond-recruiters.com` (`CONTACT.applications`).
-- [x] Registered address, Sheridan WY (`CONTACT.address`)
+- [x] Employer-facing contact — the employer page, its CTA and the shared footer on every
+      non-candidate page use `CONTACT.general`, and name Philipp Hoffschröer as the human
+      contact (`LEGAL.responsibleParty`). The footer falls back to `CONTACT.applications` on
+      `/for-candidates`, `/jobs/*` and `/thank-you` only; see `CANDIDATE_PATHS` in
+      `src/components/Footer.astro`. The employer page carries the public booking link in
+      `BOOKING` (`src/consts.ts`) as an outbound link, never an embed.
+- [x] Registered address, Sheridan WY (`CONTACT.address`), labelled "Registered address" on
+      `/contact`. It is a legal mailing address, not an office.
 - [x] Phone number (`CONTACT.phone` / `CONTACT.phoneHref`)
 - [x] The invented stats band is gone. It was replaced with `PROOF` — four commitments a
       client can hold the firm to, rather than placement counts and retention percentages a
@@ -145,7 +152,8 @@ Done:
 1. In KAS, confirm the mailbox **apply@diamond-recruiters.com** exists.
 2. **hello@diamond-recruiters.com** needs no mailbox — a catch-all on the domain forwards
    everything to `ph@skytz-consulting.com`. Keep that catch-all in place, or `hello@`, the
-   address printed on the contact, imprint, privacy and 404 pages, starts bouncing.
+   address printed on the contact, employer, about, imprint, privacy and 404 pages, starts
+   bouncing.
 3. Optional but recommended: copy `public/api/config.sample.php` to `api/config.php`
    **on the server** and fill in SMTP credentials. Without it the endpoints use PHP `mail()`,
    which works on all-inkl but is less reliable under load.
