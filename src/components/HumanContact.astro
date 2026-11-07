@@ -2,8 +2,6 @@
 import { CONTACT, LEGAL, BOOKING } from '../consts';
 
 interface Props {
-  /** 'surface' on light backgrounds, 'dark' on the ink panels. */
-  tone?: 'surface' | 'dark';
   /** Render the public booking link. Employer-facing blocks only. */
   booking?: boolean;
   /** Shown above the name. Keep it factual. */
@@ -14,71 +12,69 @@ interface Props {
 }
 
 const {
-  tone = 'surface',
   booking = false,
   eyebrow = 'Who you speak to',
   lead = 'The person who answers is the person who does the work. Nothing is passed to a delivery team.',
   class: className = '',
 } = Astro.props;
-
-const isDark = tone === 'dark';
-
-const shell = isDark
-  ? 'rounded-2xl bg-ink-900/60 p-7 ring-1 ring-ink-800 sm:p-8'
-  : 'rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-8';
-const eyebrowCls = isDark ? 'text-ice-400' : 'text-ice-600';
-const nameCls = isDark ? 'text-white' : 'text-ink-950';
-const roleCls = isDark ? 'text-ink-300' : 'text-ink-500';
-const bodyCls = isDark ? 'text-ink-200' : 'text-ink-600';
-const ruleCls = isDark ? 'border-ink-800' : 'border-ink-100';
-const linkCls = isDark
-  ? 'text-ice-300 hover:text-ice-100'
-  : 'text-ice-600 hover:text-ice-500';
-
-const person = LEGAL.responsibleParty;
-const title = LEGAL.responsibleTitle;
 ---
 
-<div class={`${shell} ${className}`}>
-  <p class={`eyebrow ${eyebrowCls}`}>{eyebrow}</p>
+<div class={`rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-8 ${className}`}>
+  <p class="eyebrow text-ice-600">{eyebrow}</p>
 
-  <p class={`mt-3 font-display text-xl font-semibold tracking-tight ${nameCls}`}>{person}</p>
-  {title && <p class={`mt-1 text-sm ${roleCls}`}>{title}, Diamond Recruiters</p>}
+  <p class="mt-3 font-display text-xl font-semibold tracking-tight text-ink-950">
+    {LEGAL.responsibleParty}
+  </p>
+  {
+    LEGAL.responsibleTitle && (
+      <p class="mt-1 text-sm text-ink-500">{LEGAL.responsibleTitle}, Diamond Recruiters</p>
+    )
+  }
 
-  <p class={`mt-4 text-[0.95rem] leading-relaxed ${bodyCls}`}>{lead}</p>
+  <p class="mt-4 text-[0.95rem] leading-relaxed text-ink-600">{lead}</p>
 
-  <dl class={`mt-6 space-y-3 border-t pt-6 text-[0.95rem] ${ruleCls}`}>
+  <dl class="mt-6 space-y-3 border-t border-ink-100 pt-6 text-[0.95rem]">
     <div>
-      <dt class={`eyebrow ${roleCls}`}>Email</dt>
+      <dt class="eyebrow text-ink-500">Email</dt>
       <dd class="mt-1.5">
-        <a href={`mailto:${CONTACT.general}`} class={`${linkCls} underline underline-offset-4`}>
+        <a
+          href={`mailto:${CONTACT.general}`}
+          class="text-ice-600 underline underline-offset-4 hover:text-ice-500"
+        >
           {CONTACT.general}
         </a>
       </dd>
     </div>
     <div>
-      <dt class={`eyebrow ${roleCls}`}>Phone</dt>
+      <dt class="eyebrow text-ink-500">Phone</dt>
       <dd class="mt-1.5">
-        <a href={CONTACT.phoneHref} class={linkCls}>{CONTACT.phone}</a>
+        <a href={CONTACT.phoneHref} class="text-ice-600 hover:text-ice-500">{CONTACT.phone}</a>
       </dd>
     </div>
   </dl>
 
   {
     booking && (
-      <div class={`mt-6 border-t pt-6 ${ruleCls}`}>
+      <div class="mt-6 border-t border-ink-100 pt-6">
         <a
           href={BOOKING.url}
           target="_blank"
           rel="noopener noreferrer"
-          class={`inline-flex items-center gap-2 text-[0.95rem] font-medium underline underline-offset-4 ${linkCls}`}
+          class="inline-flex items-center gap-2 text-[0.95rem] font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
         >
           {BOOKING.label}
-          <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <svg
+            class="h-3.5 w-3.5"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
             <path d="M6 3.5h6.5V10M12.5 3.5L4 12" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </a>
-        <p class={`mt-2 text-xs ${roleCls}`}>{BOOKING.note}</p>
+        <p class="mt-2 text-xs text-ink-500">{BOOKING.note}</p>
       </div>
     )
   }
