@@ -3,7 +3,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { SECTORS } from '../consts';
+import HumanContact from '../components/HumanContact.astro';
+import ReferenceQuotes from '../components/ReferenceQuotes.astro';
+import Button from '../components/Button.astro';
+import { SECTORS, CONTACT, BOOKING } from '../consts';
 import heroImage from '../assets/employers-handshake.jpg';
 import textureImage from '../assets/sector-electrical.jpg';
 
@@ -29,19 +32,19 @@ const commitments = [
   },
   {
     title: 'A short slate with reasons',
-    body: 'Three or four candidates, each with the number they can defend and an honest note on where they are weaker. Not twenty forwarded resumes with a hope that one sticks.',
+    body: 'A handful of people, not a pile. Each one comes with the number they can defend and an honest note on where they are weaker — rather than twenty forwarded resumes and a hope that one sticks.',
   },
   {
     title: 'We manage the counter-offer',
     body: 'Most searches in this market die at resignation, not at interview. We prepare for it with the candidate weeks before it happens, because it always happens.',
   },
   {
-    title: 'Terms agreed in writing first',
-    body: 'Fee basis, guarantee period and exclusivity are settled before we start work. No surprises on the invoice, and nothing verbal that either side has to remember differently later.',
+    title: 'Scope agreed before outreach',
+    body: 'We agree search scope, fee basis and exclusivity in writing before approaching candidates. Commercial terms are set per engagement — not listed on this site.',
   },
   {
     title: 'One point of contact throughout',
-    body: 'The person who takes your brief runs your search. You are not handed to a delivery team who never heard the original conversation.',
+    body: 'Philipp Hoffschröer stays your contact for the brief and key decisions. You are not routed through a separate account team.',
   },
 ];
 ---
@@ -73,17 +76,44 @@ const commitments = [
       </h1>
       <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
         We recruit technical sales people for industrial manufacturers and their channel
-        partners — the ones who have to understand the product to sell it. One market,
-        covered properly, which is why our calls get returned.
+        partners — roles where the seller needs to understand the product on the plant floor.
       </p>
-      <div class="mt-10">
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
         <a
           href="#brief"
           class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
         >
           Brief us on a role
         </a>
+        <a
+          href={BOOKING.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-3.5 text-base font-medium text-white ring-1 ring-white/25 backdrop-blur-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-white/20"
+        >
+          {BOOKING.label}
+        </a>
       </div>
+      <p class="mt-6 text-sm text-ink-300">
+        Employers go straight to{' '}
+        <a
+          href={`mailto:${CONTACT.general}`}
+          class="text-ice-300 underline underline-offset-4 hover:text-ice-100"
+        >
+          {CONTACT.general}
+        </a>{' '}
+        and to{' '}
+        <a
+          href="#your-contact"
+          class="text-ice-300 underline underline-offset-4 hover:text-ice-100"
+        >
+          Philipp
+        </a>, the founder. The{' '}
+        <a href="/for-candidates" class="text-ink-300 underline underline-offset-4 hover:text-white">
+          candidate inbox
+        </a>{' '}
+        is separate.
+      </p>
     </div>
   </section>
 
@@ -142,7 +172,7 @@ const commitments = [
         </div>
 
         <div>
-          <SectionHeading eyebrow="Markets" title="Where we already have a network" />
+          <SectionHeading eyebrow="Markets" title="Markets we work in" />
           <dl class="mt-9 space-y-6">
             {
               SECTORS.map((sector) => (
@@ -189,6 +219,41 @@ const commitments = [
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REFERENCES ===================== -->
+  <section class="border-t border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <SectionHeading
+        eyebrow="Track record"
+        title="What prior clients have said in writing"
+        lead="Letters from earlier clients, quoted as on skytz-consulting.com — prior work, not Diamond US mandates."
+      />
+      <ReferenceQuotes class="mt-14" limit={2} />
+      <div class="mt-10">
+        <Button href="/references" variant="secondary">View all references</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WHO YOU SPEAK TO ===================== -->
+  <section class="bg-white" id="your-contact">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <SectionHeading
+            title="A founder, not a desk."
+            lead="Philipp Hoffschröer is the employer contact. Briefings and hiring decisions go through him directly."
+          />
+        </div>
+        <div class="lg:col-span-7">
+          <HumanContact
+            booking
+            lead="Employer messages and bookings reach Philipp. Outreach and research may use tools and assistants under his direction."
+          />
+        </div>
       </div>
     </div>
   </section>

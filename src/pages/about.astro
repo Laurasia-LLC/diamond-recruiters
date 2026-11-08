@@ -3,8 +3,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
+import FounderPanel from '../components/FounderPanel.astro';
+import Button from '../components/Button.astro';
 import { PROOF, SECTORS } from '../consts';
-import heroImage from '../assets/about-team-meeting.jpg';
+import heroImage from '../assets/founder-philipp-hoffschroer.jpg';
 import gaugesImage from '../assets/accent-control-gauges.jpg';
 
 const principles = [
@@ -21,8 +23,8 @@ const principles = [
     body: 'It is the baseline. Nothing about a candidate reaches a client, and nothing about a client reaches the market, without explicit approval first.',
   },
   {
-    title: 'A placement is not the finish line',
-    body: 'A hire who leaves in month four cost everyone more than the vacancy did. We check in with both sides through the first ninety days because that is when it either sets or does not.',
+    title: 'Straight when it will not work',
+    body: 'If the brief, band or timing does not line up, we say so early rather than running a search that was never going to close.',
   },
 ];
 ---
@@ -34,10 +36,10 @@ const principles = [
   <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
     <Image
       src={heroImage}
-      alt="A team greeting each other in a bright modern office"
+      alt="Philipp Hoffschröer, founder of Diamond Recruiters"
       widths={[800, 1400, 1800]}
       sizes="100vw"
-      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-35"
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-[center_20%] opacity-40"
       loading="eager"
       fetchpriority="high"
     />
@@ -50,12 +52,12 @@ const principles = [
     <div class="mx-auto max-w-7xl px-5 pb-20 pt-16 lg:px-8 lg:pb-24 lg:pt-24">
       <p class="eyebrow text-ice-400">About</p>
       <h1 class="mt-5 max-w-4xl text-4xl leading-[1.1] text-white sm:text-5xl">
-        A search firm that knows what is on the plant floor.
+        Technical sales search for US industrial manufacturing.
       </h1>
       <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
         Diamond Recruiters places technical sales people with industrial manufacturers and
-        their distribution partners across the United States. We chose one market and went
-        deep into it rather than covering everything shallowly.
+        their distribution partners across the United States, with emphasis on automation,
+        process instrumentation and flow control.
       </p>
     </div>
   </section>
@@ -110,7 +112,7 @@ const principles = [
         </p>
         <p class="text-ink-900">
           That is the entire premise of the firm. We are not trying to be everything to
-          everyone — we are trying to be the obvious call for this one market.
+          everyone — we concentrate on industrial technical sales in those sectors.
         </p>
       </div>
     </div>
@@ -156,6 +158,16 @@ const principles = [
           </div>
         ))
       }
+    </div>
+  </section>
+
+  <!-- ===================== WHO RUNS IT ===================== -->
+  <section class="border-t border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <FounderPanel booking />
+      <div class="mt-12">
+        <Button href="/references" variant="secondary">Read signed references</Button>
+      </div>
     </div>
   </section>
 

@@ -1,0 +1,82 @@
+---
+import { Image } from 'astro:assets';
+import { BOOKING, CONTACT, FOUNDER, LEGAL } from '../consts';
+import HumanContact from './HumanContact.astro';
+import founderPhoto from '../assets/founder-philipp-hoffschroer.jpg';
+
+interface Props {
+  /** Show booking link on the contact card. */
+  booking?: boolean;
+  /** Compact layout for homepage strip. */
+  compact?: boolean;
+  class?: string;
+}
+
+const { booking = false, compact = false, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'grid items-start gap-10',
+    compact ? 'lg:grid-cols-12 lg:gap-14' : 'lg:grid-cols-2 lg:gap-16',
+    className,
+  ]}
+>
+  <div class:list={[compact && 'lg:col-span-5']}>
+    <div class="overflow-hidden rounded-2xl ring-1 ring-ink-100">
+      <Image
+        src={founderPhoto}
+        alt={`${LEGAL.responsibleParty}, founder of Diamond Recruiters`}
+        widths={[400, 560, 800]}
+        sizes={compact ? '(min-width: 1024px) 38vw, 92vw' : '(min-width: 1024px) 46vw, 92vw'}
+        class="aspect-square w-full object-cover"
+        loading="lazy"
+      />
+    </div>
+    {
+      CONTACT.social.linkedin && (
+        <p class="mt-4 text-sm">
+          <a
+            href={CONTACT.social.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
+          >
+            {LEGAL.responsibleParty} on LinkedIn
+          </a>
+        </p>
+      )
+    }
+  </div>
+
+  <div class:list={[compact && 'lg:col-span-7', 'space-y-6']}>
+    <div>
+      <p class="eyebrow text-ice-600">Employer contact</p>
+      <h2 class="mt-3 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl">
+        {LEGAL.responsibleParty}
+      </h2>
+      <p class="mt-2 text-sm text-ink-500">{LEGAL.responsibleTitle}, Diamond Recruiters</p>
+      <p class="mt-5 text-[1.02rem] leading-relaxed text-ink-600">{FOUNDER.lead}</p>
+    </div>
+
+    {
+      booking && (
+        <a
+          href={BOOKING.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-ink-950 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-ink-800"
+        >
+          {BOOKING.label}
+        </a>
+      )
+    }
+
+    <HumanContact
+      eyebrow="Direct contact"
+      booking={false}
+      lead="Use email or the booking link above for employer conversations."
+      class="!p-6 sm:!p-7"
+    />
+  </div>
+</div>

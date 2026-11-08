@@ -33,8 +33,13 @@ const orgSchema = {
   legalName: LEGAL.entityName,
   url: SITE.url,
   description: SITE.description,
-  email: CONTACT.applications,
-  telephone: CONTACT.phone,
+  /**
+   * The general inbox, not the applications inbox: schema.org `email` is the
+   * organization's own contact address, and every other page prints this one.
+   * Candidates still reach apply@ from the role pages and the application form.
+   */
+  email: CONTACT.general,
+  ...(CONTACT.showPhoneInUI ? { telephone: CONTACT.phone } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: CONTACT.address.line1,

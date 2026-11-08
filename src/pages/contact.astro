@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import HumanContact from '../components/HumanContact.astro';
 import { CONTACT } from '../consts';
 
 const routes = [
@@ -31,8 +32,9 @@ const routes = [
       <p class="eyebrow text-ice-400">Contact</p>
       <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] text-white sm:text-5xl">Talk to a person</h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
-        Every message reaches someone who works on these searches directly. We reply within
-        one business day — including when the answer is that we cannot help.
+        Employer conversations go to founder Philipp Hoffschröer — by form, booking link, or{' '}
+        {CONTACT.general}. Candidate applications use {CONTACT.applications} and the
+        forms on the candidate pages.
       </p>
     </div>
   </section>
@@ -43,53 +45,22 @@ const routes = [
       <div class="lg:col-span-4">
         <h2 class="text-xl">Direct</h2>
 
-        <dl class="mt-7 space-y-7">
-          <div>
-            <dt class="eyebrow text-ink-400">Applications</dt>
-            <dd class="mt-2">
-              <a
-                href={`mailto:${CONTACT.applications}`}
-                class="text-[0.975rem] text-ice-600 underline underline-offset-4 hover:text-ice-500"
-              >
-                {CONTACT.applications}
-              </a>
-              <p class="mt-1.5 text-sm text-ink-500">Resumes and role enquiries.</p>
-            </dd>
-          </div>
+        <div class="mt-7">
+          <HumanContact eyebrow="Founder" booking />
+        </div>
 
+        <dl class="mt-9 space-y-7 border-t border-ink-100 pt-7">
           <div>
-            <dt class="eyebrow text-ink-400">General</dt>
-            <dd class="mt-2">
-              <a
-                href={`mailto:${CONTACT.general}`}
-                class="text-[0.975rem] text-ice-600 underline underline-offset-4 hover:text-ice-500"
-              >
-                {CONTACT.general}
-              </a>
-              <p class="mt-1.5 text-sm text-ink-500">Everything else.</p>
-            </dd>
-          </div>
-
-          <div>
-            <dt class="eyebrow text-ink-400">Phone</dt>
-            <dd class="mt-2">
-              <a
-                href={CONTACT.phoneHref}
-                class="text-[0.975rem] text-ink-900 transition-colors hover:text-ice-600"
-              >
-                {CONTACT.phone}
-              </a>
-            </dd>
-          </div>
-
-          <div>
-            <dt class="eyebrow text-ink-400">Office</dt>
+            <dt class="eyebrow text-ink-400">Registered address</dt>
             <dd class="mt-2 text-[0.975rem] not-italic leading-relaxed text-ink-700">
               <address class="not-italic">
                 {CONTACT.address.line1}<br />
                 {CONTACT.address.city}, {CONTACT.address.region} {CONTACT.address.postalCode}<br />
                 {CONTACT.address.countryName}
               </address>
+              <p class="mt-1.5 text-sm text-ink-500">
+                Legal and postal address only. Searches run remotely and on site with clients.
+              </p>
             </dd>
           </div>
 
