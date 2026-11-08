@@ -58,9 +58,8 @@ const columns = [
       <div class="lg:col-span-4">
         <Logo tone="light" />
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-ink-300">
-          Technical sales search for industrial manufacturers. We recruit the people who
-          walk the plant floor and close the fix — across automation, instrumentation and
-          flow control in the United States.
+          US search for technical sales roles with industrial manufacturers — automation,
+          process instrumentation and flow control.
         </p>
 
         <div class="mt-7 space-y-2.5 text-sm">
@@ -71,12 +70,13 @@ const columns = [
           >
             {primaryEmail}
           </a>
-          <a
-            href={CONTACT.phoneHref}
-            class="block pt-2 text-ink-300 transition-colors hover:text-white"
-          >
-            {CONTACT.phone}
-          </a>
+          <div class="pt-2">
+            <p class="eyebrow text-ink-500">{CONTACT.phoneLabel}</p>
+            <a href={CONTACT.phoneHref} class="mt-1 block text-ink-300 transition-colors hover:text-white">
+              {CONTACT.phone}
+            </a>
+            <p class="mt-1.5 text-xs leading-relaxed text-ink-500">{CONTACT.phoneNote}</p>
+          </div>
         </div>
 
         <p class="mt-6 max-w-sm text-sm leading-relaxed text-ink-400">

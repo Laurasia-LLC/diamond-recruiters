@@ -44,7 +44,7 @@ const process = [
   {
     step: '05',
     title: 'Shortlist and close',
-    body: 'A slate you can act on, then we manage the offer, the counter-offer and the notice period. Most searches die at the counter-offer. Ours do not.',
+    body: 'A slate you can act on, then we work through offer, counter-offer and notice period with both sides.',
   },
   {
     step: '06',
@@ -86,14 +86,14 @@ const process = [
         <h1
           class="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
         >
-          The sales engineers who can read a plant floor{' '}
-          <span class="text-ice-400">— and close the fix.</span>
+          Search for US industrial and technical sales roles.
         </h1>
 
         <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100 lg:text-xl">
-          Founder-led search for industrial manufacturers — automation, process
-          instrumentation and flow control. One market, run in depth, by Philipp
-          Hoffschröer, not a hand-off team.
+          For manufacturers in automation, process instrumentation and flow control: you
+          brief the role and territory; we map relevant professionals and approach them
+          confidentially. No pooled résumés — each search is built for that brief.
+          Philipp Hoffschröer is the direct employer contact.
         </p>
 
         <div class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -118,22 +118,24 @@ const process = [
         </div>
 
         <p class="mt-8 max-w-2xl text-sm leading-relaxed text-ink-300">
-          Hiring managers work with Philipp directly. Candidates use{' '}
+          Employers brief or book below. Candidates use{' '}
           <a href="/jobs" class="text-ice-300 underline underline-offset-4 hover:text-white">
             open roles
           </a>{' '}
           or the{' '}
           <a href="/for-candidates" class="text-ice-300 underline underline-offset-4 hover:text-white">
             apply path
-          </a>{' '}
-          — pay bands stated up front on every live role.
+          </a>
+          {jobs.length > 0
+            ? ' — posted roles list compensation ranges in the job details.'
+            : '.'}
         </p>
       </div>
     </div>
   </section>
 
   <!-- ======================= FOUNDER ======================== -->
-  <section class="border-b border-ink-100 bg-white">
+  <section id="founder-panel" class="border-b border-ink-100 bg-white scroll-mt-28">
     <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
       <FounderPanel compact booking />
     </div>
@@ -241,7 +243,7 @@ const process = [
         <SectionHeading
           eyebrow="References"
           title="Signed letters, named signatories"
-          lead="Excerpts from reference letters about Philipp's prior recruitment work — quoted exactly, not reframed as US placement metrics."
+          lead="Letters from earlier recruitment clients, quoted as published. They describe prior work, not Diamond US mandates."
           class="mb-0 max-w-2xl"
         />
         <Button href="/references" variant="secondary">All references</Button>
@@ -259,7 +261,7 @@ const process = [
           title="Open roles"
           lead={jobs.length === 0
             ? 'Nothing is posted at the moment. Most of what we work on never gets a public ad. Send a resume and we will tell you honestly whether we are likely to have something.'
-            : 'Live searches we are running right now. Salary and travel are stated up front on every one.'}
+            : 'Live searches we are running right now. Each listing below includes compensation and travel where stated.'}
           class="mb-0"
         />
         <Button href="/jobs" variant="secondary">All open roles</Button>
@@ -284,18 +286,17 @@ const process = [
     <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-5">
         <SectionHeading
-          eyebrow="How we are different"
-          title="We name the band on the first call."
+          eyebrow="For candidates"
+          title="Compensation discussed early."
         />
         <p class="mt-6 leading-relaxed text-ink-600">
-          It is the single most common complaint we hear from sales engineers: four rounds
-          of interviews, a plant visit, a presentation — and then a number that was never
-          going to work. Everybody's time burned for nothing.
+          On posted roles we put base and OTE ranges in the listing. In conversation we aim
+          to confirm client, territory and compensation expectations before you invest time
+          in a process that was never going to fit.
         </p>
         <p class="mt-4 leading-relaxed text-ink-600">
-          So we do it the other way round. You get the client, the territory and the actual
-          band before you commit to anything. If it does not clear your bar, we say so and
-          stop there. It costs us placements. It has also made us the call people take.
+          If a role or band is not workable for you, we say so and stop rather than running
+          a long loop to reach the same answer.
         </p>
       </div>
 
@@ -304,8 +305,8 @@ const process = [
           {
             [
               {
-                title: 'One market, not forty',
-                body: 'Automation, instrumentation and flow control. We know what a DCS is, which EPC writes the spec, and why your last hire could not size a valve.',
+                title: 'Sector focus',
+                body: 'Automation, instrumentation and flow control — searches where technical credibility matters on the plant floor.',
               },
               {
                 title: 'Nobody is a résumé wall',

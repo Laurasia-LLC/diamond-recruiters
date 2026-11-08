@@ -32,9 +32,16 @@ export const CONTACT = {
    */
   general: 'hello@diamond-recruiters.com',
 
-  /** Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation. */
+  /**
+   * Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation.
+   * Same number is published on skytz-consulting.com and prior Diamond pages;
+   * live call routing / monitoring has not been verified in this preview branch.
+   */
   phone: '+1 307 429 0181',
   phoneHref: 'tel:+13074290181',
+  phoneLabel: 'Published phone',
+  phoneNote:
+    'Also listed on skytz-consulting.com. Not confirmed as monitored on Diamond in this preview.',
 
   /** Registered address of the entity in Wyoming. */
   address: {
@@ -59,9 +66,9 @@ export const CONTACT = {
  * claimed for Diamond Recruiters in the United States unless stated here.
  */
 export const REFERENCES_ATTRIBUTION = {
-  title: 'About these references',
+  title: 'Context',
   body:
-    'Excerpts from signed reference letters issued to Philipp Hoffschröer and published with permission on skytz-consulting.com. Company names, signatories and wording are as on the source. Relationship notes (for example "Client since 2016") come from the same public page, not from Diamond client files.',
+    'These excerpts come from signed letters published on skytz-consulting.com with permission. Wording, names and roles match that site. They describe earlier recruitment work, not US results claimed for Diamond.',
   sourceLabel: 'skytz-consulting.com',
   sourceUrl: 'https://skytz-consulting.com/en',
 } as const;
@@ -154,7 +161,7 @@ export const FOUNDER = {
    * not repeated on every contact block.
    */
   lead:
-    'Diamond Recruiters is a founder-led US search practice. Philipp runs employer searches directly; tooling assists research and outreach but does not replace the briefing conversation.',
+    'Philipp Hoffschröer is the direct contact for employer enquiries at Diamond Recruiters. Briefings and decisions stay with him; identification and outreach may use research tools and assistants.',
 } as const;
 
 /**
@@ -168,9 +175,9 @@ export const FOUNDER = {
  */
 export const PROOF = [
   {
-    title: 'One market, not all of them',
+    title: 'Industrial technical sales',
     detail:
-      'Automation, process instrumentation and flow control. A generalist agency has to be told what a control valve is before it can find someone who sells them.',
+      'Searches focus on automation, process instrumentation and flow control — the product lines where the sale still depends on plant-floor credibility.',
   },
   {
     title: 'The map before the approach',
@@ -178,9 +185,9 @@ export const PROOF = [
       'You see the named companies and people we intend to approach before we contact anyone. The search is grounded in your market, not a job board.',
   },
   {
-    title: 'Pay ranges in the open',
+    title: 'Compensation on posted roles',
     detail:
-      'Every role we publish carries a base and OTE range. Candidates self-select honestly, and nobody reaches final stage to discover the band was never close.',
+      'Each role under Open roles includes base and OTE ranges in the listing today. Confidential searches that are not posted are agreed in conversation.',
   },
   {
     title: 'Ninety days, not thirty',
