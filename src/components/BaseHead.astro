@@ -39,7 +39,7 @@ const orgSchema = {
    * Candidates still reach apply@ from the role pages and the application form.
    */
   email: CONTACT.general,
-  telephone: CONTACT.phone,
+  ...(CONTACT.showPhoneInUI ? { telephone: CONTACT.phone } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: CONTACT.address.line1,

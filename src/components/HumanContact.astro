@@ -50,13 +50,18 @@ const linkedin = CONTACT.social.linkedin || null;
         </p>
       </dd>
     </div>
-    <div>
-      <dt class="eyebrow text-ink-500">{CONTACT.phoneLabel}</dt>
-      <dd class="mt-1.5">
-        <a href={CONTACT.phoneHref} class="text-ice-600 hover:text-ice-500">{CONTACT.phone}</a>
-        <p class="mt-1.5 text-xs leading-relaxed text-ink-500">{CONTACT.phoneNote}</p>
-      </dd>
-    </div>
+    {
+      CONTACT.showPhoneInUI && (
+        <div>
+          <dt class="eyebrow text-ink-500">Phone</dt>
+          <dd class="mt-1.5">
+            <a href={CONTACT.phoneHref} class="text-ice-600 hover:text-ice-500">
+              {CONTACT.phone}
+            </a>
+          </dd>
+        </div>
+      )
+    }
     {
       linkedin && (
         <div>

@@ -34,14 +34,12 @@ export const CONTACT = {
 
   /**
    * Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation.
-   * Same number is published on skytz-consulting.com and prior Diamond pages;
-   * live call routing / monitoring has not been verified in this preview branch.
+   * Listed publicly on skytz-consulting.com; hidden from marketing UI until routing
+   * is confirmed (see PREVIEW_BLOCKERS.md). Imprint uses email-only contact for now.
    */
   phone: '+1 307 429 0181',
   phoneHref: 'tel:+13074290181',
-  phoneLabel: 'Published phone',
-  phoneNote:
-    'Also listed on skytz-consulting.com. Not confirmed as monitored on Diamond in this preview.',
+  showPhoneInUI: false,
 
   /** Registered address of the entity in Wyoming. */
   address: {
@@ -188,11 +186,6 @@ export const PROOF = [
     title: 'Compensation on posted roles',
     detail:
       'Each role under Open roles includes base and OTE ranges in the listing today. Confidential searches that are not posted are agreed in conversation.',
-  },
-  {
-    title: 'Ninety days, not thirty',
-    detail:
-      'We stay in contact with both sides through the first ninety days. That is when a placement either sets or quietly comes apart.',
   },
 ] as const;
 
