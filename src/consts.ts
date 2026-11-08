@@ -48,9 +48,60 @@ export const CONTACT = {
 
   /** Empty entries are hidden rather than rendered as dead links. */
   social: {
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/in/philipp-hoffschroer/',
   },
 } as const;
+
+/**
+ * Signed reference letters published on skytz-consulting.com with permission.
+ * Quotes are reproduced exactly from that public source. They describe Philipp
+ * Hoffschröer's recruitment work for the named companies — not outcomes
+ * claimed for Diamond Recruiters in the United States unless stated here.
+ */
+export const REFERENCES_ATTRIBUTION = {
+  title: 'About these references',
+  body:
+    'Excerpts from signed reference letters issued to Philipp Hoffschröer and published with permission on skytz-consulting.com. Company names, signatories and wording are as on the source. Relationship notes (for example "Client since 2016") come from the same public page, not from Diamond client files.',
+  sourceLabel: 'skytz-consulting.com',
+  sourceUrl: 'https://skytz-consulting.com/en',
+} as const;
+
+export const REFERENCES = [
+  {
+    company: 'Megger Germany GmbH',
+    industry: 'Electrical test and measurement equipment',
+    relationship: 'Client since 2016',
+    contact: 'Friedrich Enkert',
+    role: 'VP Global Sales CI, Managing Director Megger Germany GmbH',
+    quote:
+      'He has an impressive track record, successfully recruiting multiple qualified candidates for key positions in our company. His professionalism, deep understanding of our specific needs, and his ability to identify the best talents in the market have significantly contributed to our company\'s success.',
+  },
+  {
+    company: 'SebaKMT by Megger',
+    industry: 'Cable fault location and pipeline leak detection',
+    contact: 'Sascha Kuflik',
+    role: 'Business Unit Director at the time',
+    quote:
+      'I first had the opportunity to know Philipp from the perspective of a candidate. Subsequently, as a Business Unit Leader at SebaKMT, I engaged Philipp\'s services as an external recruiter. From this dual perspective, I can attest to the fact that Philipp consistently delivers outstanding results.',
+  },
+  {
+    company: 'Eurasia Group AG',
+    industry: 'Agriculture and financial holding, Switzerland',
+    relationship: 'CFO search',
+    contact: 'Mustafa Sahin',
+    role: 'Chief Executive Officer',
+    quote:
+      'He was responsible for the search, pre-selection, and candidate outreach, and supported the process through to the successful appointment of our Chief Financial Officer. The candidates presented were well targeted and professionally pre-qualified. The final placement fully met our expectations.',
+  },
+  {
+    company: 'SWR · Südwestdeutsche Rohrleitungsbau GmbH',
+    industry: 'Pipeline and district heating construction, Frankfurt',
+    contact: 'Dirk Heesen',
+    role: 'Managing Director',
+    quote:
+      'What sets him apart is his meticulous selection of candidates who not only possess the required skills but also align well with our corporate culture.',
+  },
+] as const;
 
 /**
  * Public scheduling link for employer conversations.
@@ -89,6 +140,21 @@ export const LEGAL = {
   responsibleTitle: 'Founder',
   /** Used in the privacy policy's "last updated" line. */
   policyLastUpdated: 'October 29, 2026',
+} as const;
+
+/**
+ * Founder-facing facts for HumanContact and JSON-LD. Photo is self-hosted
+ * (reproduced from skytz-consulting.com with permission — see CREDITS.md).
+ */
+export const FOUNDER = {
+  name: LEGAL.responsibleParty,
+  title: LEGAL.responsibleTitle,
+  /**
+   * Short positioning line. Longer biography belongs on About and References,
+   * not repeated on every contact block.
+   */
+  lead:
+    'Diamond Recruiters is a founder-led US search practice. Philipp runs employer searches directly; tooling assists research and outreach but does not replace the briefing conversation.',
 } as const;
 
 /**
@@ -156,6 +222,7 @@ export const NAV_LINKS = [
   { href: '/for-employers', label: 'For Employers' },
   { href: '/for-candidates', label: 'For Candidates' },
   { href: '/about', label: 'About' },
+  { href: '/references', label: 'References' },
   { href: '/contact', label: 'Contact' },
 ] as const;
 

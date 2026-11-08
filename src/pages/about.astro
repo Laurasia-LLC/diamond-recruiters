@@ -3,9 +3,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
-import HumanContact from '../components/HumanContact.astro';
+import FounderPanel from '../components/FounderPanel.astro';
+import Button from '../components/Button.astro';
 import { PROOF, SECTORS } from '../consts';
-import heroImage from '../assets/about-team-meeting.jpg';
+import heroImage from '../assets/founder-philipp-hoffschroer.jpg';
 import gaugesImage from '../assets/accent-control-gauges.jpg';
 
 const principles = [
@@ -35,10 +36,10 @@ const principles = [
   <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
     <Image
       src={heroImage}
-      alt="A team greeting each other in a bright modern office"
+      alt="Philipp Hoffschröer, founder of Diamond Recruiters"
       widths={[800, 1400, 1800]}
       sizes="100vw"
-      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-35"
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-[center_20%] opacity-40"
       loading="eager"
       fetchpriority="high"
     />
@@ -163,16 +164,9 @@ const principles = [
   <!-- ===================== WHO RUNS IT ===================== -->
   <section class="border-t border-ink-100 bg-white">
     <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
-      <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
-        <div class="lg:col-span-5">
-          <SectionHeading
-            title="One person, one market."
-            lead="No team page, no stock headshots. Diamond Recruiters is a founder-led firm, and the founder is the person who does the work."
-          />
-        </div>
-        <div class="lg:col-span-7">
-          <HumanContact eyebrow="Founder" />
-        </div>
+      <FounderPanel booking />
+      <div class="mt-12">
+        <Button href="/references" variant="secondary">Read signed references</Button>
       </div>
     </div>
   </section>

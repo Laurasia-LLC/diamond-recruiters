@@ -4,6 +4,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ContactForm from '../components/ContactForm.astro';
 import HumanContact from '../components/HumanContact.astro';
+import ReferenceQuotes from '../components/ReferenceQuotes.astro';
+import Button from '../components/Button.astro';
 import { SECTORS, CONTACT, BOOKING } from '../consts';
 import heroImage from '../assets/employers-handshake.jpg';
 import textureImage from '../assets/sector-electrical.jpg';
@@ -218,6 +220,21 @@ const commitments = [
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REFERENCES ===================== -->
+  <section class="border-t border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <SectionHeading
+        eyebrow="Track record"
+        title="What prior clients have said in writing"
+        lead="Letters about Philipp's recruitment work for industrial employers — quoted on Diamond with the same attribution as on skytz-consulting.com."
+      />
+      <ReferenceQuotes class="mt-14" limit={2} />
+      <div class="mt-10">
+        <Button href="/references" variant="secondary">View all references</Button>
       </div>
     </div>
   </section>

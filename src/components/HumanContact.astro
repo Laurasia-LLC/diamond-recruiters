@@ -1,5 +1,5 @@
 ---
-import { CONTACT, LEGAL, BOOKING } from '../consts';
+import { CONTACT, LEGAL, BOOKING, FOUNDER } from '../consts';
 
 interface Props {
   /** Render the public booking link. Employer-facing blocks only. */
@@ -14,9 +14,11 @@ interface Props {
 const {
   booking = false,
   eyebrow = 'Who you speak to',
-  lead = 'The person who answers is the person who does the work. Nothing is passed to a delivery team.',
+  lead = FOUNDER.lead,
   class: className = '',
 } = Astro.props;
+
+const linkedin = CONTACT.social.linkedin || null;
 ---
 
 <div class={`rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-8 ${className}`}>
@@ -43,6 +45,9 @@ const {
         >
           {CONTACT.general}
         </a>
+        <p class="mt-1.5 text-xs leading-relaxed text-ink-500">
+          Employer enquiries. Separate from the candidate inbox at {CONTACT.applications}.
+        </p>
       </dd>
     </div>
     <div>
@@ -51,6 +56,23 @@ const {
         <a href={CONTACT.phoneHref} class="text-ice-600 hover:text-ice-500">{CONTACT.phone}</a>
       </dd>
     </div>
+    {
+      linkedin && (
+        <div>
+          <dt class="eyebrow text-ink-500">LinkedIn</dt>
+          <dd class="mt-1.5">
+            <a
+              href={linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-ice-600 underline underline-offset-4 hover:text-ice-500"
+            >
+              Profile
+            </a>
+          </dd>
+        </div>
+      )
+    }
   </dl>
 
   {

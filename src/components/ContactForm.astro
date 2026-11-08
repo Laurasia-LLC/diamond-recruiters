@@ -225,7 +225,11 @@ const hint = 'mt-1.5 text-xs text-ink-500';
   >
     <p class="font-medium text-ink-900">Message sent.</p>
     <p class="mt-1.5 text-sm leading-relaxed text-ink-600">
-      We reply to everything within one business day — usually sooner.
+      {
+        isEmployer
+          ? 'Your brief is stored for review. If you need a faster start, use the booking link on this page.'
+          : 'Thanks — we read every application and respond when we can help or when we cannot.'
+      }
     </p>
   </div>
 </form>
