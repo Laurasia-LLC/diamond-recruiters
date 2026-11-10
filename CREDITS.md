@@ -23,6 +23,7 @@ site sends no request to Unsplash.
 | `src/assets/accent-control-gauges.jpg` | `photo-1655204903983-73007f15cb3e` | About page accent |
 | `src/assets/sector-electrical.jpg` | `photo-1716191300020-b52dec5b70a8` | For Employers texture |
 | `src/assets/alt-assembly-line.jpg` | `photo-1717386255767-52643970d483` | Spare — not currently placed |
+| `src/assets/founder-philipp-hoffschroer.jpg` | — (not Unsplash) | Founder photo; reproduced from [skytz-consulting.com](https://skytz-consulting.com/brand/Philipp-Hoffschroer.jpg) with permission |
 
 To view the original of any image, open `https://unsplash.com/photos/<photo ID>`.
 

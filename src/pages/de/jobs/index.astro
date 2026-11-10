@@ -1,0 +1,229 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import JobCard from '../../../components/JobCard.astro';
+import CTABand from '../../../components/CTABand.astro';
+import { isLive } from '../../../lib/jobStatus';
+import { CONTACT } from '../../../consts';
+import { localePath } from '../../../lib/locale';
+
+const locale = 'de' as const;
+
+const jobs = (await getCollection('jobs', ({ data }) => isLive(data))).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const territories = [...new Set(jobs.flatMap((j) => j.data.territories))].sort();
+const disciplines = [...new Set(jobs.map((j) => j.data.discipline))].sort();
+---
+
+<BaseLayout
+  title="Offene Stellen"
+  description="Laufende technische Vertriebssuchen in US-Industrie: Automation, Prozessinstrumentierung und Flow Control. Ausgeschriebene Rollen nennen Vergütung und Reiseanteil."
+  headerOverDark={false}
+  locale={locale}
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-7xl px-5 pb-16 pt-16 lg:px-8 lg:pb-20 lg:pt-24">
+      <p class="eyebrow text-ice-400">
+        {
+          jobs.length === 0
+            ? 'Keine laufenden Suchen'
+            : `${jobs.length} ${jobs.length === 1 ? 'laufende Suche' : 'laufende Suchen'}`
+        }
+      </p>
+      <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] text-white sm:text-5xl">Offene Stellen</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
+        {
+          jobs.length === 0
+            ? 'Aktuell ist nichts ausgeschrieben. Sobald eine Rolle live ist, stehen Basis, OTE und Reise vorne. Vieles von dem, womit wir arbeiten, veröffentlichen wir nie.'
+            : 'Jede Rolle unten ist eine Suche, die wir aktiv fahren. Die Ausschreibung nennt Basis, OTE und Reise — Kunde und Band klären wir im Gespräch, bevor Sie Zeit in Interviews investieren.'
+        }
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+  {jobs.length > 0 && (
+    <div class="flex flex-col gap-5 border-b border-ink-100 pb-8 lg:flex-row lg:items-end lg:gap-10">
+      <div>
+        <p class="eyebrow text-ink-400">Gebiet</p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="filter-chip is-active"
+            data-filter-type="territory"
+            data-filter-value="all">Alle Gebiete</button
+          >
+          {
+            territories.map((t) => (
+              <button type="button" class="filter-chip" data-filter-type="territory" data-filter-value={t}>
+                {t}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow text-ink-400">Disziplin</p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="filter-chip is-active"
+            data-filter-type="discipline"
+            data-filter-value="all">Alle Disziplinen</button
+          >
+          {
+            disciplines.map((d) => (
+              <button type="button" class="filter-chip" data-filter-type="discipline" data-filter-value={d}>
+                {d}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <p class="text-sm text-ink-500 lg:ml-auto lg:pb-1">
+        <span data-result-count>{jobs.length}</span>{' '}
+        <span data-result-noun>{jobs.length === 1 ? 'Stelle' : 'Stellen'}</span> angezeigt
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-7 md:grid-cols-2 xl:grid-cols-3" data-job-grid>
+      {
+        jobs.map((job) => (
+          <div
+            data-job-item
+            data-territories={JSON.stringify(job.data.territories)}
+            data-discipline={job.data.discipline}
+          >
+            <JobCard job={job} />
+          </div>
+        ))
+      }
+    </div>
+
+    <p
+      class="mt-10 hidden rounded-2xl border border-dashed border-ink-200 px-6 py-12 text-center text-ink-500"
+      data-empty
+    >
+      Keine Stelle passt zu dieser Kombination.
+      <button type="button" class="text-ice-600 underline underline-offset-2" data-reset>
+        Filter zurücksetzen
+      </button>
+      oder Lebenslauf senden — wir melden uns, wenn etwas passt.
+    </p>
+    )}
+
+    <div class="mt-14 rounded-2xl bg-sand-100 p-8 lg:p-10">
+      <h2 class="text-xl">{jobs.length === 0 ? 'Trotzdem Lebenslauf senden' : 'Nichts Passendes?'}</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-ink-600">
+        Vieles wird nie ausgeschrieben. Kunden suchen vertraulich — und besetzen aus Menschen, die
+        schon auf dem Radar sind. Senden Sie Ihren Lebenslauf; wir sagen ehrlich, ob wir vermutlich
+        etwas haben.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href={`${localePath(locale, '/for-candidates')}#general-application`}
+          class="inline-flex items-center justify-center rounded-full bg-ink-900 px-5 py-2.5 text-[0.95rem] font-medium text-white transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ink-700"
+        >
+          Lebenslauf senden
+        </a>
+        <a
+          href={`mailto:${CONTACT.applications}`}
+          class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-[0.95rem] font-medium text-ink-900 ring-1 ring-ink-200 transition-all duration-200 ease-out-expo hover:-translate-y-px hover:ring-ink-400"
+        >
+          {CONTACT.applications}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    eyebrow="Arbeitgeber"
+    title="Ein Gebiet, das zu lange offen ist?"
+    lead="Sagen Sie uns Patches, Produktlinie und Band. Wir sagen direkt, ob die Zahl die Person findet — und was nötig wäre, wenn nicht."
+    primaryHref={`${localePath(locale, '/for-employers')}#brief`}
+    primaryLabel="Rolle briefen"
+    secondaryHref={localePath(locale, '/for-employers')}
+    secondaryLabel="So arbeiten wir"
+  />
+</BaseLayout>
+
+<style>
+  .filter-chip {
+    border-radius: 9999px;
+    border: 1px solid var(--color-ink-200);
+    background: white;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-ink-700);
+    transition: all 0.2s var(--ease-out-expo);
+    cursor: pointer;
+  }
+
+  .filter-chip:hover {
+    border-color: var(--color-ink-400);
+  }
+
+  .filter-chip.is-active {
+    background: var(--color-ink-900);
+    border-color: var(--color-ink-900);
+    color: white;
+  }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-job-grid]');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-job-item]'));
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const count = document.querySelector<HTMLElement>('[data-result-count]');
+  const noun = document.querySelector<HTMLElement>('[data-result-noun]');
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-chip'));
+
+  const active = { territory: 'all', discipline: 'all' };
+
+  const apply = () => {
+    let visible = 0;
+
+    items.forEach((item) => {
+      const territories: string[] = JSON.parse(item.dataset.territories ?? '[]');
+      const discipline = item.dataset.discipline ?? '';
+
+      const matches =
+        (active.territory === 'all' || territories.includes(active.territory)) &&
+        (active.discipline === 'all' || discipline === active.discipline);
+
+      item.classList.toggle('hidden', !matches);
+      if (matches) visible += 1;
+    });
+
+    empty?.classList.toggle('hidden', visible > 0);
+    grid?.classList.toggle('hidden', visible === 0);
+    if (count) count.textContent = String(visible);
+    if (noun) noun.textContent = visible === 1 ? 'Stelle' : 'Stellen';
+  };
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const type = chip.dataset.filterType as 'territory' | 'discipline';
+      const value = chip.dataset.filterValue ?? 'all';
+
+      active[type] = value;
+
+      chips
+        .filter((c) => c.dataset.filterType === type)
+        .forEach((c) => c.classList.toggle('is-active', c === chip));
+
+      apply();
+    });
+  });
+
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    active.territory = 'all';
+    active.discipline = 'all';
+    chips.forEach((c) => c.classList.toggle('is-active', c.dataset.filterValue === 'all'));
+    apply();
+  });
+</script>

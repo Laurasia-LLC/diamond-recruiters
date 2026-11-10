@@ -12,9 +12,10 @@
     "assets": "node scripts/generate-assets.mjs",
     "check": "astro check",
     "check:placeholders": "node scripts/check-placeholders.mjs",
+    "check:no-phone": "node scripts/check-no-phone.mjs",
     "validate:schema": "node scripts/validate-jobposting.mjs",
     "notify:google": "node scripts/notify-indexing.mjs",
-    "prelaunch": "npm run build && npm run validate:schema && npm run check:placeholders",
+    "prelaunch": "npm run build && npm run validate:schema && npm run check:placeholders && npm run check:no-phone",
     "astro": "astro"
   },
   "dependencies": {

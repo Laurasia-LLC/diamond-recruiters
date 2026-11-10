@@ -7,7 +7,9 @@ import SectionHeading from '../components/SectionHeading.astro';
 import JobCard from '../components/JobCard.astro';
 import CTABand from '../components/CTABand.astro';
 import { isLive } from '../lib/jobStatus';
-import { SITE, SECTORS, PROOF } from '../consts';
+import { SITE, SECTORS, PROOF, BOOKING } from '../consts';
+import FounderPanel from '../components/FounderPanel.astro';
+import ReferenceQuotes from '../components/ReferenceQuotes.astro';
 
 import heroImage from '../assets/hero-automation-line.jpg';
 import employersImage from '../assets/employers-handshake.jpg';
@@ -42,12 +44,7 @@ const process = [
   {
     step: '05',
     title: 'Shortlist and close',
-    body: 'A slate you can act on, then we manage the offer, the counter-offer and the notice period. Most searches die at the counter-offer. Ours do not.',
-  },
-  {
-    step: '06',
-    title: 'First ninety days',
-    body: 'We check in with both sides at 30, 60 and 90 days. A placement that leaves in month four was not a placement.',
+    body: 'A slate you can act on, then we work through offer, counter-offer and notice period with both sides.',
   },
 ];
 ---
@@ -79,43 +76,63 @@ const process = [
 
     <div class="mx-auto max-w-7xl px-5 pb-28 pt-20 lg:px-8 lg:pb-36 lg:pt-28">
       <div class="max-w-3xl">
-        <p class="eyebrow text-ice-400">Technical sales search · United States</p>
+        <p class="eyebrow text-ice-400">For employers · US technical sales search</p>
 
         <h1
           class="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
         >
-          The sales engineers who can read a plant floor{' '}
-          <span class="text-ice-400">— and close the fix.</span>
+          Search for US industrial and technical sales roles.
         </h1>
 
         <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100 lg:text-xl">
-          Diamond Recruiters places technical sales talent with industrial manufacturers
-          across automation, process instrumentation and flow control. We recruit inside
-          one market, deeply, instead of every market thinly.
+          For manufacturers in automation, process instrumentation and flow control: you
+          brief the role and territory; we map relevant professionals and approach them
+          confidentially. No pooled résumés — each search is built for that brief.
+          Philipp Hoffschröer is the direct employer contact.
         </p>
 
-        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button href="/for-employers#brief" variant="onDark" size="lg">
-            Hire a sales engineer
+            Start a search
           </Button>
-          <Button
-            href="/jobs"
-            size="lg"
-            class="bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm hover:bg-white/20 hover:ring-white/40"
+          <a
+            href={BOOKING.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center rounded-full bg-white/10 px-8 py-3.5 text-base font-semibold text-white ring-1 ring-white/25 backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-white/20"
           >
-            See open roles ({jobs.length})
+            {BOOKING.label}
+          </a>
+          <Button
+            href="/for-candidates"
+            size="lg"
+            class="bg-white/5 text-ink-100 ring-1 ring-white/15 hover:bg-white/10 hover:ring-white/25"
+          >
+            For candidates
           </Button>
         </div>
 
-        <p class="mt-8 flex items-center gap-2.5 text-sm text-ink-300">
-          <svg class="h-4 w-4 shrink-0 text-ice-400" viewBox="0 0 16 16" fill="currentColor">
-            <path
-              d="M8 1l1.9 4.1 4.5.6-3.3 3.1.8 4.4L8 11.1 4.1 13.2l.8-4.4L1.6 5.7l4.5-.6z"
-            ></path>
-          </svg>
-          Every candidate conversation starts with the real salary band. No exceptions.
+        <p class="mt-8 max-w-2xl text-sm leading-relaxed text-ink-300">
+          Employers brief or book below. Candidates use{' '}
+          <a href="/jobs" class="text-ice-300 underline underline-offset-4 hover:text-white">
+            open roles
+          </a>{' '}
+          or the{' '}
+          <a href="/for-candidates" class="text-ice-300 underline underline-offset-4 hover:text-white">
+            apply path
+          </a>
+          {jobs.length > 0
+            ? ' — posted roles list compensation ranges in the job details.'
+            : '.'}
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ======================= FOUNDER ======================== -->
+  <section id="founder-panel" class="border-b border-ink-100 bg-white scroll-mt-28">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <FounderPanel compact booking />
     </div>
   </section>
 
@@ -214,6 +231,22 @@ const process = [
     </div>
   </section>
 
+  <!-- ========================= REFERENCES ========================= -->
+  <section class="border-y border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading
+          eyebrow="References"
+          title="Signed letters, named signatories"
+          lead="Letters from earlier recruitment clients, quoted as published. They describe prior work, not Diamond US mandates."
+          class="mb-0 max-w-2xl"
+        />
+        <Button href="/references" variant="secondary">All references</Button>
+      </div>
+      <ReferenceQuotes class="mt-14" limit={2} />
+    </div>
+  </section>
+
   <!-- ========================= OPEN ROLES ========================= -->
   <section class="border-y border-ink-100 bg-sand-100/60">
     <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
@@ -223,7 +256,7 @@ const process = [
           title="Open roles"
           lead={jobs.length === 0
             ? 'Nothing is posted at the moment. Most of what we work on never gets a public ad. Send a resume and we will tell you honestly whether we are likely to have something.'
-            : 'Live searches we are running right now. Salary and travel are stated up front on every one.'}
+            : 'Live searches we are running right now. Each listing below includes compensation and travel where stated.'}
           class="mb-0"
         />
         <Button href="/jobs" variant="secondary">All open roles</Button>
@@ -248,18 +281,17 @@ const process = [
     <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-5">
         <SectionHeading
-          eyebrow="How we are different"
-          title="We name the band on the first call."
+          eyebrow="For candidates"
+          title="Compensation discussed early."
         />
         <p class="mt-6 leading-relaxed text-ink-600">
-          It is the single most common complaint we hear from sales engineers: four rounds
-          of interviews, a plant visit, a presentation — and then a number that was never
-          going to work. Everybody's time burned for nothing.
+          On posted roles we put base and OTE ranges in the listing. In conversation we aim
+          to confirm client, territory and compensation expectations before you invest time
+          in a process that was never going to fit.
         </p>
         <p class="mt-4 leading-relaxed text-ink-600">
-          So we do it the other way round. You get the client, the territory and the actual
-          band before you commit to anything. If it does not clear your bar, we say so and
-          stop there. It costs us placements. It has also made us the call people take.
+          If a role or band is not workable for you, we say so and stop rather than running
+          a long loop to reach the same answer.
         </p>
       </div>
 
@@ -268,8 +300,8 @@ const process = [
           {
             [
               {
-                title: 'One market, not forty',
-                body: 'Automation, instrumentation and flow control. We know what a DCS is, which EPC writes the spec, and why your last hire could not size a valve.',
+                title: 'Sector focus',
+                body: 'Automation, instrumentation and flow control — searches where technical credibility matters on the plant floor.',
               },
               {
                 title: 'Nobody is a résumé wall',
@@ -280,8 +312,8 @@ const process = [
                 body: 'Nothing moves without your say-so. Your current employer never learns you spoke to us.',
               },
               {
-                title: 'We answer the phone after',
-                body: 'The relationship does not end at the signed offer. We check in through the first ninety days, both sides.',
+                title: 'Straight contact',
+                body: 'Employer enquiries go to Philipp directly by email or booking link — not a pooled inbox on the employer side.',
               },
             ].map((item) => (
               <div class="rounded-2xl bg-white p-7 ring-1 ring-ink-100">
@@ -367,7 +399,7 @@ const process = [
   <CTABand
     eyebrow="Start here"
     title="Tell us what you need to hire, or what you want to be paid."
-    lead="Either conversation starts the same way — a short call, straight answers, no obligation on you. We reply to every message within one business day."
+    lead="Employers: brief the role or book a call. Candidates: apply with the band you need — we answer plainly when we can help and when we cannot."
     primaryHref="/for-employers#brief"
     primaryLabel="Brief us on a role"
     secondaryHref="/jobs"

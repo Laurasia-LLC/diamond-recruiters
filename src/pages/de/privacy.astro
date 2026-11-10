@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteFor, CONTACT, LEGAL } from '../../consts';
+import { localePath } from '../../lib/locale';
+
+const locale = 'de' as const;
+const site = siteFor(locale);
+const addr = CONTACT.address;
+const responsible: string = LEGAL.responsibleTitle
+  ? `${LEGAL.responsibleParty}, Gründer`
+  : LEGAL.responsibleParty;
+---
+
+<BaseLayout
+  title="Datenschutz"
+  description="Wie Diamond Recruiters personenbezogene Daten erhebt, nutzt, weitergibt und speichert — und welche Rechte Sie haben."
+  headerOverDark={false}
+  locale={locale}
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-3xl px-5 pb-14 pt-16 lg:px-8 lg:pb-16 lg:pt-24">
+      <p class="eyebrow text-ice-400">Rechtliches</p>
+      <h1 class="mt-4 text-4xl leading-tight text-white">Datenschutzerklärung</h1>
+      <p class="mt-5 text-ink-300">Stand: {LEGAL.policyLastUpdatedDe}</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
+    <div class="prose-dr text-ink-700">
+      <p>
+        {site.name} ist ein Handelsname der {LEGAL.entityName}. In dieser Erklärung meinen
+        &bdquo;wir&ldquo; und &bdquo;uns&ldquo; die {LEGAL.entityName}. Die {LEGAL.entityName} ist
+        ein Recruiting-Unternehmen unter <a href={site.url}>{site.domain}</a>. Diese Seite
+        erläutert, welche Daten wir erheben, warum, mit wem wir sie teilen und was Sie von uns
+        verlangen können.
+      </p>
+
+      <h2>Wer wir sind</h2>
+      <p>
+        Verantwortlich für personenbezogene Daten auf dieser Website ist die {LEGAL.entityName},
+        eine Limited Liability Company im Bundesstaat Wyoming. {site.name} ist ein Handelsname der{' '}
+        {LEGAL.entityName}. Vertreten durch {responsible}. Postanschrift: {addr.line1},{' '}
+        {addr.city}, {addr.region} {addr.postalCode}, {addr.countryName}. Fragen zu dieser Seite:{' '}
+        <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a>.
+      </p>
+
+      <h2>Welche Daten wir erheben</h2>
+      <p>Nur was für Recruiting nötig ist. Konkret:</p>
+      <ul>
+        <li>
+          <strong>Daten, die Sie uns geben</strong> — Name, E-Mail-Adresse, Wohnort/Basisstadt,
+          Gehaltsvorstellung, Reisebereitschaft, LinkedIn-Profil, Lebenslauf und alles, was Sie uns
+          in einer Nachricht schreiben. (Eine Telefonnummer nur, wenn Sie sie freiwillig angeben.)
+        </li>
+        <li>
+          <strong>Daten zu einem Stellenbedarf</strong> — wenn Sie als Arbeitgeber anfragen: Name,
+          geschäftliche E-Mail, Unternehmen und Details zur zu besetzenden Rolle.
+        </li>
+        <li>
+          <strong>Daten aus öffentlichen und beruflichen Quellen</strong> — wenn wir Kandidaten über
+          Berufsnetzwerke, Unternehmenswebsites, Branchenverzeichnisse oder Empfehlungen identifizieren.
+          Bei Direktansprache sagen wir auf Nachfrage, wo wir Sie gefunden haben.
+        </li>
+        <li>
+          <strong>Technische Minimalfdaten</strong> — bei Formularabsendung Zeitpunkt und IP-Adresse,
+          ausschließlich zum Schutz vor Missbrauch.
+        </li>
+      </ul>
+
+      <h2>Wofür wir sie nutzen</h2>
+      <ul>
+        <li>Prüfen, ob Sie zu einer Rolle passen, und das mit Ihnen besprechen</li>
+        <li>
+          Sie einem potenziellen Arbeitgeber vorstellen — <strong
+            >nur nach Ihrer ausdrücklichen Freigabe für genau dieses Unternehmen</strong
+          >
+        </li>
+        <li>Sie über künftig passende Rollen informieren</li>
+        <li>Auf Ihre Anfrage antworten</li>
+        <li>Aufzeichnungen über die Arbeit für einen Kunden führen</li>
+        <li>Formulare vor automatisiertem Missbrauch schützen</li>
+        <li>Rechtliche, steuerliche und regulatorische Pflichten erfüllen</li>
+      </ul>
+      <p>
+        Wir verkaufen keine personenbezogenen Daten und geben sie nicht an Werbetreibende oder
+        Datenhändler weiter.
+      </p>
+
+      <h2>Empfänger</h2>
+      <ul>
+        <li>
+          <strong>Potenzielle Arbeitgeber</strong> — nur mit Ihrer vorherigen Freigabe für das
+          jeweilige Unternehmen. Wünschen Sie einen Ausschluss, blockieren wir diesen Arbeitgeber.
+        </li>
+        <li>
+          <strong>Dienstleister</strong> für Hosting und E-Mail — verarbeiten nur nach unserer
+          Weisung.
+        </li>
+        <li>
+          <strong>Behörden</strong>, wenn wir gesetzlich zur Offenlegung verpflichtet sind.
+        </li>
+      </ul>
+
+      <h2>Speicherdauer</h2>
+      <p>
+        Kandidatendaten behalten wir, solange sie für eine Vermittlung sinnvoll sind, und prüfen
+        sie regelmäßig. Auf Löschantrag löschen wir sie, soweit keine Aufbewahrungspflicht besteht —
+        etwa nach einer Vermittlung aus steuerlichen oder vertraglichen Gründen.
+      </p>
+
+      <h2>Ihre Rechte</h2>
+      <p>Unabhängig von Ihrem Wohnort können Sie uns bitten:</p>
+      <ul>
+        <li>mitzuteilen, welche Daten wir zu Ihrer Person haben</li>
+        <li>eine Kopie zu erhalten</li>
+        <li>Fehler zu berichtigen</li>
+        <li>Daten zu löschen</li>
+        <li>künftige Kontaktaufnahme zu stoppen</li>
+      </ul>
+      <p>
+        E-Mail an <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a> — wir setzen das um.
+        Wegen der Ausübung Ihrer Rechte werden Sie nicht benachteiligt.
+      </p>
+
+      <h3>Wenn Sie in Kalifornien wohnen</h3>
+      <p>
+        Nach dem California Consumer Privacy Act (CPRA) haben Sie zusätzlich das Recht zu erfahren,
+        welche Kategorien personenbezogener Daten wir erheben, zu welchen Zwecken und an welche
+        Kategorien Dritter wir sie offenlegen — alles oben beschrieben. Sie können Löschung oder
+        Berichtigung verlangen und dem „Verkauf“ oder „Teilen“ widersprechen.{' '}
+        <strong
+          >Wir verkaufen oder „teilen“ personenbezogene Daten im Sinne des CCPA nicht</strong
+        > — es gibt nichts, dem Sie widersprechen müssten. Bevollmächtigte können Anfragen in Ihrem
+        Namen stellen.
+      </p>
+
+      <h3>Wenn Sie im EWR oder im Vereinigten Königreich sind</h3>
+      <p>
+        Wo die DSGVO bzw. UK GDPR gilt, stützen wir uns auf Ihre Einwilligung (bei Formularen) und
+        unser berechtigtes Interesse an Recruiting-Tätigkeit. Sie können die Einwilligung jederzeit
+        widerrufen und bei Ihrer Aufsichtsbehörde Beschwerde einlegen.
+      </p>
+
+      <h2>Sicherheit</h2>
+      <p>
+        Die Website wird per HTTPS ausgeliefert; Formulare sind verschlüsselt übertragen.
+        Hochgeladene Lebensläufe gehen per E-Mail in unser Recruiting-Postfach — nicht dauerhaft
+        auf dem Webserver. Kein System ist perfekt sicher; wir begrenzen Erhebung und Zugriff.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        Diese Website setzt keine Werbe- oder Tracking-Cookies und nutzt keine Analytics-Dienste
+        Dritter. Schrift und Bilder kommen von unserer Domain — Ihr Besuch wird nicht an Dritte
+        gemeldet.
+      </p>
+
+      <h2>Kinder</h2>
+      <p>
+        Die Website richtet sich an Berufstätige. Wir erheben wissentlich keine Daten von Personen
+        unter 16 Jahren. Glauben Sie, ein Kind habe uns Daten geschickt, melden Sie sich — wir
+        löschen sie.
+      </p>
+
+      <h2>Änderungen</h2>
+      <p>
+        Bei Änderungen aktualisieren wir das Datum oben. Wesentliche Änderungen weisen wir auf der
+        Website hervor.
+      </p>
+
+      <h2>Kontakt</h2>
+      <p>
+        Fragen zu dieser Erklärung oder Anfragen zu Ihren Daten:{' '}
+        <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a> oder an die obige Postanschrift.
+      </p>
+
+      <p class="mt-8">
+        <a href={localePath(locale, '/legal')}>Impressum</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

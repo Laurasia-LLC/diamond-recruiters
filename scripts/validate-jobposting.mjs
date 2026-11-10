@@ -111,7 +111,7 @@ for await (const file of walk(dist)) {
   htmlFiles += 1;
   const rel = relative(dist, file).replace(/\\/g, '/');
   const html = await readFile(file, 'utf8');
-  const isJobPage = /^jobs\/[^/]+\/index\.html$/.test(rel);
+  const isJobPage = /^(de\/)?jobs\/[^/]+\/index\.html$/.test(rel);
   const blocks = extractJsonLd(html);
 
   for (const b of blocks) {
@@ -125,7 +125,7 @@ for await (const file of walk(dist)) {
     continue;
   }
 
-  const slug = rel.split('/')[1];
+  const slug = rel.replace(/^(de\/)?jobs\//, '').replace(/\/index\.html$/, '');
   seenJobPages.add(slug);
 
   const noindex = /<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html);

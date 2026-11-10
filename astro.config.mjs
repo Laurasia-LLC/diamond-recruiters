@@ -4,17 +4,14 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { expiredSlugs, readJobs } from './scripts/lib/jobIndex.mjs';
 
-/**
- * Roles that exist as pages but must stay out of the sitemap: closed, filled
- * or past their validThrough. They are also noindexed and stripped of their
- * JobPosting schema in the page itself.
- */
 const excludedJobPaths = expiredSlugs().map((slug) => `/jobs/${slug}`);
+const excludedJobPathsDe = excludedJobPaths.map((p) => `/de${p}`);
 
-/** slug -> datePosted, used to stamp sitemap lastmod. */
 const jobDates = new Map(
   readJobs().map(({ slug, data }) => [slug, new Date(data.datePosted)])
 );
+
+const allExcluded = [...excludedJobPaths, ...excludedJobPathsDe, '/de/thank-you'];
 
 if (excludedJobPaths.length > 0) {
   console.log(
@@ -31,13 +28,21 @@ export default defineConfig({
       filter: (page) => {
         const path = new URL(page).pathname.replace(/\/$/, '');
         if (path === '/thank-you') return false;
-        return !excludedJobPaths.includes(path);
+        return !allExcluded.includes(path);
       },
       serialize: (item) => {
-        // lastmod is the one sitemap hint Google actually acts on, so stamp
-        // each job page with its posting date. changefreq/priority are
-        // deliberately omitted — Google ignores them.
-        const slug = new URL(item.url).pathname.replace(/\/$/, '').split('/jobs/')[1];
+        const url = new URL(item.url);
+        let pathname = url.pathname.replace(/\/$/, '') || '/';
+
+        if (pathname.startsWith('/de')) {
+          const publicPath = pathname.replace(/^\/de/, '') || '/';
+          return {
+            ...item,
+            url: `https://diamond-recruiters.de${publicPath}`,
+          };
+        }
+
+        const slug = pathname.split('/jobs/')[1];
         const posted = slug && jobDates.get(slug);
         if (posted) {
           return { ...item, lastmod: posted.toISOString() };
@@ -47,7 +52,6 @@ export default defineConfig({
     }),
   ],
   build: {
-    // all-inkl serves plain Apache: emit /about/index.html so URLs work without rewrites
     format: 'directory',
   },
   vite: {

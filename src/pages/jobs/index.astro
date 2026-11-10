@@ -17,7 +17,7 @@ const disciplines = [...new Set(jobs.map((j) => j.data.discipline))].sort();
 
 <BaseLayout
   title="Open Roles"
-  description="Live technical sales searches across US industrial automation, process instrumentation and flow control. Salary and territory stated up front on every role."
+  description="Live technical sales searches across US industrial automation, process instrumentation and flow control. Posted roles include compensation and travel in each listing."
   headerOverDark={false}
 >
   <section class="border-b border-ink-100 bg-ink-950">
@@ -34,7 +34,7 @@ const disciplines = [...new Set(jobs.map((j) => j.data.discipline))].sort();
         {
           jobs.length === 0
             ? 'No searches are posted right now. When a role is live, base, on-target earnings and travel are stated up front. Most of what we work on never gets posted.'
-            : 'Every role below is a search we are actively running. Base, on-target earnings and travel are stated up front — and we confirm the client\'s real band with you on the first call, before you commit to an interview loop.'
+            : 'Each role below is a search we are actively running. The listing includes base, on-target earnings and travel where stated; we confirm client and band in conversation before you commit to interviews.'
         }
       </p>
     </div>

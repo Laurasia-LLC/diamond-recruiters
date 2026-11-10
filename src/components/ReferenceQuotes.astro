@@ -1,0 +1,60 @@
+---
+import type { Locale } from '../lib/locale';
+import { referencesFor } from '../consts';
+
+interface Props {
+  locale?: Locale;
+  limit?: number;
+  class?: string;
+}
+
+const { locale = 'en', limit, class: className = '' } = Astro.props;
+const items = limit != null ? referencesFor(locale).slice(0, limit) : referencesFor(locale);
+
+const caseNoteLabel = locale === 'de' ? 'Fallnotiz' : 'Case note';
+---
+
+<div class={className}>
+  <ul class="grid gap-7 lg:grid-cols-2">
+    {
+      items.map((ref) => {
+        const hasQuote = 'quote' in ref && ref.quote;
+        const caseNote = 'caseNote' in ref ? ref.caseNote : undefined;
+
+        return (
+          <li class="flex flex-col rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-8">
+            <figure class="flex flex-1 flex-col">
+              {
+                hasQuote && (
+                  <blockquote class="flex-1 text-[1.02rem] leading-relaxed text-ink-800">
+                    <span aria-hidden="true" class="text-ice-500">
+                      “
+                    </span>
+                    {ref.quote}
+                    <span aria-hidden="true" class="text-ice-500">
+                      ”
+                    </span>
+                  </blockquote>
+                )
+              }
+              {
+                caseNote && (
+                  <div class="flex-1">
+                    <p class="eyebrow text-ink-500">{caseNoteLabel}</p>
+                    <p class="mt-2 text-[1.02rem] leading-relaxed text-ink-800">{caseNote}</p>
+                  </div>
+                )
+              }
+              <figcaption class="mt-6 border-t border-ink-100 pt-6">
+                <p class="font-display font-semibold text-ink-950">{ref.contact}</p>
+                <p class="mt-1 text-sm text-ink-600">{ref.role}</p>
+                <p class="mt-2 text-sm font-medium text-ink-800">{ref.company}</p>
+                <p class="mt-1 text-xs text-ink-500">{ref.industry}</p>
+              </figcaption>
+            </figure>
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>

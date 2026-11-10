@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ReferenceQuotes from '../../components/ReferenceQuotes.astro';
+import CTABand from '../../components/CTABand.astro';
+import { localePath } from '../../lib/locale';
+
+const locale = 'de' as const;
+---
+
+<BaseLayout
+  title="Referenzen"
+  description="Kundenreferenzen zur Recruiting-Arbeit von Philipp Hoffschröer — Box02, 3V8S Ventures und GEF Ingenieur AG."
+  headerOverDark={false}
+  locale={locale}
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-7xl px-5 pb-16 pt-16 lg:px-8 lg:pb-20 lg:pt-24">
+      <p class="eyebrow text-ice-400">Referenzen</p>
+      <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        Referenzen zu Philipps Recruiting-Arbeit
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
+        Drei freigegebene Kundenaussagen zu unserem Gründer Philipp — keine erfundenen Kennzahlen,
+        kein separates US-Delivery-Team.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
+    <SectionHeading
+      eyebrow="Kunden"
+      title="Was sie geschrieben haben"
+      lead="Zitate und websitebestätigte Aussagen aus den Testimonial-Dateien des Projekts."
+    />
+    <ReferenceQuotes class="mt-14" locale={locale} />
+  </section>
+
+  <CTABand
+    eyebrow="Arbeitgeber"
+    title="Sie starten eine technische Vertriebssuche in den USA?"
+    lead="Buchen Sie ein Scoping-Gespräch oder senden Sie ein Briefing. Kandidaten nutzen den separaten Bewerbungsweg."
+    primaryHref={`${localePath(locale, '/for-employers')}#brief`}
+    primaryLabel="Rolle briefen"
+    secondaryHref={localePath(locale, '/for-candidates')}
+    secondaryLabel="Für Kandidaten"
+  />
+</BaseLayout>

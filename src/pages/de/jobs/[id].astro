@@ -1,0 +1,376 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ApplicationForm from '../../../components/ApplicationForm.astro';
+import JobCard from '../../../components/JobCard.astro';
+import { buildJobPostingSchema } from '../../../lib/jobSchema';
+import { isLive, validThroughFor } from '../../../lib/jobStatus';
+import { usdRange, longDate, isoDate } from '../../../lib/format';
+import { CONTACT } from '../../../consts';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  // Expired roles still build, so inbound links and shared URLs do not 404.
+  // They simply lose their structured data and get noindexed below.
+  const jobs = await getCollection('jobs', ({ data }) => !data.draft);
+  return jobs.map((job) => ({
+    params: { id: job.id },
+    props: { job },
+  }));
+};
+
+interface Props {
+  job: CollectionEntry<'jobs'>;
+}
+
+const { job } = Astro.props;
+const d = job.data;
+const { Content } = await render(job);
+
+const canonical = `https://diamond-recruiters.de/jobs/${job.id}`;
+
+/**
+ * A closed or expired posting must not carry JobPosting markup. Stale schema
+ * degrades Google's trust in the whole domain's feed, not just this listing.
+ */
+const live = isLive(d);
+const schema = live ? buildJobPostingSchema(job, canonical) : null;
+
+const others = (await getCollection('jobs', ({ data }) => isLive(data)))
+  .filter((j) => j.id !== job.id)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const facts = [
+  { label: 'Base salary', value: usdRange(d.baseMin, d.baseMax), mono: true },
+  { label: 'On-target earnings', value: usdRange(d.oteMin, d.oteMax), mono: true },
+  { label: 'Territory', value: d.remote ? 'Remote (US)' : d.territoryLabel, mono: false },
+  { label: 'Travel', value: d.travel, mono: false },
+  { label: 'Experience', value: d.experience, mono: false },
+];
+---
+
+<BaseLayout locale="de" title={d.title} description={d.summary} schema={schema} noindex={!live}>
+  <!-- ============================ HERO ============================ -->
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={d.heroImage}
+      alt={d.heroAlt}
+      widths={[800, 1400, 2000]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/85 to-ink-900/60"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-14 pt-10 lg:px-8 lg:pb-20 lg:pt-16">
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex flex-wrap items-center gap-2 text-sm text-ink-300">
+          <li><a href="/" class="transition-colors hover:text-white">Home</a></li>
+          <li aria-hidden="true" class="text-ink-600">/</li>
+          <li><a href="/jobs" class="transition-colors hover:text-white">Jobs</a></li>
+          <li aria-hidden="true" class="text-ink-600">/</li>
+          <li class="text-ink-100" aria-current="page">{d.discipline}</li>
+        </ol>
+      </nav>
+
+      {
+        !live && (
+          <p class="mb-5 inline-flex items-center gap-2 rounded-full bg-copper-500/20 px-4 py-2 text-sm font-medium text-copper-400 ring-1 ring-copper-500/40">
+            <svg class="h-4 w-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 1.5A6.5 6.5 0 1 0 8 14.5 6.5 6.5 0 0 0 8 1.5zM7.25 4.5h1.5v5h-1.5v-5zm0 6.25h1.5v1.5h-1.5v-1.5z" />
+            </svg>
+            This search has closed
+          </p>
+        )
+      }
+
+      <p class="eyebrow text-ice-400">{d.remote ? 'Remote · United States' : d.territoryLabel}</p>
+      <h1 class="mt-3 max-w-4xl text-3xl leading-[1.12] text-white sm:text-4xl lg:text-5xl">
+        {d.title}
+      </h1>
+      <p class="mt-5 max-w-2xl text-base leading-relaxed text-ink-200 lg:text-lg">{d.summary}</p>
+
+      {
+        live ? (
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <a
+              href="#apply"
+              class="inline-flex items-center justify-center gap-2 rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
+            >
+              Apply for this role
+            </a>
+            <a
+              href={`mailto:${CONTACT.applications}?subject=${encodeURIComponent(d.title)}`}
+              class="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-3.5 text-base font-medium text-white ring-1 ring-white/25 backdrop-blur-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-white/20"
+            >
+              Email us instead
+            </a>
+          </div>
+        ) : (
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <a
+              href="/jobs"
+              class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400"
+            >
+              See current openings
+            </a>
+            <a
+              href="/for-candidates#general-application"
+              class="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-3.5 text-base font-medium text-white ring-1 ring-white/25 backdrop-blur-sm transition-all hover:bg-white/20"
+            >
+              Send your resume anyway
+            </a>
+          </div>
+        )
+      }
+
+      <p class="mt-6 text-sm text-ink-400">
+        Posted <time datetime={isoDate(d.datePosted)}>{longDate(d.datePosted)}</time>
+        {
+          live && (
+            <>
+              {' · Applications close '}
+              <time datetime={isoDate(validThroughFor(d))}>{longDate(validThroughFor(d))}</time>
+            </>
+          )
+        }
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================= FACT STRIP ========================= -->
+  <section class="border-b border-ink-100 bg-white">
+    <dl class="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-6 px-5 py-8 lg:grid-cols-5 lg:px-8">
+      {
+        facts.map((fact) => (
+          <div>
+            <dt class="eyebrow text-ink-400">{fact.label}</dt>
+            <dd
+              class:list={[
+                'mt-2 font-medium text-ink-950',
+                fact.mono ? 'font-mono text-[0.95rem]' : 'text-[0.95rem]',
+              ]}
+            >
+              {fact.value}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- ============================ BODY ============================ -->
+  <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-7 xl:col-span-8">
+        {
+          d.highlights.length > 0 && (
+            <ul class="mb-12 grid gap-3 sm:grid-cols-2">
+              {d.highlights.map((h) => (
+                <li class="flex items-start gap-3 rounded-xl bg-sand-100 px-4 py-3.5">
+                  <svg
+                    class="mt-0.5 h-4 w-4 shrink-0 text-ice-600"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+                  </svg>
+                  <span class="text-sm leading-relaxed text-ink-800">{h}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <div class="prose-dr max-w-none text-ink-700">
+          <Content />
+        </div>
+
+        {
+          d.oteNote && (
+            <p class="mt-10 rounded-2xl border-l-2 border-ice-500 bg-ice-100/50 px-6 py-5 text-[0.95rem] leading-relaxed text-ink-800">
+              <span class="eyebrow block text-ice-600">Earnings detail</span>
+              <span class="mt-2 block">{d.oteNote}</span>
+            </p>
+          )
+        }
+
+        <div class="mt-10 flex flex-wrap gap-2">
+          {
+            d.sectors.map((s) => (
+              <span class="rounded-full bg-ink-100 px-3.5 py-1.5 text-xs font-medium text-ink-700">
+                {s}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Sticky sidebar -->
+      <aside class="lg:col-span-5 xl:col-span-4">
+        <div class="lg:sticky lg:top-28">
+          <div class="rounded-2xl bg-ink-950 p-8 text-white">
+            <p class="eyebrow text-ice-400">Before you apply</p>
+            <h2 class="mt-3 text-xl text-white">You get the real number first</h2>
+            <p class="mt-4 text-[0.925rem] leading-relaxed text-ink-200">
+              The range on this page is our read on comparable roles in this market. We name
+              the client's actual band on the first call, before you spend a minute on an
+              interview loop. If it comes in under what you need, we say so and stop there.
+            </p>
+
+            {
+              live && (
+                <a
+                  href="#apply"
+                  class="mt-7 inline-flex w-full items-center justify-center rounded-full bg-ice-500 px-6 py-3.5 font-semibold text-ink-950 transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400"
+                >
+                  Apply now
+                </a>
+              )
+            }
+
+            <dl class="mt-8 space-y-4 border-t border-ink-800 pt-7 text-sm">
+              <div class="flex justify-between gap-4">
+                <dt class="text-ink-400">Employment</dt>
+                <dd class="text-right text-ink-100">Full time, permanent</dd>
+              </div>
+              <div class="flex justify-between gap-4">
+                <dt class="text-ink-400">Work setup</dt>
+                <dd class="text-right text-ink-100">
+                  {d.remote ? 'Remote, United States' : 'Field-based, home office in territory'}
+                </dd>
+              </div>
+              <div class="flex justify-between gap-4">
+                <dt class="text-ink-400">Commission</dt>
+                <dd class="text-right text-ink-100">Uncapped</dd>
+              </div>
+              <div class="flex justify-between gap-4">
+                <dt class="text-ink-400">Reference</dt>
+                <dd class="text-right font-mono text-xs text-ink-300">{job.id}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <p class="mt-5 px-2 text-sm leading-relaxed text-ink-500">
+            Prefer to ask something before you send anything? Email
+            <a
+              href={`mailto:${CONTACT.applications}`}
+              class="text-ice-600 underline underline-offset-2">{CONTACT.applications}</a
+            > and a person will reply.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =========================== APPLY ============================ -->
+  {
+    live && (
+      <section class="border-y border-ink-100 bg-sand-100/70">
+        <div class="mx-auto max-w-3xl px-5 py-16 lg:px-8 lg:py-20">
+          <p class="eyebrow text-ice-600">Apply</p>
+          <h2 class="mt-3 text-3xl leading-tight sm:text-4xl">Send it through</h2>
+          <p class="mt-5 leading-relaxed text-ink-600">
+            Resume, base city, the OTE you need and how far you will travel. That is
+            genuinely all we need to have a useful first conversation about
+            <strong class="font-medium text-ink-900">{d.title}</strong>. No account, no
+            login — and you get a confirmation on screen the moment it lands.
+          </p>
+
+          <div class="mt-10 rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-9">
+            <ApplicationForm roleTitle={d.title} roleSlug={job.id} id="apply" />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    others.length > 0 && (
+      <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h2 class="text-2xl">Other open roles</h2>
+          <a
+            href="/jobs"
+            class="text-sm font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
+          >
+            View all
+          </a>
+        </div>
+        <div class="mt-8 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+          {others.map((other) => (
+            <JobCard job={other} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {/* Spacer so the fixed mobile bar never covers the footer's last line. */}
+  {live && <div class="h-20 lg:hidden" aria-hidden="true" />}
+
+  <!-- ==================== MOBILE APPLY BAR =======================
+       Keeps Apply reachable without scrolling on a phone, which is where
+       most candidates land from a Google Jobs result. -->
+  {
+    live && (
+      <div
+        class="fixed inset-x-0 bottom-0 z-40 border-t border-ink-100 bg-sand-50/95 px-4 py-3 backdrop-blur-md lg:hidden"
+        data-mobile-apply
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="#apply"
+            class="flex-1 rounded-full bg-ink-900 px-5 py-3.5 text-center text-[0.95rem] font-semibold text-white transition-colors hover:bg-ink-700"
+          >
+            Apply for this role
+          </a>
+          <a
+            href={`mailto:${CONTACT.applications}?subject=${encodeURIComponent(d.title)}`}
+            class="rounded-full p-3.5 text-ink-700 ring-1 ring-ink-200 transition-colors hover:bg-white"
+            aria-label={`Email us about ${d.title}`}
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+              <path d="M3 7l9 6 9-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    )
+  }
+</BaseLayout>
+
+<script>
+  // Hide the fixed bar once the real form is on screen, so it never sits on
+  // top of the fields the candidate is filling in.
+  const bar = document.querySelector<HTMLElement>('[data-mobile-apply]');
+  const form = document.getElementById('apply');
+
+  if (bar && form && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        bar.classList.toggle('translate-y-full', entry.isIntersecting);
+        bar.classList.toggle('opacity-0', entry.isIntersecting);
+      },
+      { rootMargin: '-20% 0px -20% 0px' }
+    );
+    observer.observe(form);
+    bar.classList.add('transition-all', 'duration-300', 'ease-out-expo');
+  }
+</script>

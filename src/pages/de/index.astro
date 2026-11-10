@@ -1,0 +1,409 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import JobCard from '../../components/JobCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { isLive } from '../../lib/jobStatus';
+import { siteFor, proofFor, sectorsFor, bookingFor } from '../../consts';
+import FounderPanel from '../../components/FounderPanel.astro';
+import ReferenceQuotes from '../../components/ReferenceQuotes.astro';
+import { localePath } from '../../lib/locale';
+
+import heroImage from '../../assets/hero-automation-line.jpg';
+import employersImage from '../../assets/employers-handshake.jpg';
+import candidatesImage from '../../assets/candidates-plant-floor.jpg';
+
+const locale = 'de' as const;
+const site = siteFor(locale);
+const BOOKING = bookingFor(locale);
+const SECTORS = sectorsFor(locale);
+const PROOF = proofFor(locale);
+
+const jobs = (await getCollection('jobs', ({ data }) => isLive(data))).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const featured = jobs.filter((j) => j.data.featured).slice(0, 2);
+
+const process = [
+  {
+    step: '01',
+    title: 'Scoping-Gespräch',
+    body: 'Gebiet, Produktlinie, Steuerungsarchitektur, das echte Vergütungsband. Wir fragen, was der Vorgänger falsch machte — das ist meist das Briefing.',
+  },
+  {
+    step: '02',
+    title: 'Marktkarte',
+    body: 'Wir benennen Unternehmen und Ansprechpartner. Sie sehen die Karte, bevor wir jemanden ansprechen — die Suche steht in Ihrem Markt, nicht auf einem Jobportal.',
+  },
+  {
+    step: '03',
+    title: 'Direktansprache',
+    body: 'Vertraulicher Kontakt zu Menschen, die dort performen, wo sie sind. Die stärksten Sales Engineers bewerben sich nicht — sie werden angerufen.',
+  },
+  {
+    step: '04',
+    title: 'Technische Qualifikation',
+    body: 'Wir prüfen Engineering, nicht nur den Lebenslauf. Jeder Kandidat kommt mit einer Zahl, die er vertreten kann, und einer Anwendungsgeschichte, die standhält.',
+  },
+  {
+    step: '05',
+    title: 'Shortlist und Abschluss',
+    body: 'Eine Liste, mit der Sie handeln können — danach begleiten wir Angebot, Gegenangebot und Kündigungsfrist auf beiden Seiten.',
+  },
+];
+---
+
+<BaseLayout title={site.name} locale={locale}>
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="Automationslinie in einer modernen Produktionshalle, kühl blau beleuchtet"
+      widths={[800, 1400, 2000, 2400]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/80 to-ink-900/55"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="absolute inset-x-0 bottom-0 -z-10 h-20 bg-linear-to-t from-sand-50 to-transparent lg:h-28"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-28 pt-20 lg:px-8 lg:pb-36 lg:pt-28">
+      <div class="max-w-3xl">
+        <p class="eyebrow text-ice-400">Für Arbeitgeber · Technischer Vertrieb USA</p>
+
+        <h1
+          class="mt-5 text-4xl leading-[1.08] text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
+        >
+          Suche für industrielle und technische Vertriebsrollen in den USA.
+        </h1>
+
+        <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100 lg:text-xl">
+          Für Hersteller in Automation, Prozessinstrumentierung und Flow Control: Sie briefen Rolle
+          und Gebiet; wir kartieren passende Fachleute und sprechen sie vertraulich an. Kein
+          Lebenslauf-Pool — jede Suche folgt Ihrem Briefing. Philipp Hoffschröer ist der direkte
+          Arbeitgeber-Kontakt.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button href={`${localePath(locale, '/for-employers')}#brief`} variant="onDark" size="lg">
+            Suche starten
+          </Button>
+          <a
+            href={BOOKING.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center rounded-full bg-white/10 px-8 py-3.5 text-base font-semibold text-white ring-1 ring-white/25 backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-white/20"
+          >
+            {BOOKING.label}
+          </a>
+          <Button
+            href={localePath(locale, '/for-candidates')}
+            size="lg"
+            class="bg-white/5 text-ink-100 ring-1 ring-white/15 hover:bg-white/10 hover:ring-white/25"
+          >
+            Für Kandidaten
+          </Button>
+        </div>
+
+        <p class="mt-8 max-w-2xl text-sm leading-relaxed text-ink-300">
+          Arbeitgeber briefen oder buchen unten. Kandidaten nutzen{' '}
+          <a
+            href={localePath(locale, '/jobs')}
+            class="text-ice-300 underline underline-offset-4 hover:text-white"
+          >
+            offene Stellen
+          </a>{' '}
+          oder den{' '}
+          <a
+            href={localePath(locale, '/for-candidates')}
+            class="text-ice-300 underline underline-offset-4 hover:text-white"
+          >
+            Bewerbungsweg
+          </a>
+          {jobs.length > 0
+            ? ' — ausgeschriebene Rollen nennen Vergütungsbänder in den Details.'
+            : '.'}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="founder-panel" class="border-b border-ink-100 bg-white scroll-mt-28">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <FounderPanel compact booking locale={locale} />
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <SectionHeading
+      eyebrow="Mit wem wir arbeiten"
+      title="Zwei Seiten desselben Markts — und ehrlich zu beiden."
+      lead="Viele Agenturen behandeln Kandidaten als Inventar und Kunden als Rechnung. Wir machen beides nicht. Das Geschäft lebt davon, dass beide Seiten uns vertrauen."
+    />
+
+    <div class="mt-14 grid gap-6 lg:grid-cols-2">
+      <a
+        href={localePath(locale, '/for-employers')}
+        class="group relative flex flex-col overflow-hidden rounded-2xl bg-ink-950 ring-1 ring-ink-800 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink-900/20"
+      >
+        <div class="relative h-56 overflow-hidden sm:h-64">
+          <Image
+            src={employersImage}
+            alt="Zwei Fachleute geben sich in einem modernen Büro die Hand"
+            widths={[600, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            class="h-full w-full object-cover opacity-70 transition-all duration-500 ease-out-expo group-hover:scale-[1.04] group-hover:opacity-85"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/50 to-transparent"
+          >
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col p-8">
+          <p class="eyebrow text-ice-400">Für Arbeitgeber</p>
+          <h3 class="mt-3 text-2xl text-white">Sie brauchen jemanden, der die Linie trägt</h3>
+          <p class="mt-4 flex-1 leading-relaxed text-ink-200">
+            Gebietsvertrieb, Applications Engineering, regionale und nationale Vertriebsführung. Wir
+            kartieren Ihren Markt beim Namen, sprechen Performer dort an, wo sie sind, und liefern eine
+            Liste, mit der Sie entscheiden können.
+          </p>
+          <span
+            class="mt-7 inline-flex items-center gap-2 text-sm font-medium text-ice-400 transition-colors group-hover:text-ice-300"
+          >
+            So läuft eine Suche
+            <svg
+              class="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a
+        href={localePath(locale, '/for-candidates')}
+        class="group relative flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink-100 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink-900/10 hover:ring-ink-200"
+      >
+        <div class="relative h-56 overflow-hidden sm:h-64">
+          <Image
+            src={candidatesImage}
+            alt="Ingenieure an einem Kreisförderer im Werk"
+            widths={[600, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            class="h-full w-full object-cover transition-transform duration-500 ease-out-expo group-hover:scale-[1.04]"
+            loading="lazy"
+          />
+        </div>
+        <div class="flex flex-1 flex-col p-8">
+          <p class="eyebrow text-ice-600">Für Kandidaten</p>
+          <h3 class="mt-3 text-2xl text-ink-950">Sie wollen die Zahl vor der Interviewrunde</h3>
+          <p class="mt-4 flex-1 leading-relaxed text-ink-600">
+            Im ersten Gespräch nennen wir Kunde, Band und Gebiet. Liegt das Geld unter Ihrer
+            Schwelle, sagen wir das und stoppen — statt drei Abende zu investieren, um dasselbe zu
+            erfahren.
+          </p>
+          <span
+            class="mt-7 inline-flex items-center gap-2 text-sm font-medium text-ink-900 transition-colors group-hover:text-ice-600"
+          >
+            So arbeiten wir mit Kandidaten
+            <svg
+              class="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="border-y border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading
+          eyebrow="Referenzen"
+          title="Unterschriebene Briefe, namentliche Unterzeichner"
+          lead="Briefe früherer Recruiting-Kunden, wörtlich wie veröffentlicht. Sie beschreiben frühere Arbeit — nicht Diamond-US-Mandate."
+          class="mb-0 max-w-2xl"
+        />
+        <Button href={localePath(locale, '/references')} variant="secondary">Alle Referenzen</Button>
+      </div>
+      <ReferenceQuotes class="mt-14" limit={2} locale={locale} />
+    </div>
+  </section>
+
+  <section class="border-y border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading
+          eyebrow={jobs.length === 0 ? 'Gerade keine offenen Rollen' : `${jobs.length} Rollen offen`}
+          title="Offene Stellen"
+          lead={jobs.length === 0
+            ? 'Aktuell ist nichts ausgeschrieben. Vieles, womit wir arbeiten, erscheint nie öffentlich. Senden Sie einen Lebenslauf — wir sagen ehrlich, ob wir vermutlich etwas haben.'
+            : 'Laufende Suchen. Jede Rolle unten nennt Vergütung und Reise, wo angegeben.'}
+          class="mb-0"
+        />
+        <Button href={localePath(locale, '/jobs')} variant="secondary">Alle offenen Stellen</Button>
+      </div>
+
+      {
+        jobs.length > 0 ? (
+          <div class="mt-14 grid gap-7 lg:grid-cols-2">
+            {featured.map((job) => <JobCard job={job} featured />)}
+          </div>
+        ) : (
+          <div class="mt-10">
+            <Button href={`${localePath(locale, '/for-candidates')}#general-application`}>
+              Lebenslauf senden
+            </Button>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <SectionHeading eyebrow="Für Kandidaten" title="Vergütung früh klären." />
+        <p class="mt-6 leading-relaxed text-ink-600">
+          Bei ausgeschriebenen Rollen stehen Basis und OTE in der Anzeige. Im Gespräch klären wir
+          Kunde, Gebiet und Gehaltserwartung, bevor Sie Zeit in einen Prozess investieren, der nie
+          passen würde.
+        </p>
+        <p class="mt-4 leading-relaxed text-ink-600">
+          Passt Rolle oder Band nicht, sagen wir das und stoppen — statt lange Runden bis zum
+          gleichen Ergebnis.
+        </p>
+      </div>
+
+      <div class="lg:col-span-7">
+        <div class="grid gap-5 sm:grid-cols-2">
+          {
+            [
+              {
+                title: 'Sektor-Fokus',
+                body: 'Automation, Instrumentierung und Flow Control — Suchen, in denen technische Glaubwürdigkeit auf der Anlage zählt.',
+              },
+              {
+                title: 'Keine Lebenslauf-Wand',
+                body: 'Eine kurze Liste mit Begründung pro Name — nicht zwanzig PDFs und die Hoffnung, dass einer hält.',
+              },
+              {
+                title: 'Standard: vertraulich',
+                body: 'Nichts bewegt sich ohne Ihr Okay. Ihr aktueller Arbeitgeber erfährt nicht, dass Sie mit uns gesprochen haben.',
+              },
+              {
+                title: 'Direkter Kontakt',
+                body: 'Arbeitgeber-Anfragen gehen direkt an Philipp per E-Mail oder Buchungslink — kein Sammel-Postfach.',
+              },
+            ].map((item) => (
+              <div class="rounded-2xl bg-white p-7 ring-1 ring-ink-100">
+                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-ice-100">
+                  <svg class="h-4 w-4 text-ice-600" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+                  </svg>
+                </div>
+                <h3 class="mt-5 text-lg">{item.title}</h3>
+                <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{item.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <SectionHeading
+        eyebrow="Märkte"
+        title="Wo wir rekrutieren"
+        lead="Tief in einem schmalen Industrieband — deshalb werden Anrufe beantwortet."
+      />
+
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl bg-ink-100 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          SECTORS.map((sector, i) => (
+            <div class="group bg-white p-8 transition-colors duration-300 hover:bg-sand-50">
+              <span class="font-mono text-xs text-ink-300">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-3 text-lg text-ink-950">{sector.name}</h3>
+              <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{sector.detail}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <SectionHeading
+      eyebrow="Die Suche"
+      title="So läuft eine Suche wirklich"
+      lead="Keine Black Box. Sie wissen in jeder Phase, was passiert — und der Kandidat auch."
+    />
+
+    <ol class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        process.map((item) => (
+          <li class="relative border-t border-ink-200 pt-6">
+            <span class="font-mono text-sm font-medium text-ice-600">{item.step}</span>
+            <h3 class="mt-2.5 text-lg text-ink-950">{item.title}</h3>
+            <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-600">{item.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="border-t border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+      <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          PROOF.map((item) => (
+            <div class="border-t-2 border-ice-600 pt-5">
+              <dt class="font-display text-lg font-semibold tracking-tight text-ink-950">
+                {item.title}
+              </dt>
+              <dd class="mt-2.5 text-sm leading-relaxed text-ink-500">{item.detail}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CTABand
+    eyebrow="Hier starten"
+    title="Sagen Sie, wen Sie einstellen wollen — oder was Sie verdienen möchten."
+    lead="Arbeitgeber: Rolle briefen oder Termin buchen. Kandidaten: bewerben mit dem Band, das Sie brauchen — wir antworten klar, wenn wir helfen können und wenn nicht."
+    primaryHref={`${localePath(locale, '/for-employers')}#brief`}
+    primaryLabel="Rolle briefen"
+    secondaryHref={localePath(locale, '/jobs')}
+    secondaryLabel="Offene Stellen ansehen"
+  />
+</BaseLayout>

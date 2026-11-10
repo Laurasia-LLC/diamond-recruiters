@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CONTACT, LEGAL } from '../consts';
+
+const addr = CONTACT.address;
+
+const responsible: string = LEGAL.responsibleTitle
+  ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
+  : LEGAL.responsibleParty;
+---
+
+<BaseLayout
+  title="Legal"
+  description="Legal identification and site ownership details for Diamond Recruiters."
+  headerOverDark={false}
+  locale="en"
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-3xl px-5 pb-14 pt-16 lg:px-8 lg:pb-16 lg:pt-24">
+      <p class="eyebrow text-ice-400">Legal</p>
+      <h1 class="mt-4 text-4xl leading-tight text-white">Legal</h1>
+      <p class="mt-5 text-ink-300">Site ownership and legal identification</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
+    <div class="prose-dr text-ink-700">
+      <h2>Site operator</h2>
+      <p>
+        {LEGAL.entityName}, a {LEGAL.stateOfIncorporation} {LEGAL.entityType}<br />
+        {addr.line1}<br />
+        {addr.city}, {addr.region} {addr.postalCode}<br />
+        {addr.countryName}
+      </p>
+      <p>{SITE.name} is a trade name of {LEGAL.entityName}.</p>
+
+      <h2>Represented by</h2>
+      <p>
+        {responsible}<br />
+        Contact at <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a>.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Email: <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a><br />
+        Applications: <a href={`mailto:${CONTACT.applications}`}>{CONTACT.applications}</a>
+      </p>
+
+      <h2>Registered address</h2>
+      <p>
+        {addr.line1}<br />
+        {addr.city}, {addr.region} {addr.postalCode}<br />
+        {addr.countryName}
+      </p>
+      <p class="text-sm text-ink-500">
+        Legal and postal address of Laurasia LLC. Searches are run remotely and on site with
+        clients — this is not a walk-in office.
+      </p>
+
+      <h2>Nature of business</h2>
+      <p>
+        Recruitment and executive search services for technical sales roles in industrial
+        manufacturing, supplied to employers in the United States.
+      </p>
+
+      <h2>Liability for content</h2>
+      <p>
+        We prepare the content of this site with care, but we do not warrant that it is
+        complete, current or accurate at all times. Salary ranges shown on role pages are our
+        assessment of comparable roles in the relevant market and are not an offer, a
+        guarantee, or a statement of any particular employer's compensation band. The
+        client's actual band is confirmed directly with candidates.
+      </p>
+
+      <h2>Liability for links</h2>
+      <p>
+        Where this site links to external websites, we have no control over their content
+        and accept no responsibility for it. Responsibility rests with the operator of the
+        linked site.
+      </p>
+
+      <h2>Copyright</h2>
+      <p>
+        The content and structure of this site are protected by copyright. Photography used
+        on this site is licensed from third-party photographers — see
+        <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">CREDITS.md</code> in
+        the site repository for the source of each image. Reproduction of site content
+        outside the limits of copyright law requires our written consent.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        How we handle personal information is set out in our <a href="/privacy">Privacy Policy</a>.
+      </p>
+
+      <p class="mt-10 text-sm text-ink-500">
+        {SITE.name} · <a href={SITE.url}>{SITE.domain}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

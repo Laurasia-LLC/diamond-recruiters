@@ -1,0 +1,98 @@
+---
+import { Image } from 'astro:assets';
+import { CONTACT, LEGAL, founderFor, bookingFor } from '../consts';
+import type { Locale } from '../lib/locale';
+import { detectLocaleFromPath } from '../lib/locale';
+import HumanContact from './HumanContact.astro';
+import founderPhoto from '../assets/founder-philipp-hoffschroer.jpg';
+
+interface Props {
+  booking?: boolean;
+  compact?: boolean;
+  class?: string;
+  locale?: Locale;
+}
+
+const {
+  booking = false,
+  compact = false,
+  class: className = '',
+  locale = detectLocaleFromPath(Astro.url.pathname),
+} = Astro.props;
+
+const founder = founderFor(locale);
+const bookingInfo = bookingFor(locale);
+const employerEyebrow = locale === 'de' ? 'Ansprechpartner Arbeitgeber' : 'Employer contact';
+const directEyebrow = locale === 'de' ? 'Direktkontakt' : 'Direct contact';
+const directLead =
+  locale === 'de'
+    ? 'E-Mail oder Buchungslink oben für Arbeitgeber-Gespräche.'
+    : 'Use email or the booking link above for employer conversations.';
+---
+
+<div
+  class:list={[
+    'grid items-start gap-10',
+    compact ? 'lg:grid-cols-12 lg:gap-14' : 'lg:grid-cols-2 lg:gap-16',
+    className,
+  ]}
+>
+  <div class:list={[compact && 'lg:col-span-5']}>
+    <div class="overflow-hidden rounded-2xl ring-1 ring-ink-100">
+      <Image
+        src={founderPhoto}
+        alt={`${LEGAL.responsibleParty}, founder of Diamond Recruiters`}
+        widths={[400, 560, 800]}
+        sizes={compact ? '(min-width: 1024px) 38vw, 92vw' : '(min-width: 1024px) 46vw, 92vw'}
+        class="aspect-square w-full object-cover"
+        loading="lazy"
+      />
+    </div>
+    {
+      CONTACT.social.linkedin && (
+        <p class="mt-4 text-sm">
+          <a
+            href={CONTACT.social.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
+          >
+            {LEGAL.responsibleParty} on LinkedIn
+          </a>
+        </p>
+      )
+    }
+  </div>
+
+  <div class:list={[compact && 'lg:col-span-7', 'space-y-6']}>
+    <div>
+      <p class="eyebrow text-ice-600">{employerEyebrow}</p>
+      <h2 class="mt-3 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl">
+        {LEGAL.responsibleParty}
+      </h2>
+      <p class="mt-2 text-sm text-ink-500">{LEGAL.responsibleTitle}, Diamond Recruiters</p>
+      <p class="mt-5 text-[1.02rem] leading-relaxed text-ink-600">{founder.lead}</p>
+    </div>
+
+    {
+      booking && (
+        <a
+          href={bookingInfo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-ink-950 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-ink-800"
+        >
+          {bookingInfo.label}
+        </a>
+      )
+    }
+
+    <HumanContact
+      locale={locale}
+      eyebrow={directEyebrow}
+      booking={false}
+      lead={directLead}
+      class="!p-6 sm:!p-7"
+    />
+  </div>
+</div>

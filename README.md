@@ -3,8 +3,9 @@
 Marketing and job-board site for Diamond Recruiters, a technical sales search firm working in
 US industrial automation, process instrumentation and flow control.
 
-Static site, no database, no CMS. Roles are markdown files. Forms are handled by two small PHP
-endpoints on the same host.
+Static site, no database, no CMS. Roles are markdown files. Employer conversion is Google
+Calendar plus `hello@`; candidate applications use `apply@` via mailto on Vercel (PHP endpoints
+removed from this branch — legacy All-Inkl copies remain documented below for reference).
 
 ---
 
@@ -17,8 +18,8 @@ endpoints on the same host.
 | Content | Astro Content Collections | One markdown file per role, schema-validated at build time. |
 | Images | Astro `<Image>` + sharp | Auto AVIF/WebP at multiple widths. A 750 kB hero ships as 79 kB. |
 | Fonts | Fontsource, self-hosted | No Google Fonts request, so no consent banner needed for fonts. |
-| Forms | PHP on all-inkl | Uses the domain's own mailbox — best deliverability, no third-party service. |
-| Hosting | all-inkl webspace | Static files over FTPS from GitHub Actions. |
+| Forms | Mailto + calendar (Vercel) | No server-side form handler in this build. |
+| Hosting | Vercel (target) | `vercel.json` maps `.com` → English, `.de` → `/de/*`. Legacy: all-inkl FTPS. |
 
 ---
 
@@ -37,6 +38,8 @@ npm run dev          # http://localhost:4321
 | `npm run check` | TypeScript + Astro diagnostics |
 | `npm run validate:schema` | **Validates JobPosting JSON-LD against Google's rules** |
 | `npm run check:placeholders` | **Lists every fake value still in the build** |
+| `npm run check:no-phone` | **Fails if the old public phone or Diana Herold appears in dist/** |
+| `npm run prelaunch` | build + validate:schema + placeholder + no-phone checks |
 | `npm run notify:google` | Push new/closed roles to the Google Indexing API |
 | `npm run prelaunch` | Build, validate schema, then check placeholders |
 | `npm run assets` | Regenerate favicon, OG card and app icons |
@@ -133,7 +136,14 @@ Done:
       (`LEGAL.responsibleParty` / `LEGAL.responsibleTitle`)
 - [x] Imprint and privacy contact — `hello@diamond-recruiters.com` (`CONTACT.general`).
       Applications stay on `apply@diamond-recruiters.com` (`CONTACT.applications`).
-- [x] Registered address, Sheridan WY (`CONTACT.address`)
+- [x] Employer-facing contact — the employer page, its CTA and the shared footer on every
+      non-candidate page use `CONTACT.general`, and name Philipp Hoffschröer as the human
+      contact (`LEGAL.responsibleParty`). The footer falls back to `CONTACT.applications` on
+      `/for-candidates`, `/jobs/*` and `/thank-you` only; see `CANDIDATE_PATHS` in
+      `src/components/Footer.astro`. The employer page carries the public booking link in
+      `BOOKING` (`src/consts.ts`) as an outbound link, never an embed.
+- [x] Registered address, Sheridan WY (`CONTACT.address`), labelled "Registered address" on
+      `/contact`. It is a legal mailing address, not an office.
 - [x] Phone number (`CONTACT.phone` / `CONTACT.phoneHref`)
 - [x] The invented stats band is gone. It was replaced with `PROOF` — four commitments a
       client can hold the firm to, rather than placement counts and retention percentages a
@@ -145,7 +155,8 @@ Done:
 1. In KAS, confirm the mailbox **apply@diamond-recruiters.com** exists.
 2. **hello@diamond-recruiters.com** needs no mailbox — a catch-all on the domain forwards
    everything to `ph@skytz-consulting.com`. Keep that catch-all in place, or `hello@`, the
-   address printed on the contact, imprint, privacy and 404 pages, starts bouncing.
+   address printed on the contact, employer, about, imprint, privacy and 404 pages, starts
+   bouncing.
 3. Optional but recommended: copy `public/api/config.sample.php` to `api/config.php`
    **on the server** and fill in SMTP credentials. Without it the endpoints use PHP `mail()`,
    which works on all-inkl but is less reliable under load.

@@ -1,0 +1,66 @@
+---
+import { CONTACT } from '../consts';
+import type { Locale } from '../lib/locale';
+import { bookingFor } from '../consts';
+
+interface Props {
+  locale?: Locale;
+  id?: string;
+}
+
+const { locale = 'en', id = 'employer-conversion' } = Astro.props;
+const booking = bookingFor(locale);
+
+const copy =
+  locale === 'de'
+    ? {
+        title: 'Suchbrief oder Gespräch',
+        lead:
+          'Schreiben Sie an hello@ oder buchen Sie einen Termin mit Philipp. Für einen strukturierten Suchbrief nutzen Sie die Vorlage in der E-Mail.',
+        mailSubject: 'Suchbrief Diamond Recruiters',
+        mailBody:
+          'Rolle / Titel:\nTerritorium:\nProduktlinie:\nGehaltsband (Basis / OTE):\nZeitrahmen:\nSonstiges:',
+        template: 'E-Mail mit Vorlage öffnen',
+      }
+    : {
+        title: 'Brief a search or book a call',
+        lead:
+          'Email hello@ or book time with Philipp. For a structured brief, use the template in the email — no PHP form required.',
+        mailSubject: 'Search brief — Diamond Recruiters',
+        mailBody:
+          'Role / title:\nTerritory:\nProduct line:\nComp band (base / OTE):\nTimeline:\nNotes:',
+        template: 'Open email with template',
+      };
+
+const mailto = `mailto:${CONTACT.general}?subject=${encodeURIComponent(copy.mailSubject)}&body=${encodeURIComponent(copy.mailBody)}`;
+---
+
+<div id={id} class="scroll-mt-28 space-y-6">
+  <div>
+    <h3 class="text-lg font-semibold text-ink-950">{copy.title}</h3>
+    <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-600">{copy.lead}</p>
+  </div>
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+    <a
+      href={booking.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center rounded-full bg-ink-950 px-7 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-ink-800"
+    >
+      {booking.label}
+    </a>
+    <a
+      href={`mailto:${CONTACT.general}`}
+      class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-base font-medium text-ink-900 ring-1 ring-ink-200 transition-all hover:bg-sand-50"
+    >
+      {CONTACT.general}
+    </a>
+    <a
+      href={mailto}
+      class="inline-flex items-center justify-center rounded-full bg-ice-50 px-7 py-3.5 text-base font-medium text-ice-800 ring-1 ring-ice-200 transition-all hover:bg-ice-100"
+    >
+      {copy.template}
+    </a>
+  </div>
+</div>

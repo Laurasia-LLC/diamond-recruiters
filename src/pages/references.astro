@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ReferenceQuotes from '../components/ReferenceQuotes.astro';
+import CTABand from '../components/CTABand.astro';
+---
+
+<BaseLayout
+  title="References"
+  description="Client references about Philipp Hoffschröer's recruitment work — Box02, 3V8S Ventures and GEF Ingenieur AG."
+  headerOverDark={false}
+  locale="en"
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-7xl px-5 pb-16 pt-16 lg:px-8 lg:pb-20 lg:pt-24">
+      <p class="eyebrow text-ice-400">References</p>
+      <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        References for Philipp's recruitment work
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
+        Three approved client statements about our founder Philipp — not invented metrics, not
+        a separate US delivery team.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
+    <SectionHeading
+      eyebrow="Clients"
+      title="What they wrote"
+      lead="Quotes and website-confirmed statements sourced from project testimonial files."
+    />
+    <ReferenceQuotes class="mt-14" locale="en" />
+  </section>
+
+  <CTABand
+    eyebrow="Employers"
+    title="Starting a US technical sales search?"
+    lead="Book a scoping call or send a brief. Candidates should use the separate apply path."
+    primaryHref="/for-employers#brief"
+    primaryLabel="Brief a role"
+    secondaryHref="/for-candidates"
+    secondaryLabel="For candidates"
+  />
+</BaseLayout>

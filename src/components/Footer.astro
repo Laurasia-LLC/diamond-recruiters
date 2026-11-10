@@ -1,38 +1,106 @@
 ---
-import { SITE, CONTACT, SECTORS } from '../consts';
+import { CONTACT, LEGAL, siteFor, sectorsFor } from '../consts';
+import type { Locale } from '../lib/locale';
+import { detectLocaleFromPath, localePath, logicalPath } from '../lib/locale';
 import Logo from './Logo.astro';
 
-const year = new Date().getFullYear();
+interface Props {
+  locale?: Locale;
+}
 
-/** Hide social links until they hold a real URL — a broken link reads worse than none. */
+const { locale = detectLocaleFromPath(Astro.url.pathname) } = Astro.props;
+const site = siteFor(locale);
+const sectors = sectorsFor(locale);
 const linkedin: string | null = CONTACT.social.linkedin || null;
 
-const columns = [
-  {
-    heading: 'Company',
-    links: [
-      { href: '/about', label: 'About' },
-      { href: '/for-employers', label: 'For Employers' },
-      { href: '/for-candidates', label: 'For Candidates' },
-      { href: '/contact', label: 'Contact' },
-    ],
-  },
-  {
-    heading: 'Open Roles',
-    links: [
-      { href: '/jobs', label: 'All open roles' },
-      { href: '/jobs/sales-engineer-industrial-automation-sensors', label: 'Automation & Sensors' },
-      { href: '/jobs/sales-engineer-process-instrumentation-valve-automation', label: 'Process Instrumentation' },
-    ],
-  },
-  {
-    heading: 'Legal',
-    links: [
-      { href: '/privacy', label: 'Privacy Policy' },
-      { href: '/imprint', label: 'Imprint' },
-    ],
-  },
-];
+const path = logicalPath(Astro.url.pathname);
+const CANDIDATE_PATHS = ['/for-candidates', '/jobs', '/thank-you'];
+const forCandidates = CANDIDATE_PATHS.some(
+  (p) => path === p || path.startsWith(`${p}/`)
+);
+
+const primaryEmail = forCandidates ? CONTACT.applications : CONTACT.general;
+const primaryLabel = forCandidates
+  ? locale === 'de'
+    ? 'Bewerbungen'
+    : 'Applications'
+  : locale === 'de'
+    ? 'Anfragen'
+    : 'Enquiries';
+const isContactPage = path === '/contact';
+const contactHref = localePath(locale, '/contact');
+
+const legalLabel = locale === 'de' ? 'Impressum' : 'Legal';
+const privacyLabel = locale === 'de' ? 'Datenschutz' : 'Privacy Policy';
+
+const columns =
+  locale === 'de'
+    ? [
+        {
+          heading: 'Unternehmen',
+          links: [
+            { href: '/about', label: 'Über uns' },
+            { href: '/references', label: 'Referenzen' },
+            { href: '/for-employers', label: 'Für Arbeitgeber' },
+            { href: '/for-candidates', label: 'Für Kandidaten' },
+            { href: '/contact', label: 'Kontakt' },
+          ],
+        },
+        {
+          heading: 'Offene Stellen',
+          links: [
+            { href: '/jobs', label: 'Alle Stellen' },
+            {
+              href: '/jobs/sales-engineer-industrial-automation-sensors',
+              label: 'Automation & Sensoren',
+            },
+            {
+              href: '/jobs/sales-engineer-process-instrumentation-valve-automation',
+              label: 'Prozessinstrumentierung',
+            },
+          ],
+        },
+        {
+          heading: 'Rechtliches',
+          links: [
+            { href: '/privacy', label: privacyLabel },
+            { href: '/legal', label: legalLabel },
+          ],
+        },
+      ]
+    : [
+        {
+          heading: 'Company',
+          links: [
+            { href: '/about', label: 'About' },
+            { href: '/references', label: 'References' },
+            { href: '/for-employers', label: 'For Employers' },
+            { href: '/for-candidates', label: 'For Candidates' },
+            { href: '/contact', label: 'Contact' },
+          ],
+        },
+        {
+          heading: 'Open Roles',
+          links: [
+            { href: '/jobs', label: 'All open roles' },
+            { href: '/jobs/sales-engineer-industrial-automation-sensors', label: 'Automation & Sensors' },
+            { href: '/jobs/sales-engineer-process-instrumentation-valve-automation', label: 'Process Instrumentation' },
+          ],
+        },
+        {
+          heading: 'Legal',
+          links: [
+            { href: '/privacy', label: privacyLabel },
+            { href: '/legal', label: legalLabel },
+          ],
+        },
+      ];
+
+const year = new Date().getFullYear();
+const blurb =
+  locale === 'de'
+    ? 'US-Suche für technische Vertriebsrollen bei Industrieherstellern — Automation, Prozessinstrumentierung und Flow Control.'
+    : 'US search for technical sales roles with industrial manufacturers — automation, process instrumentation and flow control.';
 ---
 
 <footer class="bg-ink-950 text-ink-200">
@@ -40,26 +108,39 @@ const columns = [
     <div class="grid gap-12 lg:grid-cols-12">
       <div class="lg:col-span-4">
         <Logo tone="light" />
-        <p class="mt-5 max-w-sm text-sm leading-relaxed text-ink-300">
-          Technical sales search for industrial manufacturers. We recruit the people who
-          walk the plant floor and close the fix — across automation, instrumentation and
-          flow control in the United States.
-        </p>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-ink-300">{blurb}</p>
 
         <div class="mt-7 space-y-2.5 text-sm">
+          <p class="eyebrow text-ink-400">{primaryLabel}</p>
           <a
-            href={`mailto:${CONTACT.applications}`}
+            href={`mailto:${primaryEmail}`}
             class="block text-ice-300 transition-colors hover:text-ice-100"
           >
-            {CONTACT.applications}
-          </a>
-          <a
-            href={CONTACT.phoneHref}
-            class="block text-ink-300 transition-colors hover:text-white"
-          >
-            {CONTACT.phone}
+            {primaryEmail}
           </a>
         </div>
+
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-ink-400">
+          {LEGAL.responsibleTitle
+            ? `${LEGAL.responsibleParty}, ${LEGAL.responsibleTitle}`
+            : LEGAL.responsibleParty}
+          {' — '}
+          {isContactPage ? (
+            <a
+              href={`mailto:${CONTACT.general}`}
+              class="text-ink-300 underline underline-offset-4 transition-colors hover:text-white"
+            >
+              {locale === 'de' ? 'direkt per E-Mail' : 'email directly'}
+            </a>
+          ) : (
+            <a
+              href={contactHref}
+              class="text-ink-300 underline underline-offset-4 transition-colors hover:text-white"
+            >
+              {locale === 'de' ? 'direkter Kontakt' : 'direct contact'}
+            </a>
+          )}
+        </p>
 
         {
           linkedin && (
@@ -87,7 +168,7 @@ const columns = [
                 {col.links.map((link) => (
                   <li>
                     <a
-                      href={link.href}
+                      href={localePath(locale, link.href)}
                       class="text-sm text-ink-200 transition-colors hover:text-white"
                     >
                       {link.label}
@@ -101,10 +182,10 @@ const columns = [
       </div>
 
       <div class="lg:col-span-3">
-        <h3 class="eyebrow text-ink-400">Markets we cover</h3>
+        <h3 class="eyebrow text-ink-400">{locale === 'de' ? 'Märkte' : 'Markets we cover'}</h3>
         <ul class="mt-4 flex flex-wrap gap-2">
           {
-            SECTORS.map((s) => (
+            sectors.map((s) => (
               <li class="rounded-full border border-ink-800 px-3 py-1.5 text-xs text-ink-300">
                 {s.name}
               </li>
@@ -117,9 +198,13 @@ const columns = [
     <div
       class="mt-14 flex flex-col gap-4 border-t border-ink-800 pt-8 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between"
     >
-      <p>&copy; {year} {SITE.name}. All rights reserved.</p>
+      <p>
+        &copy; {year} {site.name}. {locale === 'de' ? 'Alle Rechte vorbehalten.' : 'All rights reserved.'}
+      </p>
       <p class="font-mono">
-        Recruiting across the United States · Automation · Instrumentation · Flow Control
+        {locale === 'de'
+          ? 'USA · Automation · Instrumentierung · Flow Control'
+          : 'Recruiting across the United States · Automation · Instrumentation · Flow Control'}
       </p>
     </div>
   </div>
