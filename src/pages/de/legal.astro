@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteFor, CONTACT, LEGAL } from '../../consts';
+import { localePath } from '../../lib/locale';
+
+const locale = 'de' as const;
+const site = siteFor(locale);
+const addr = CONTACT.address;
+
+const responsible: string = LEGAL.responsibleTitle
+  ? `${LEGAL.responsibleParty}, Gründer`
+  : LEGAL.responsibleParty;
+---
+
+<BaseLayout
+  title="Impressum"
+  description="Impressum und rechtliche Angaben zu Diamond Recruiters."
+  headerOverDark={false}
+  locale={locale}
+>
+  <section class="border-b border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-3xl px-5 pb-14 pt-16 lg:px-8 lg:pb-16 lg:pt-24">
+      <p class="eyebrow text-ice-400">Rechtliches</p>
+      <h1 class="mt-4 text-4xl leading-tight text-white">Impressum</h1>
+      <p class="mt-5 text-ink-300">Angaben gemäß § 5 TMG (soweit anwendbar) und Site-Betreiber</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8 lg:py-20">
+    <div class="prose-dr text-ink-700">
+      <h2>Diensteanbieter</h2>
+      <p>
+        {LEGAL.entityName}<br />
+        {addr.line1}<br />
+        {addr.city}, {addr.region} {addr.postalCode}<br />
+        {addr.countryName}
+      </p>
+      <p>{site.name} ist ein Handelsname der {LEGAL.entityName}.</p>
+
+      <h2>Vertreten durch</h2>
+      <p>
+        {responsible}<br />
+        Kontakt: <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a>
+      </p>
+
+      <h2>Kontakt</h2>
+      <p>
+        E-Mail: <a href={`mailto:${CONTACT.general}`}>{CONTACT.general}</a><br />
+        Bewerbungen: <a href={`mailto:${CONTACT.applications}`}>{CONTACT.applications}</a>
+      </p>
+      <p class="text-sm text-ink-500">
+        Keine öffentliche Telefonnummer auf dieser Website. Gespräche laufen per E-Mail oder
+        Kalenderbuchung.
+      </p>
+
+      <h2>Registrierte Anschrift</h2>
+      <p>
+        {addr.line1}<br />
+        {addr.city}, {addr.region} {addr.postalCode}<br />
+        {addr.countryName}
+      </p>
+      <p class="text-sm text-ink-500">
+        Rechtliche und postalische Anschrift der Laurasia LLC. Suchen werden remote und vor Ort
+        beim Kunden durchgeführt — dies ist kein Besucherbüro.
+      </p>
+
+      <h2>Tätigkeit</h2>
+      <p>
+        Recruiting und Executive Search für technische Vertriebsrollen in der Industrieproduktion,
+        für Arbeitgeber in den Vereinigten Staaten.
+      </p>
+
+      <h2>Haftung für Inhalte</h2>
+      <p>
+        Wir bereiten die Inhalte dieser Website mit Sorgfalt auf, garantieren aber nicht, dass sie
+        jederzeit vollständig, aktuell oder fehlerfrei sind. Gehaltsbänder auf Stellenseiten sind
+        unsere Einschätzung vergleichbarer Rollen im jeweiligen Markt — kein Angebot, keine
+        Garantie und keine Zusage eines konkreten Arbeitgeberbands. Der tatsächliche Band wird
+        direkt mit Kandidaten geklärt.
+      </p>
+
+      <h2>Haftung für Links</h2>
+      <p>
+        Verlinken wir auf externe Websites, haben wir keinen Einfluss auf deren Inhalte und keine
+        Verantwortung dafür. Verantwortlich ist der jeweilige Betreiber.
+      </p>
+
+      <h2>Urheberrecht</h2>
+      <p>
+        Inhalt und Struktur dieser Website sind urheberrechtlich geschützt. Fotos sind von
+        Drittanbietern lizenziert — siehe <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs">CREDITS.md</code> im
+        Repository. Vervielfältigung außerhalb der Schranken des Urheberrechts nur mit unserer
+        schriftlichen Zustimmung.
+      </p>
+
+      <h2>Datenschutz</h2>
+      <p>
+        Wie wir personenbezogene Daten verarbeiten, steht in unserer{' '}
+        <a href={localePath(locale, '/privacy')}>Datenschutzerklärung</a>.
+      </p>
+
+      <p class="mt-10 text-sm text-ink-500">
+        {site.name} · <a href={site.url}>{site.domain}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

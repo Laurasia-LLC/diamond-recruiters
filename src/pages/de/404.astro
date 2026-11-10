@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import { CONTACT } from '../../consts';
+import { localePath } from '../../lib/locale';
+
+const locale = 'de' as const;
+
+const links = [
+  {
+    href: localePath(locale, '/jobs'),
+    label: 'Offene Stellen',
+    detail: 'Alle Suchen, die wir gerade laufen lassen',
+  },
+  {
+    href: localePath(locale, '/for-employers'),
+    label: 'Für Arbeitgeber',
+    detail: 'So läuft eine Suche — und wie Sie uns briefen',
+  },
+  {
+    href: localePath(locale, '/for-candidates'),
+    label: 'Für Kandidaten',
+    detail: 'Was die Zusammenarbeit mit uns bedeutet',
+  },
+  {
+    href: localePath(locale, '/contact'),
+    label: 'Kontakt',
+    detail: 'Direkt mit einer Person sprechen',
+  },
+];
+---
+
+<BaseLayout title="Seite nicht gefunden" noindex={true} headerOverDark={false} locale={locale}>
+  <section class="mx-auto max-w-3xl px-5 py-24 lg:px-8 lg:py-32">
+    <p class="eyebrow text-ice-600">Fehler 404</p>
+    <h1 class="mt-4 text-4xl leading-tight sm:text-5xl">Diese Seite gibt es nicht.</h1>
+    <p class="mt-6 text-lg leading-relaxed text-ink-600">
+      Der Link ist vielleicht veraltet, oder eine Stelle wurde geschlossen, seit sie geteilt wurde.
+      Alles Aktuelle steht auf der Stellenseite.
+    </p>
+
+    <div class="mt-10">
+      <Button href={localePath(locale, '/jobs')} size="lg">Offene Stellen ansehen</Button>
+    </div>
+
+    <ul class="mt-14 divide-y divide-ink-100 border-y border-ink-100">
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href} class="group flex items-center justify-between gap-4 py-5">
+              <span>
+                <span class="block font-display font-medium text-ink-950">{link.label}</span>
+                <span class="mt-1 block text-sm text-ink-500">{link.detail}</span>
+              </span>
+              <svg
+                class="h-5 w-5 shrink-0 text-ink-300 transition-all duration-300 ease-out-expo group-hover:translate-x-1 group-hover:text-ice-600"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                aria-hidden="true"
+              >
+                <path d="M2.5 8h11M9 3.5L13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-10 text-sm text-ink-500">
+      Suchen Sie etwas Bestimmtes? Schreiben Sie an{' '}
+      <a
+        href={`mailto:${CONTACT.general}`}
+        class="text-ice-600 underline underline-offset-2">{CONTACT.general}</a>
+      — wir zeigen Ihnen den Weg.
+    </p>
+  </section>
+</BaseLayout>

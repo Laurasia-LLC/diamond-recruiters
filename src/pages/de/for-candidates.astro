@@ -1,0 +1,222 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ApplicationForm from '../../components/ApplicationForm.astro';
+import JobCard from '../../components/JobCard.astro';
+import { isLive } from '../../lib/jobStatus';
+import { localePath } from '../../lib/locale';
+import heroImage from '../../assets/candidates-plant-floor.jpg';
+
+const locale = 'de' as const;
+
+const jobs = (await getCollection('jobs', ({ data }) => isLive(data))).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const promises = [
+  {
+    title: 'Das Band, bevor die Runden starten',
+    body: 'Im ersten Gespräch nennen wir Kunde, Gebiet und echtes Gehaltsband. Liegt es unter Ihrer Schwelle, sagen wir das und hören auf — niemand investiert vier Interviewrunden, um zu erfahren, dass das Geld nie passte.',
+  },
+  {
+    title: 'Nichts ohne Ihr Okay',
+    body: 'Ihr Lebenslauf geht nirgends hin, bis Sie genau diesem Unternehmen zustimmen. Kein Massenversand, kein „Sie lagen bei uns auf“, kein Anruf des aktuellen Arbeitgebers.',
+  },
+  {
+    title: 'Wir sagen, wenn es nicht passt',
+    body: 'Auch wenn wir nicht helfen können. Ein klares Nein heute ist Ihnen mehr wert als ein höfliches Vielleicht, das drei Wochen verstummt.',
+  },
+  {
+    title: 'Echte Vorbereitung, kein Briefing-PDF',
+    body: 'Vor dem Termin sagen wir, wer im Raum sitzt, was ihnen wichtig ist, was der Vorgänger falsch machte und wo sie nachhaken werden.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Erfährt mein aktueller Arbeitgeber etwas?',
+    a: 'Nicht von uns. Wir senden Ihre Daten nie an ein Unternehmen ohne Ihre ausdrückliche Freigabe — beim Namen. Gibt es einen Arbeitgeber, den wir meiden sollen, sagen Sie Bescheid — wir sperren ihn.',
+  },
+  {
+    q: 'Was, wenn ich gerade nicht suche?',
+    a: 'Genau solche Menschen rufen wir oft an. Wenn heute nichts passt, bleiben wir in Kontakt für später. Keine Newsletter-Liste.',
+  },
+  {
+    q: 'Zahle ich etwas?',
+    a: 'Nein. Kandidaten zahlen uns in keiner Phase etwas. Das Honorar zahlt der einstellende Arbeitgeber.',
+  },
+  {
+    q: 'Warum fragen Sie so früh nach Gehalt?',
+    a: 'Weil wir ehrlich damit arbeiten, nicht dagegen. Liegt Ihre Zahl über dem Band, sagen wir das sofort — statt sie als Druckmittel gegen Sie zu nutzen.',
+  },
+  {
+    q: 'Was passiert mit meinem Lebenslauf ohne Passung?',
+    a: 'Wir behalten ihn, um Sie bei passenden Rollen anzusprechen — Sie können jederzeit Löschung verlangen. Details in der Datenschutzerklärung.',
+  },
+  {
+    q: 'Wie schnell bekomme ich Antwort?',
+    a: 'Ein Mensch liest mit. Wenn wir nicht helfen können, sagen wir das klar.',
+  },
+];
+---
+
+<BaseLayout
+  title="Für Kandidaten"
+  description="Sales-Engineer-Rollen in US-Industrie: Automation, Prozessinstrumentierung und Flow Control. Gehaltsband im ersten Gespräch — nichts läuft ohne Ihre Freigabe."
+  locale={locale}
+>
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="Ingenieure an einem Förderkreis im Werk"
+      widths={[800, 1400, 1800]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-40"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/85 to-ink-900/70"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-20 pt-16 lg:px-8 lg:pb-24 lg:pt-24">
+      <p class="eyebrow text-ice-400">Für Kandidaten</p>
+      <h1 class="mt-5 max-w-4xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        Sie sollten die Zahl kennen, bevor Sie Abende in Interviews investieren.
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
+        Wir arbeiten mit Sales Engineers, Applications Engineers und technischen Vertriebsführern
+        in der US-Industrie. Ehrliche Antworten, Vertraulichkeit, kein Druck nur wegen eines
+        Honorars.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={localePath(locale, '/jobs')}
+          class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
+        >
+          Offene Stellen ({jobs.length})
+        </a>
+        <a
+          href="#general-application"
+          class="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-3.5 text-base font-medium text-white ring-1 ring-white/25 backdrop-blur-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-white/20"
+        >
+          Lebenslauf senden
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <SectionHeading
+      eyebrow="Was Sie erwarten können"
+      title="Vier Dinge, die wir Ihnen nicht antun"
+      lead="Jeder Punkt existiert, weil Kandidaten uns erzählen, was beim letzten Recruiter schiefging."
+    />
+
+    <div class="mt-14 grid gap-6 sm:grid-cols-2">
+      {
+        promises.map((item) => (
+          <div class="rounded-2xl bg-white p-8 ring-1 ring-ink-100 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-lg hover:shadow-ink-900/6">
+            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-ice-100">
+              <svg class="h-4 w-4 text-ice-600" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+              </svg>
+            </div>
+            <h3 class="mt-5 text-lg">{item.title}</h3>
+            <p class="mt-3 leading-relaxed text-ink-600">{item.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="border-y border-ink-100 bg-ink-950">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <SectionHeading eyebrow="Im Gegenzug" title="Was wir von Ihnen erwarten" tone="light" />
+        </div>
+        <div class="space-y-6 lg:col-span-7">
+          <p class="text-lg leading-relaxed text-ink-200">
+            Eine Zahl, die Sie im Gespräch vertreten können. Quoten-Erfüllung, Wachstum Jahr für
+            Jahr, ein Account, den Sie gewonnen haben — und wie. Kein Soll, ein Ergebnis.
+          </p>
+          <p class="text-lg leading-relaxed text-ink-200">
+            Und die Wahrheit zur Situation: was Sie wirklich verdienen, was Sie wirklich bewegen würde,
+            ob Sie woanders sprechen. Fast alles geht — Überraschungen in Woche sechs nicht.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    jobs.length > 0 && (
+      <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <SectionHeading eyebrow="Aktuell" title="Offene Stellen" class="mb-0" />
+          <a
+            href={localePath(locale, '/jobs')}
+            class="text-sm font-medium text-ice-600 underline underline-offset-4 hover:text-ice-500"
+          >
+            Alle ansehen
+          </a>
+        </div>
+        <div class="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+          {jobs.map((job) => (
+            <JobCard job={job} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="border-y border-ink-100 bg-white">
+    <div class="mx-auto max-w-3xl px-5 py-20 lg:px-8 lg:py-24">
+      <SectionHeading eyebrow="Fragen" title="Was wirklich gefragt wird" />
+
+      <div class="mt-12 divide-y divide-ink-100 border-y border-ink-100">
+        {
+          faqs.map((faq) => (
+            <details class="group py-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+                <span class="font-display text-[1.05rem] font-medium text-ink-950">{faq.q}</span>
+                <svg
+                  class="h-5 w-5 shrink-0 text-ink-400 transition-transform duration-300 ease-out-expo group-open:rotate-45"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
+                  <path d="M10 4v12M4 10h12" stroke-linecap="round" />
+                </svg>
+              </summary>
+              <p class="mt-3.5 max-w-2xl leading-relaxed text-ink-600">{faq.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sand-100/70" id="general-application">
+    <div class="mx-auto max-w-3xl px-5 py-20 lg:px-8 lg:py-24">
+      <p class="eyebrow text-ice-600">Initiativbewerbung</p>
+      <h2 class="mt-3 text-3xl leading-tight sm:text-4xl">Lebenslauf senden</h2>
+      <p class="mt-5 leading-relaxed text-ink-600">
+        Vieles, womit wir arbeiten, wird nie ausgeschrieben — Kunden lassen vertraulich suchen und
+        besetzen aus dem bestehenden Netzwerk. Kommen Sie dazu. Wir sagen ehrlich, ob wir vermutlich
+        etwas Passendes haben.
+      </p>
+
+      <div class="mt-10 rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-9">
+        <ApplicationForm id="general-apply" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

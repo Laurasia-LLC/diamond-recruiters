@@ -1,0 +1,286 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import EmployerConversion from '../../components/EmployerConversion.astro';
+import HumanContact from '../../components/HumanContact.astro';
+import ReferenceQuotes from '../../components/ReferenceQuotes.astro';
+import Button from '../../components/Button.astro';
+import { sectorsFor, CONTACT, bookingFor, FEE_TERMS } from '../../consts';
+import { localePath } from '../../lib/locale';
+import heroImage from '../../assets/employers-handshake.jpg';
+import textureImage from '../../assets/sector-electrical.jpg';
+
+const locale = 'de' as const;
+const SECTORS = sectorsFor(locale);
+const BOOKING = bookingFor(locale);
+
+const roles = [
+  'Territory / Regional Sales Engineer',
+  'Applications & Solutions Engineer',
+  'Regional Sales Manager',
+  'National Sales Manager',
+  'Business Development Manager',
+  'Product & Market Manager',
+  'Distribution / Channel Manager',
+  'Technical Support & Inside Sales',
+];
+
+const commitments = [
+  {
+    title: 'Wir sagen, wenn die Zahl nicht stimmt',
+    body: 'Wenn das Band die beschriebene Person nicht kaufen kann, hören Sie das im ersten Gespräch — nicht nach acht Wochen leerer Pipeline. Manchmal liegt es am Gehalt, manchmal an der Stellenbeschreibung.',
+  },
+  {
+    title: 'Benannte Marktkarte, kein Jobportal',
+    body: 'Sie sehen, welche Unternehmen und welche Personen wir ansprechen wollen, bevor der erste Kontakt läuft. Ist ein Wettbewerber tabu, sagen Sie es dann — nicht nach unserem Anruf.',
+  },
+  {
+    title: 'Kurze Liste mit Begründung',
+    body: 'Eine Handvoll Kandidaten, kein Stapel. Jeder mit einer Zahl, die er vertreten kann, und einer ehrlichen Notiz zu Schwächen — statt zwanzig weitergeleiteter Lebensläufe und der Hoffnung, dass einer hält.',
+  },
+  {
+    title: 'Gegenangebote mitdenken',
+    body: 'Viele Suchen in diesem Markt sterben bei der Kündigung, nicht im Interview. Wir bereiten das Wochen vorher mit dem Kandidaten vor — weil es fast immer passiert.',
+  },
+  {
+    title: 'Konditionen vor der Ansprache',
+    body: FEE_TERMS.de.body,
+  },
+  {
+    title: 'Ein Ansprechpartner durchgehend',
+    body: 'Philipp Hoffschröer bleibt Ihr Kontakt für Briefing und wesentliche Entscheidungen. Kein separates Account-Team.',
+  },
+];
+---
+
+<BaseLayout
+  title="Für Arbeitgeber"
+  description="Diamond Recruiters führt technische Vertriebssuchen für US-Industriehersteller — Automation, Instrumentierung und Flow Control. Benannte Marktkarten, kurze Listen, ehrliche Gehaltsberatung."
+  locale={locale}
+>
+  <section class="relative isolate -mt-[89px] overflow-hidden bg-ink-950 pt-[89px]">
+    <Image
+      src={heroImage}
+      alt="Zwei Fachleute geben sich in einem modernen Büro die Hand"
+      widths={[800, 1400, 1800]}
+      sizes="100vw"
+      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-45"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-linear-to-br from-ink-950/95 via-ink-950/85 to-ink-900/70"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="mx-auto max-w-7xl px-5 pb-20 pt-16 lg:px-8 lg:pb-24 lg:pt-24">
+      <p class="eyebrow text-ice-400">Für Arbeitgeber</p>
+      <h1 class="mt-5 max-w-4xl text-4xl leading-[1.1] text-white sm:text-5xl">
+        Ein offenes Gebiet ist keine Vakanz. Es ist Umsatz, der jeden Monat verloren geht.
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-relaxed text-ink-100">
+        Wir rekrutieren technische Vertriebskräfte für Industriehersteller und Vertriebspartner —
+        Rollen, in denen der Verkäufer das Produkt auf der Anlage verstehen muss.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={BOOKING.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-ice-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-ice-400 hover:shadow-lg"
+        >
+          {BOOKING.label}
+        </a>
+        <a
+          href="#brief"
+          class="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-3.5 text-base font-medium text-white ring-1 ring-white/25 backdrop-blur-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:bg-white/20"
+        >
+          Rolle briefen
+        </a>
+      </div>
+      <p class="mt-6 text-sm text-ink-300">
+        Arbeitgeber erreichen direkt{' '}
+        <a
+          href={`mailto:${CONTACT.general}`}
+          class="text-ice-300 underline underline-offset-4 hover:text-ice-100"
+        >
+          {CONTACT.general}
+        </a>{' '}
+        und{' '}
+        <a href="#your-contact" class="text-ice-300 underline underline-offset-4 hover:text-ice-100">
+          Philipp
+        </a>, den Gründer. Die{' '}
+        <a
+          href={localePath(locale, '/for-candidates')}
+          class="text-ink-300 underline underline-offset-4 hover:text-white"
+        >
+          Kandidaten-E-Mail
+        </a>{' '}
+        ist getrennt.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="Warum es schwer ist"
+          title="Die Menschen, die Sie wollen, suchen nicht aktiv."
+        />
+      </div>
+      <div class="space-y-5 text-lg leading-relaxed text-ink-600 lg:col-span-7">
+        <p>
+          Ein Sales Engineer, der im aufgebauten Gebiet die Quote trifft, hat keinen Grund, Jobbörsen
+          zu durchsuchen. Er liegt nicht in Ihrem Bewerberpool — und keine Schaltanzeige ändert das.
+        </p>
+        <p>
+          Die Bewerbungen, die kommen, neigen zu Menschen, die Produkte beschreiben können, aber noch
+          nie etwas auf der Anlage diagnostiziert haben. Das zu sichten bindet Ihren Regional Manager
+          an fremde Pipeline statt an seine Zahl.
+        </p>
+        <p class="text-ink-900">
+          Die Suche muss per Direktansprache, beim Namen, durch jemanden laufen, der technisch
+          glaubwürdig genug ist, dass ein erfolgreicher Sales Engineer den Anruf annimmt. Das ist
+          der ganze Job.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-ink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <div class="grid gap-14 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <SectionHeading eyebrow="Rollen" title="Was wir besetzen" />
+          <ul class="mt-9 space-y-px overflow-hidden rounded-2xl bg-ink-100">
+            {
+              roles.map((role) => (
+                <li class="flex items-center gap-3.5 bg-white px-5 py-4 transition-colors hover:bg-sand-50">
+                  <svg
+                    class="h-3.5 w-3.5 shrink-0 text-ice-500"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 0.5l2.2 5.3 5.3 2.2-5.3 2.2L8 15.5l-2.2-5.3L0.5 8l5.3-2.2z" />
+                  </svg>
+                  <span class="text-[0.95rem] text-ink-800">{role}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <SectionHeading eyebrow="Märkte" title="Märkte, in denen wir arbeiten" />
+          <dl class="mt-9 space-y-6">
+            {
+              SECTORS.map((sector) => (
+                <div class="border-l-2 border-ink-100 pl-5 transition-colors hover:border-ice-500">
+                  <dt class="font-display font-semibold text-ink-950">{sector.name}</dt>
+                  <dd class="mt-1.5 text-[0.925rem] leading-relaxed text-ink-600">
+                    {sector.detail}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden bg-ink-950">
+    <Image
+      src={textureImage}
+      alt=""
+      widths={[800, 1400]}
+      sizes="100vw"
+      class="absolute inset-0 h-full w-full object-cover opacity-10"
+      loading="lazy"
+      aria-hidden="true"
+    />
+    <div class="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <SectionHeading
+        eyebrow="Was Sie bekommen"
+        title="Sechs Zusagen auf jeder Suche"
+        lead="Nichts davon ist ungewöhnlich — es steht nur selten so, dass Sie uns daran messen können."
+        tone="light"
+      />
+
+      <div class="mt-14 grid gap-x-10 gap-y-11 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          commitments.map((item, i) => (
+            <div class="border-t border-ink-800 pt-6">
+              <span class="font-mono text-sm text-ice-400">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-2.5 text-lg text-white">{item.title}</h3>
+              <p class="mt-2.5 text-[0.925rem] leading-relaxed text-ink-300">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-ink-100 bg-sand-100/60">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <SectionHeading
+        eyebrow="Track Record"
+        title="Was Kunden über Philipp geschrieben haben"
+        lead="Drei freigegebene Referenzen. Wortlaut aus unterschriebenen oder webseitenbestätigten Aussagen."
+      />
+      <ReferenceQuotes class="mt-14" limit={2} locale={locale} />
+      <div class="mt-10">
+        <Button href={localePath(locale, '/references')} variant="secondary">
+          Alle Referenzen
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white" id="your-contact">
+    <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <SectionHeading
+            title="Gründer, kein Callcenter."
+            lead="Philipp Hoffschröer ist Ihr Arbeitgeber-Kontakt. Briefings und Einstellungsentscheidungen laufen direkt über ihn."
+          />
+        </div>
+        <div class="lg:col-span-7">
+          <HumanContact
+            booking
+            locale={locale}
+            lead="Arbeitgeber-Nachrichten und Buchungen erreichen Philipp. Recherche kann Werkzeuge und Assistenz unter seiner Leitung nutzen."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-ink-100 bg-white">
+    <div class="mx-auto max-w-3xl px-5 py-20 lg:px-8 lg:py-24">
+      <p class="eyebrow text-ice-600">Konditionen</p>
+      <h2 class="mt-3 text-3xl leading-tight sm:text-4xl">{FEE_TERMS.de.title}</h2>
+      <p class="mt-6 text-lg leading-relaxed text-ink-700">{FEE_TERMS.de.body}</p>
+    </div>
+  </section>
+
+  <section class="border-b border-ink-100 bg-sand-100/70" id="brief">
+    <div class="mx-auto max-w-3xl px-5 py-20 lg:px-8 lg:py-24">
+      <p class="eyebrow text-ice-600">Suche starten</p>
+      <h2 class="mt-3 text-3xl leading-tight sm:text-4xl">Rolle briefen</h2>
+      <p class="mt-5 leading-relaxed text-ink-600">
+        Termin buchen oder Briefing per E-Mail. Auf diesem Host gibt es kein PHP-Kontaktformular —
+        Kalender und hello@ sind der Arbeitgeber-Weg.
+      </p>
+
+      <div class="mt-10 rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-9">
+        <EmployerConversion locale={locale} id="employer-brief" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
