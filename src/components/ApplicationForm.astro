@@ -11,6 +11,11 @@ interface Props {
 
 const { roleTitle = '', roleSlug = '', id = 'apply', compact = false } = Astro.props;
 
+const useMailto = !APPLY_ENDPOINT;
+const mailtoHref = `mailto:${CONTACT.applications}?subject=${encodeURIComponent(
+  roleTitle ? `Application — ${roleTitle}` : 'Application — Diamond Recruiters'
+)}&body=${encodeURIComponent('Name:\nCity:\nOTE needed:\nTravel:\nLinkedIn:\n\nPlease attach your resume to this email.')}`;
+
 const field =
   'w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-[0.95rem] text-ink-900 ' +
   'placeholder:text-ink-300 transition-colors duration-200 ' +
@@ -19,6 +24,24 @@ const label = 'block text-sm font-medium text-ink-800';
 const hint = 'mt-1.5 text-xs text-ink-500';
 ---
 
+{
+  useMailto ? (
+    <div id={id} class="scroll-mt-28 rounded-2xl border border-ink-100 bg-sand-50 p-7 sm:p-8">
+      <p class="text-[0.95rem] leading-relaxed text-ink-700">
+        Send your resume by email to{' '}
+        <a href={`mailto:${CONTACT.applications}`} class="font-medium text-ice-600 underline">
+          {CONTACT.applications}
+        </a>
+        . Include your base city, OTE, travel willingness and LinkedIn URL.
+      </p>
+      <a
+        href={mailtoHref}
+        class="mt-6 inline-flex items-center justify-center rounded-full bg-ink-950 px-6 py-3 text-sm font-semibold text-white hover:bg-ink-800"
+      >
+        Open application email
+      </a>
+    </div>
+  ) : (
 <form
   id={id}
   class="apply-form scroll-mt-28"
@@ -227,32 +250,34 @@ const hint = 'mt-1.5 text-xs text-ink-500';
     </p>
   </div>
 </form>
+  )
+}
 
-<script>
+<script is:inline>
   const MAX_BYTES = 8 * 1024 * 1024;
 
-  document.querySelectorAll<HTMLFormElement>('form.apply-form').forEach((form) => {
-    const errorBox = form.querySelector<HTMLElement>('[data-error]');
-    const successBox = form.querySelector<HTMLElement>('[data-success]');
-    const submit = form.querySelector<HTMLButtonElement>('[data-submit]');
-    const spinner = form.querySelector<HTMLElement>('[data-spinner]');
-    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+  document.querySelectorAll('form.apply-form').forEach((form) => {
+    const errorBox = form.querySelector('[data-error]');
+    const successBox = form.querySelector('[data-success]');
+    const submit = form.querySelector('[data-submit]');
+    const spinner = form.querySelector('[data-spinner]');
+    const submitLabel = form.querySelector('[data-submit-label]');
 
     // Stamped client-side so the server can reject sub-second bot submissions.
-    const stamp = form.querySelector<HTMLInputElement>('[data-rendered-at]');
+    const stamp = form.querySelector('[data-rendered-at]');
     if (stamp) stamp.value = String(Math.floor(Date.now() / 1000));
 
-    const pageUrl = form.querySelector<HTMLInputElement>('[data-page-url]');
+    const pageUrl = form.querySelector('[data-page-url]');
     if (pageUrl) pageUrl.value = window.location.href;
 
-    const showError = (msg: string) => {
+    const showError = (msg) => {
       if (!errorBox) return;
       errorBox.textContent = msg;
       errorBox.classList.remove('hidden');
       errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
-    const setBusy = (busy: boolean) => {
+    const setBusy = (busy) => {
       if (submit) submit.disabled = busy;
       spinner?.classList.toggle('hidden', !busy);
       if (submitLabel) submitLabel.textContent = busy ? 'Sending…' : 'Send application';
@@ -264,7 +289,8 @@ const hint = 'mt-1.5 text-xs text-ink-500';
 
       if (!form.reportValidity()) return;
 
-      const file = form.querySelector<HTMLInputElement>('input[type="file"]')?.files?.[0];
+      const fileInput = form.querySelector('input[type="file"]');
+      const file = fileInput?.files?.[0];
       if (file && file.size > MAX_BYTES) {
         showError('That resume is over 8 MB. Please attach a smaller file or email it to us.');
         return;

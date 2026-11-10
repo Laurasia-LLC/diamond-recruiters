@@ -1,20 +1,32 @@
 ---
-import { NAV_LINKS } from '../consts';
+import { bookingFor, navFor } from '../consts';
+import type { Locale } from '../lib/locale';
+import { detectLocaleFromPath, localePath, logicalPath } from '../lib/locale';
 import Logo from './Logo.astro';
 
 interface Props {
-  /**
-   * True when the page opens with a dark hero sitting behind the header.
-   * The header then renders light until the page scrolls, at which point it
-   * gains a solid surface and flips back to dark type.
-   */
   overDark?: boolean;
+  locale?: Locale;
 }
 
-const { overDark = true } = Astro.props;
+const { overDark = true, locale = detectLocaleFromPath(Astro.url.pathname) } = Astro.props;
 
-const path = '/' + Astro.url.pathname.replace(/^\/|\/$/g, '');
-const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const navLinks = navFor(locale).map((link) => ({
+  ...link,
+  href: localePath(locale, link.href),
+}));
+
+const path = logicalPath(Astro.url.pathname);
+const isActive = (href: string) => {
+  const logical = logicalPath(href);
+  return path === logical || path.startsWith(`${logical}/`);
+};
+
+const booking = bookingFor(locale);
+const home = localePath(locale, '/');
+const employersBrief = `${localePath(locale, '/for-employers')}#brief`;
+const cta =
+  locale === 'de' ? 'Suche starten' : 'Start a search';
 ---
 
 <header
@@ -25,13 +37,13 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   ]}
 >
   <div class="mx-auto flex max-w-7xl items-center gap-6 px-5 py-4 lg:px-8">
-    <a href="/" class="shrink-0" aria-label="Diamond Recruiters — home">
+    <a href={home} class="shrink-0" aria-label="Diamond Recruiters — home">
       <Logo />
     </a>
 
     <nav class="ml-auto hidden items-center gap-1 lg:flex" aria-label="Main">
       {
-        NAV_LINKS.map((link) => (
+        navLinks.map((link) => (
           <a
             href={link.href}
             aria-current={isActive(link.href) ? 'page' : undefined}
@@ -51,10 +63,12 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
     <div class="ml-auto hidden lg:ml-3 lg:block">
       <a
-        href="/for-employers#brief"
+        href={booking.url}
+        target="_blank"
+        rel="noopener noreferrer"
         class="dr-header-cta inline-flex items-center justify-center whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200 ease-out-expo hover:-translate-y-px hover:shadow-md"
       >
-        Start a search
+        {locale === 'de' ? 'Call buchen' : 'Book a call'}
       </a>
     </div>
 
@@ -83,7 +97,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   >
     <nav class="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-4" aria-label="Mobile">
       {
-        NAV_LINKS.map((link) => (
+        navLinks.map((link) => (
           <a
             href={link.href}
             aria-current={isActive(link.href) ? 'page' : undefined}
@@ -99,19 +113,16 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         ))
       }
       <a
-        href="/for-employers#brief"
+        href={employersBrief}
         class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-ink-900 px-5 py-3 font-medium text-white transition-colors hover:bg-ink-700"
       >
-        Start a search
+        {cta}
       </a>
     </nav>
   </div>
 </header>
 
 <style is:global>
-  /* -----------------------------------------------------------------------
-     Default (light page, or any page once scrolled): dark type.
-     -------------------------------------------------------------------- */
   .dr-header .dr-nav-link {
     color: var(--color-ink-600);
   }
@@ -135,10 +146,6 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     background-color: var(--color-ink-100);
   }
 
-  /* -----------------------------------------------------------------------
-     Over a dark hero, before the page scrolls: light type so the nav is
-     actually readable against the photograph.
-     -------------------------------------------------------------------- */
   .dr-header.over-dark:not(.is-scrolled):not(.menu-open) .dr-logo-word {
     color: #fff;
   }
@@ -166,12 +173,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     background-color: rgb(255 255 255 / 0.15);
   }
 
-  /* The mark's outline is drawn in ink; lighten it over a dark hero. */
   .dr-header.over-dark:not(.is-scrolled):not(.menu-open) .dr-logo-stroke {
     stroke: var(--color-ice-100);
   }
 
-  /* Scrolled state: solid surface. */
   .dr-header.is-scrolled {
     background-color: rgb(250 248 245 / 0.9);
     backdrop-filter: blur(12px);
@@ -179,7 +184,6 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     box-shadow: 0 1px 2px 0 rgb(10 26 43 / 0.05);
   }
 
-  /* An open mobile menu always needs the solid surface behind it. */
   .dr-header.menu-open {
     background-color: var(--color-sand-50);
   }

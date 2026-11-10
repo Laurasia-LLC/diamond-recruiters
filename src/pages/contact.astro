@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ContactForm from '../components/ContactForm.astro';
+import EmployerConversion from '../components/EmployerConversion.astro';
 import HumanContact from '../components/HumanContact.astro';
 import { CONTACT } from '../consts';
 
@@ -8,14 +8,14 @@ const routes = [
   {
     eyebrow: 'Hiring',
     title: 'You need to fill a seat',
-    body: 'Tell us the role, the territory and the band. We will come back with a straight read on whether it is findable at that number.',
+    body: 'Book a call with Philipp or email hello@ with the role, territory and band.',
     href: '/for-employers#brief',
-    label: 'Brief us on a role',
+    label: 'Start a search',
   },
   {
     eyebrow: 'Looking',
     title: 'You want your next territory',
-    body: 'Send your resume with your base city, the OTE you need and how far you will travel. A person reads it and replies.',
+    body: 'Send your resume with your base city, the OTE you need and how far you will travel.',
     href: '/for-candidates#general-application',
     label: 'Send your resume',
   },
@@ -26,27 +26,27 @@ const routes = [
   title="Contact"
   description="Get in touch with Diamond Recruiters — technical sales search for US industrial automation, process instrumentation and flow control."
   headerOverDark={false}
+  locale="en"
 >
   <section class="border-b border-ink-100 bg-ink-950">
     <div class="mx-auto max-w-7xl px-5 pb-16 pt-16 lg:px-8 lg:pb-20 lg:pt-24">
       <p class="eyebrow text-ice-400">Contact</p>
       <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] text-white sm:text-5xl">Talk to a person</h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
-        Employer conversations go to founder Philipp Hoffschröer — by form, booking link, or{' '}
-        {CONTACT.general}. Candidate applications use {CONTACT.applications} and the
-        forms on the candidate pages.
+        Employer conversations go to founder Philipp Hoffschröer — calendar link or{' '}
+        {CONTACT.general}. Candidate applications use {CONTACT.applications} on the candidate
+        pages. No public phone number on this site.
       </p>
     </div>
   </section>
 
   <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
     <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
-      <!-- Details -->
       <div class="lg:col-span-4">
         <h2 class="text-xl">Direct</h2>
 
         <div class="mt-7">
-          <HumanContact eyebrow="Founder" booking />
+          <HumanContact eyebrow="Founder" booking locale="en" />
         </div>
 
         <dl class="mt-9 space-y-7 border-t border-ink-100 pt-7">
@@ -73,22 +73,19 @@ const routes = [
         </dl>
       </div>
 
-      <!-- Form -->
       <div class="lg:col-span-8">
         <div class="rounded-2xl bg-white p-7 ring-1 ring-ink-100 sm:p-9">
-          <h2 class="text-xl">Send a message</h2>
+          <h2 class="text-xl">Employers</h2>
           <p class="mt-2.5 text-[0.95rem] leading-relaxed text-ink-600">
-            If you are hiring or applying, the dedicated forms below capture what we need
-            to be useful straight away.
+            Primary conversion is calendar plus hello@ — not a PHP form on this host.
           </p>
           <div class="mt-8">
-            <ContactForm variant="general" id="general-contact" />
+            <EmployerConversion locale="en" id="employer-contact" />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Routes -->
     <div class="mt-16 grid gap-6 sm:grid-cols-2">
       {
         routes.map((route) => (

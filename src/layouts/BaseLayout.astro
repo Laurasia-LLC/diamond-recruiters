@@ -2,6 +2,8 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import type { Locale } from '../lib/locale';
+import { LOCALES, detectLocaleFromPath } from '../lib/locale';
 
 interface Props {
   title: string;
@@ -9,11 +11,8 @@ interface Props {
   image?: string;
   noindex?: boolean;
   schema?: Record<string, unknown> | null;
-  /**
-   * Set false on pages that open on a light background, so the header renders
-   * dark type instead of light. Most pages open with a dark hero.
-   */
   headerOverDark?: boolean;
+  locale?: Locale;
 }
 
 const {
@@ -23,11 +22,15 @@ const {
   noindex,
   schema,
   headerOverDark = true,
+  locale = detectLocaleFromPath(Astro.url.pathname),
 } = Astro.props;
+
+const skip =
+  locale === 'de' ? 'Zum Inhalt springen' : 'Skip to content';
 ---
 
 <!doctype html>
-<html lang="en-US">
+<html lang={LOCALES[locale].htmlLang}>
   <head>
     <BaseHead
       title={title}
@@ -35,6 +38,7 @@ const {
       image={image}
       noindex={noindex}
       schema={schema}
+      locale={locale}
     />
   </head>
   <body class="flex min-h-screen flex-col">
@@ -42,15 +46,15 @@ const {
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-ink-900 focus:px-5 focus:py-2.5 focus:text-sm focus:text-white"
     >
-      Skip to content
+      {skip}
     </a>
 
-    <Header overDark={headerOverDark} />
+    <Header overDark={headerOverDark} locale={locale} />
 
     <main id="main" class="flex-1">
       <slot />
     </main>
 
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>

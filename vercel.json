@@ -1,0 +1,57 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "diamond-recruiters.de" }],
+      "destination": "/de"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.diamond-recruiters.de" }],
+      "destination": "/de"
+    },
+    {
+      "source": "/:path((?!de/).*)",
+      "has": [{ "type": "host", "value": "diamond-recruiters.de" }],
+      "destination": "/de/:path"
+    },
+    {
+      "source": "/:path((?!de/).*)",
+      "has": [{ "type": "host", "value": "www.diamond-recruiters.de" }],
+      "destination": "/de/:path"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/de",
+      "has": [{ "type": "host", "value": "diamond-recruiters.com" }],
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/de",
+      "has": [{ "type": "host", "value": "www.diamond-recruiters.com" }],
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/de/:path*",
+      "has": [{ "type": "host", "value": "diamond-recruiters.com" }],
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/de/:path*",
+      "has": [{ "type": "host", "value": "www.diamond-recruiters.com" }],
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/imprint",
+      "destination": "/legal",
+      "permanent": true
+    }
+  ]
+}

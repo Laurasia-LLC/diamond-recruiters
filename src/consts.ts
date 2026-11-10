@@ -7,41 +7,39 @@
  * every one still present, so nothing invented can ship by accident.
  */
 
-export const SITE = {
-  name: 'Diamond Recruiters',
-  domain: 'diamond-recruiters.com',
-  url: 'https://diamond-recruiters.com',
-  tagline: 'Technical sales recruitment for industrial manufacturers',
-  description:
-    'Diamond Recruiters places sales engineers and technical sales leaders with industrial manufacturers across the United States. Automation, sensors, process instrumentation and flow control.',
-  locale: 'en_US',
+import type { Locale } from './lib/locale';
+
+export const SITE_BY_LOCALE = {
+  en: {
+    name: 'Diamond Recruiters',
+    domain: 'diamond-recruiters.com',
+    url: 'https://diamond-recruiters.com',
+    tagline: 'Technical sales recruitment for industrial manufacturers',
+    description:
+      'Diamond Recruiters places sales engineers and technical sales leaders with industrial manufacturers across the United States. Automation, sensors, process instrumentation and flow control.',
+    locale: 'en_US',
+  },
+  de: {
+    name: 'Diamond Recruiters',
+    domain: 'diamond-recruiters.de',
+    url: 'https://diamond-recruiters.de',
+    tagline: 'Technischer Vertrieb — Recruiting für Industriehersteller',
+    description:
+      'Diamond Recruiters besetzt Sales Engineers und technische Vertriebsführungskräfte bei Industrieherstellern in den USA. Automation, Prozessinstrumentierung und Flow Control.',
+    locale: 'de_DE',
+  },
 } as const;
 
+/** @deprecated Use SITE_BY_LOCALE[locale] in new code. */
+export const SITE = SITE_BY_LOCALE.en;
+
+export function siteFor(locale: Locale) {
+  return SITE_BY_LOCALE[locale];
+}
+
 export const CONTACT = {
-  /**
-   * Applications, including the address on job ads and the imprint.
-   * Change it here; the pages read this constant.
-   */
   applications: 'apply@diamond-recruiters.com',
-
-  /**
-   * Imprint and privacy contact, and the address every employer-facing page
-   * prints. Delivered by the catch-all on @diamond-recruiters.com, which
-   * forwards to ph@skytz-consulting.com. Change this one value to update both
-   * legal pages and the employer CTA.
-   */
   general: 'hello@diamond-recruiters.com',
-
-  /**
-   * Keep `phoneHref` digits-only and E.164 — some dialers choke on punctuation.
-   * Listed publicly on skytz-consulting.com; hidden from marketing UI until routing
-   * is confirmed (see PREVIEW_BLOCKERS.md). Imprint uses email-only contact for now.
-   */
-  phone: '+1 307 429 0181',
-  phoneHref: 'tel:+13074290181',
-  showPhoneInUI: false,
-
-  /** Registered address of the entity in Wyoming. */
   address: {
     line1: '1309 Coffeen Avenue, STE 1200',
     city: 'Sheridan',
@@ -50,128 +48,138 @@ export const CONTACT = {
     country: 'US',
     countryName: 'United States',
   },
-
-  /** Empty entries are hidden rather than rendered as dead links. */
   social: {
     linkedin: 'https://www.linkedin.com/in/philipp-hoffschroer/',
   },
 } as const;
 
 /**
- * Signed reference letters published on skytz-consulting.com with permission.
- * Quotes are reproduced exactly from that public source. They describe Philipp
- * Hoffschröer's recruitment work for the named companies — not outcomes
- * claimed for Diamond Recruiters in the United States unless stated here.
+ * Approved website references (Philipp personally). Quotes only where sourced
+ * in project testimonial files — no invented placement statistics.
  */
-export const REFERENCES_ATTRIBUTION = {
-  title: 'Context',
-  body:
-    'These excerpts come from signed letters published on skytz-consulting.com with permission. Wording, names and roles match that site. They describe earlier recruitment work, not US results claimed for Diamond.',
-  sourceLabel: 'skytz-consulting.com',
-  sourceUrl: 'https://skytz-consulting.com/en',
-} as const;
-
-export const REFERENCES = [
+export const REFERENCES_EN = [
   {
-    company: 'Megger Germany GmbH',
-    industry: 'Electrical test and measurement equipment',
-    relationship: 'Client since 2016',
-    contact: 'Friedrich Enkert',
-    role: 'VP Global Sales CI, Managing Director Megger Germany GmbH',
+    company: 'Box02 LLC',
+    industry: 'E-commerce and performance marketing, Wyoming',
+    contact: 'Sebastian Wolff',
+    role: 'Founder & CEO',
     quote:
-      'He has an impressive track record, successfully recruiting multiple qualified candidates for key positions in our company. His professionalism, deep understanding of our specific needs, and his ability to identify the best talents in the market have significantly contributed to our company\'s success.',
+      'Within a short timeframe, Philipp was able to present a slate of candidates who not only matched our requirements on paper but also fit well with our culture.',
   },
   {
-    company: 'SebaKMT by Megger',
-    industry: 'Cable fault location and pipeline leak detection',
-    contact: 'Sascha Kuflik',
-    role: 'Business Unit Director at the time',
+    company: '3V8S Ventures',
+    industry: 'Mobile applications',
+    contact: 'Bas van der Wals',
+    role: 'Founder & CEO',
     quote:
-      'I first had the opportunity to know Philipp from the perspective of a candidate. Subsequently, as a Business Unit Leader at SebaKMT, I engaged Philipp\'s services as an external recruiter. From this dual perspective, I can attest to the fact that Philipp consistently delivers outstanding results.',
+      'As the CEO of a leading mobile app company, I had the opportunity to work closely with Philipp in recruiting our Head of AI Software Engineering.',
   },
   {
-    company: 'Eurasia Group AG',
-    industry: 'Agriculture and financial holding, Switzerland',
-    relationship: 'CFO search',
-    contact: 'Mustafa Sahin',
-    role: 'Chief Executive Officer',
+    company: 'GEF Ingenieur AG',
+    industry: 'District heating, CHP and industrial energy systems',
+    contact: 'Timo Che Banning',
+    role: 'Authorized signatory, head of route planning',
     quote:
-      'He was responsible for the search, pre-selection, and candidate outreach, and supported the process through to the successful appointment of our Chief Financial Officer. The candidates presented were well targeted and professionally pre-qualified. The final placement fully met our expectations.',
-  },
-  {
-    company: 'SWR · Südwestdeutsche Rohrleitungsbau GmbH',
-    industry: 'Pipeline and district heating construction, Frankfurt',
-    contact: 'Dirk Heesen',
-    role: 'Managing Director',
-    quote:
-      'What sets him apart is his meticulous selection of candidates who not only possess the required skills but also align well with our corporate culture.',
+      'Our founder Philipp supports GEF Ingenieur AG with technical recruiting for project and planning engineers — including a project engineer placement from October 2025.',
   },
 ] as const;
 
-/**
- * Public scheduling link for employer conversations.
- *
- * It is a plain outbound link, not an embed: nothing is requested from Google
- * until the visitor chooses to follow it, so the site keeps its no-third-party
- * assets and no-tracking position. The calendar owns the call length and the
- * available slots, so neither is stated here.
- */
-export const BOOKING = {
-  url: 'https://calendar.app.google/5xbLcjnJdEKsHMqy9',
-  label: 'Book a call',
-  note: 'Opens Google Calendar in a new tab.',
+export const REFERENCES_DE = [
+  {
+    company: 'Box02 LLC',
+    industry: 'E-Commerce und Performance-Marketing, Wyoming',
+    contact: 'Sebastian Wolff',
+    role: 'Founder & CEO',
+    quote:
+      'Within a short timeframe, Philipp was able to present a slate of candidates who not only matched our requirements on paper but also fit well with our culture.',
+  },
+  {
+    company: '3V8S Ventures',
+    industry: 'Mobile Applications',
+    contact: 'Bas van der Wals',
+    role: 'Founder & CEO',
+    quote:
+      'As the CEO of a leading mobile app company, I had the opportunity to work closely with Philipp in recruiting our Head of AI Software Engineering.',
+  },
+  {
+    company: 'GEF Ingenieur AG',
+    industry: 'Fernwärme, KWK und industrielle Energiesysteme',
+    contact: 'Timo Che Banning',
+    role: 'Prokurist, Leiter Trassenplanung',
+    quote:
+      'Unser Gründer Philipp unterstützt die GEF Ingenieur AG beim technischen Recruiting von Projekt- und Planungsingenieuren — unter anderem mit einer Besetzung als Projektingenieur ab Oktober 2025.',
+  },
+] as const;
+
+export function referencesFor(locale: Locale) {
+  return locale === 'de' ? REFERENCES_DE : REFERENCES_EN;
+}
+
+export const BOOKING_BY_LOCALE = {
+  en: {
+    url: 'https://calendar.app.google/5xbLcjnJdEKsHMqy9',
+    label: 'Book a 30-minute call with Philipp',
+    note: 'Opens Google Calendar in a new tab.',
+  },
+  de: {
+    url: 'https://calendar.app.google/5xbLcjnJdEKsHMqy9',
+    label: '30-Minuten-Call mit Philipp buchen',
+    note: 'Öffnet Google Kalender in einem neuen Tab.',
+  },
 } as const;
 
-/**
- * Legal identity for the imprint and privacy policy.
- * Diamond Recruiters is a trade name of Laurasia LLC.
- *
- * No register number, EIN, or other identifier is stored here. Do not add one
- * unless the owner supplies it — the legal pages omit anything that is not set.
- *
- * The imprint and privacy contact address is CONTACT.general. The applications
- * address is CONTACT.applications. Both are edited above.
- */
+export const BOOKING = BOOKING_BY_LOCALE.en;
+
+export function bookingFor(locale: Locale) {
+  return BOOKING_BY_LOCALE[locale];
+}
+
+/** Exact employer-facing fee copy — do not paraphrase. */
+export const FEE_TERMS = {
+  en: {
+    title: 'Terms agreed in writing first',
+    body: 'Depending on the search, we work contingency or retained. The fee is a percentage of first-year compensation. The exact fee basis, the guarantee period and exclusivity are settled in writing before we start work. No surprises on the invoice, and nothing verbal that either side has to remember differently later.',
+  },
+  de: {
+    title: 'Konditionen zuerst schriftlich',
+    body: 'Je nach Suche arbeiten wir contingency oder retained. Das Honorar ist ein Anteil der First-year-Compensation. Die genaue Honorarbasis, die Garantiefrist und die Exklusivität halten wir schriftlich fest, bevor wir beginnen. Keine Überraschungen auf der Rechnung, und nichts nur mündlich, das später unterschiedlich erinnert wird.',
+  },
+} as const;
+
 export const LEGAL = {
   entityName: 'Laurasia LLC',
-  /** Printed as "a Wyoming limited liability company". */
   entityType: 'limited liability company',
   stateOfIncorporation: 'Wyoming',
-  /**
-   * Managing person. The imprint prints "Name, Title" when responsibleTitle
-   * is set, and the name alone when it is empty.
-   */
   responsibleParty: 'Philipp Hoffschröer',
   responsibleTitle: 'Founder',
-  /** Used in the privacy policy's "last updated" line. */
   policyLastUpdated: 'October 29, 2026',
+  policyLastUpdatedDe: '29. Oktober 2026',
 } as const;
 
-/**
- * Founder-facing facts for HumanContact and JSON-LD. Photo is self-hosted
- * (reproduced from skytz-consulting.com with permission — see CREDITS.md).
- */
+export const FOUNDER_BY_LOCALE = {
+  en: {
+    lead: 'Philipp Hoffschröer is who employers work with at Diamond Recruiters. Briefings and hiring decisions stay with him — not a delivery queue or a separate US account team.',
+  },
+  de: {
+    lead: 'Philipp Hoffschröer ist Ihr direkter Ansprechpartner bei Diamond Recruiters. Briefings und Einstellungsentscheidungen laufen über ihn — nicht über ein anonymes Delivery-Team.',
+  },
+} as const;
+
 export const FOUNDER = {
   name: LEGAL.responsibleParty,
   title: LEGAL.responsibleTitle,
-  /**
-   * Short positioning line. Longer biography belongs on About and References,
-   * not repeated on every contact block.
-   */
-  lead:
-    'Philipp Hoffschröer is the direct contact for employer enquiries at Diamond Recruiters. Briefings and decisions stay with him; identification and outreach may use research tools and assistants.',
-} as const;
+  lead: FOUNDER_BY_LOCALE.en.lead,
+};
 
-/**
- * What the firm commits to, in place of a metrics band. Deliberately non-numeric:
- * a new firm quoting placement counts and retention percentages invites the one
- * question it cannot answer. Each line below is a claim a client can hold us to
- * on the first engagement, which is worth more than a statistic they cannot check.
- *
- * If real figures ever exist, they belong here as a fifth item or a replacement —
- * not as decoration.
- */
-export const PROOF = [
+export function founderFor(locale: Locale) {
+  return {
+    name: LEGAL.responsibleParty,
+    title: LEGAL.responsibleTitle,
+    lead: FOUNDER_BY_LOCALE[locale].lead,
+  };
+}
+
+export const PROOF_EN = [
   {
     title: 'Industrial technical sales',
     detail:
@@ -189,52 +197,81 @@ export const PROOF = [
   },
 ] as const;
 
-/** The markets Diamond actually recruits into. Drawn from the live searches. */
-export const SECTORS = [
+export const PROOF_DE = [
   {
-    name: 'Factory Automation',
-    detail: 'Sensors, machine vision, industrial connectivity, safety and control components.',
+    title: 'Technischer Industrievertrieb',
+    detail:
+      'Suchen konzentrieren sich auf Automation, Prozessinstrumentierung und Flow Control — dort, wo der Verkauf noch von Glaubwürdigkeit auf der Anlage abhängt.',
   },
   {
-    name: 'Process Instrumentation',
-    detail: 'Flow, level, pressure and analytical measurement into refining and petrochem.',
+    title: 'Marktkarte vor der Ansprache',
+    detail:
+      'Sie sehen die Unternehmen und Ansprechpartner, die wir ansprechen wollen, bevor der erste Kontakt läuft. Die Suche steht in Ihrem Markt — nicht auf einem Jobportal.',
   },
   {
-    name: 'Flow Control & Valves',
-    detail: 'Control valves, isolation valves, actuation and the EPC project cycle.',
-  },
-  {
-    name: 'Robotics & Motion',
-    detail: 'Industrial robotics, motion control, drives and the integrators around them.',
-  },
-  {
-    name: 'Electrical & Power Distribution',
-    detail: 'Switchgear, power quality, industrial electrical distribution.',
-  },
-  {
-    name: 'Systems Integration',
-    detail: 'Integrators and distribution partners who carry the line into the plant.',
+    title: 'Vergütung bei ausgeschriebenen Rollen',
+    detail:
+      'Jede Rolle unter Offene Stellen nennt heute Basis und OTE. Vertrauliche Suchen ohne Ausschreibung klären wir im Gespräch.',
   },
 ] as const;
 
-export const NAV_LINKS = [
-  { href: '/jobs', label: 'Open Roles' },
+export function proofFor(locale: Locale) {
+  return locale === 'de' ? PROOF_DE : PROOF_EN;
+}
+
+export const PROOF = PROOF_EN;
+
+export const SECTORS_EN = [
+  { name: 'Factory Automation', detail: 'Sensors, machine vision, industrial connectivity, safety and control components.' },
+  { name: 'Process Instrumentation', detail: 'Flow, level, pressure and analytical measurement into refining and petrochem.' },
+  { name: 'Flow Control & Valves', detail: 'Control valves, isolation valves, actuation and the EPC project cycle.' },
+  { name: 'Robotics & Motion', detail: 'Industrial robotics, motion control, drives and the integrators around them.' },
+  { name: 'Electrical & Power Distribution', detail: 'Switchgear, power quality, industrial electrical distribution.' },
+  { name: 'Systems Integration', detail: 'Integrators and distribution partners who carry the line into the plant.' },
+] as const;
+
+export const SECTORS_DE = [
+  { name: 'Fabrikautomation', detail: 'Sensoren, Machine Vision, industrielle Vernetzung, Safety und Steuerungskomponenten.' },
+  { name: 'Prozessinstrumentierung', detail: 'Durchfluss, Füllstand, Druck und Analytik in Raffinerie und Petrochemie.' },
+  { name: 'Flow Control & Armaturen', detail: 'Regelventile, Absperrarmaturen, Antriebe und der EPC-Projektzyklus.' },
+  { name: 'Robotik & Antrieb', detail: 'Industrierobotik, Motion Control, Antriebe und Integratoren am Werk.' },
+  { name: 'Elektrotechnik & Energieverteilung', detail: 'Schaltanlagen, Netzqualität, industrielle Energieverteilung.' },
+  { name: 'Systemintegration', detail: 'Integratoren und Vertriebspartner, die die Linie ins Werk bringen.' },
+] as const;
+
+export const SECTORS = SECTORS_EN;
+
+export function sectorsFor(locale: Locale) {
+  return locale === 'de' ? SECTORS_DE : SECTORS_EN;
+}
+
+export const NAV_LINKS_EN = [
   { href: '/for-employers', label: 'For Employers' },
-  { href: '/for-candidates', label: 'For Candidates' },
   { href: '/about', label: 'About' },
   { href: '/references', label: 'References' },
   { href: '/contact', label: 'Contact' },
+  { href: '/jobs', label: 'Open Roles' },
+  { href: '/for-candidates', label: 'For Candidates' },
 ] as const;
 
-/**
- * Where the application form POSTs. Overridable with PUBLIC_APPLY_ENDPOINT so
- * the PHP handler can be swapped for a serverless function later without
- * touching any component — see README "Moving off all-inkl".
- */
-export const APPLY_ENDPOINT =
-  import.meta.env.PUBLIC_APPLY_ENDPOINT ?? '/api/apply.php';
+export const NAV_LINKS_DE = [
+  { href: '/for-employers', label: 'Für Arbeitgeber' },
+  { href: '/about', label: 'Über uns' },
+  { href: '/references', label: 'Referenzen' },
+  { href: '/contact', label: 'Kontakt' },
+  { href: '/jobs', label: 'Offene Stellen' },
+  { href: '/for-candidates', label: 'Für Kandidaten' },
+] as const;
 
-/** Mirrors the server-side limits in public/api/apply.php. Keep in sync. */
+export const NAV_LINKS = NAV_LINKS_EN;
+
+export function navFor(locale: Locale) {
+  return locale === 'de' ? NAV_LINKS_DE : NAV_LINKS_EN;
+}
+
+/** Candidate apply flows may still use apply@; no server endpoint on Vercel — mailto only. */
+export const APPLY_ENDPOINT = import.meta.env.PUBLIC_APPLY_ENDPOINT ?? '';
+
 export const UPLOAD = {
   maxBytes: 8 * 1024 * 1024,
   maxLabel: '8 MB',

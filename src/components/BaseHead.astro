@@ -1,45 +1,46 @@
 ---
-import { SITE, CONTACT, LEGAL } from '../consts';
+import { CONTACT, LEGAL, siteFor } from '../consts';
+import type { Locale } from '../lib/locale';
+import { alternateFor, canonicalFor, logicalPath } from '../lib/locale';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
-  /** Absolute or site-relative path to the social share image. */
   image?: string;
-  /** Set true on pages that should not be indexed. */
   noindex?: boolean;
-  /** Extra JSON-LD to inject (e.g. JobPosting). */
   schema?: Record<string, unknown> | null;
+  locale?: Locale;
 }
 
 const {
   title,
-  description = SITE.description,
+  description,
   image = '/og-default.png',
   noindex = false,
   schema = null,
+  locale = 'en',
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', Astro.site);
-const ogImage = new URL(image, Astro.site);
-const fullTitle = title === SITE.name ? `${SITE.name} — ${SITE.tagline}` : `${title} | ${SITE.name}`;
+const site = siteFor(locale);
+const logical = logicalPath(Astro.url.pathname);
+const canonical = canonicalFor(locale, logical);
+const alternate = alternateFor(locale, logical);
+const alternateLocale = locale === 'en' ? 'de' : 'en';
 
-/** Organization schema — helps Google associate the brand with the domain. */
+const descriptionText = description ?? site.description;
+const ogImage = new URL(image, site.url);
+const fullTitle =
+  title === site.name ? `${site.name} — ${site.tagline}` : `${title} | ${site.name}`;
+
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'EmploymentAgency',
-  name: SITE.name,
+  name: site.name,
   legalName: LEGAL.entityName,
-  url: SITE.url,
-  description: SITE.description,
-  /**
-   * The general inbox, not the applications inbox: schema.org `email` is the
-   * organization's own contact address, and every other page prints this one.
-   * Candidates still reach apply@ from the role pages and the application form.
-   */
+  url: site.url,
+  description: descriptionText,
   email: CONTACT.general,
-  ...(CONTACT.showPhoneInUI ? { telephone: CONTACT.phone } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: CONTACT.address.line1,
@@ -48,7 +49,7 @@ const orgSchema = {
     postalCode: CONTACT.address.postalCode,
     addressCountry: CONTACT.address.country,
   },
-  areaServed: { '@type': 'Country', name: 'United States' },
+  areaServed: { '@type': 'Country', name: locale === 'de' ? 'United States' : 'United States' },
   knowsAbout: [
     'Industrial automation sales recruitment',
     'Process instrumentation recruitment',
@@ -63,9 +64,11 @@ const orgSchema = {
 <meta name="generator" content={Astro.generator} />
 
 <title>{fullTitle}</title>
-<meta name="description" content={description} />
+<meta name="description" content={descriptionText} />
 <link rel="canonical" href={canonical} />
-{/* "follow" so a closed role still passes link equity to the live ones. */}
+<link rel="alternate" hreflang={locale === 'en' ? 'en' : 'de'} href={canonical} />
+<link rel="alternate" hreflang={alternateLocale} href={alternate} />
+<link rel="alternate" hreflang="x-default" href={canonicalFor('en', logical)} />
 {noindex && <meta name="robots" content="noindex, follow" />}
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -73,16 +76,17 @@ const orgSchema = {
 <link rel="sitemap" href="/sitemap-index.xml" />
 
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content={SITE.name} />
+<meta property="og:site_name" content={site.name} />
 <meta property="og:title" content={fullTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={descriptionText} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
-<meta property="og:locale" content={SITE.locale} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:locale:alternate" content={siteFor(alternateLocale).locale} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
-<meta name="twitter:description" content={description} />
+<meta name="twitter:description" content={descriptionText} />
 <meta name="twitter:image" content={ogImage} />
 
 <meta name="theme-color" content="#0a1a2b" />
