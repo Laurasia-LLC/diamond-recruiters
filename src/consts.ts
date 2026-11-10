@@ -79,7 +79,7 @@ export const REFERENCES_EN = [
     industry: 'District heating, CHP and industrial energy systems',
     contact: 'Timo Che Banning',
     role: 'Authorized signatory, head of route planning',
-    quote:
+    caseNote:
       'Our founder Philipp supports GEF Ingenieur AG with technical recruiting for project and planning engineers — including a project engineer placement from October 2025.',
   },
 ] as const;
@@ -106,7 +106,7 @@ export const REFERENCES_DE = [
     industry: 'Fernwärme, KWK und industrielle Energiesysteme',
     contact: 'Timo Che Banning',
     role: 'Prokurist, Leiter Trassenplanung',
-    quote:
+    caseNote:
       'Unser Gründer Philipp unterstützt die GEF Ingenieur AG beim technischen Recruiting von Projekt- und Planungsingenieuren — unter anderem mit einer Besetzung als Projektingenieur ab Oktober 2025.',
   },
 ] as const;
